@@ -1,0 +1,35 @@
+{
+  "name": "hmmmm",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vueup/vue-quill": "^1.0.0-beta.9",
+    "axios": "^0.27.2",
+    "global": "^4.4.0",
+    "less": "^4.1.3",
+    "mongoose": "^6.5.0",
+    "nprogress": "^0.2.0",
+    "path": "^0.12.7",
+    "pinia": "^2.0.16",
+    "pinia-plugin-persist": "^1.0.0",
+    "unplugin-auto-import": "^0.11.1",
+    "unplugin-vue-components": "^0.22.4",
+    "vue": "^3.2.25",
+    "vue-router": "^4.1.2"
+  },
+  "devDependencies": {
+    "@types/nprogress": "^0.2.0",
+    "@vicons/ionicons5": "^0.12.0",
+    "@vitejs/plugin-vue": "^2.3.3",
+    "naive-ui": "^2.31.0",
+    "typescript": "^4.5.4",
+    "vfonts": "^0.0.3",
+    "vite": "^2.9.9",
+    "vue-tsc": "^0.34.7"
+  }
+}
