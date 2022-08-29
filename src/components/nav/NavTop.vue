@@ -2,7 +2,7 @@
 	<!-- <div class="nav"> -->
 		<n-grid x-gap="12" :cols="24" class="nav">
 			<n-gi span="8" class="nav-left">
-				<n-menu mode="horizontal" :options="menuOptions" :value="route.meta.title"/>
+				<n-menu mode="horizontal" :options="menuOptions" :value="route.meta.title"                />
 			</n-gi>
 
 			<n-gi span="8" class="nav-center">
@@ -30,6 +30,8 @@
                     <n-icon :component="Person" @click="handleSearch"/>
                     hmlc
                 </div> -->
+                <!-- <n-switch v-model:value="inverted" />   -->
+
 
                 <n-popover  
                     placement="bottom-end" 

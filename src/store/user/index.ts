@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
-import { login,register, setUser,delUser } from "@/api/user"
-// import { removeToken } from '@/utils/token'
-// import { toLogin } from '@/utils/auth'
+import { login,register, setUser,delUser, getUser } from "@/api/user"
+import { setToken,getToken,delToken } from '@/utils/auth'
 import { Names } from "@/store/store-name";
 import { reactive,computed,onMounted } from 'vue'
-import { User } from '@/interface/user';
+import { User } from '@/types/user';
+// import _ from 'lodash-es'
 
 export const useUserStore = defineStore(Names.USER, ()=>{
     //state
@@ -20,56 +20,63 @@ export const useUserStore = defineStore(Names.USER, ()=>{
     //action
     const USER_LOGIN=async(params:User)=> {
         const res = await login(params)
-        const { status } = res.data;
-        if (status === '200') {
+        const { code,data={} } = res.data;
+        if (code === 200) {
             setUserInfo(params)
+            setToken(data.token)
         }
-        return res
+        return res.data
     }
-
     const USER_REG=async(params:User)=> {
         const res = await register(params)
-        const { status } = res.data;
+        const { code } = res.data;
         
-        if (status === '200') {
-            setUserInfo(params)
-        }
-        return res
+        // if (code === 200) {
+        //     setUserInfo(params)
+        // }
+        return res.data
     }
-
     const USER_UPDATE=async(params:User)=> {
         const res = await setUser(params)
-        const { status } = res.data;
+        const { code } = res.data;
         
-        if (status === '200') {
+        if (code === 200) {
             setUserInfo(params)
         }
-        return res
+        return res.data
     }
     const USER_DEL=async(params:User)=> {
         const res = await delUser(params)
-        const { status } = res.data;
+        const { code } = res.data;
         
-        if (status === '200') {
-            setUserInfo(params)
+        // if (code === 200) {
+        //     setUserInfo(params)
+        // }
+        return res.data
+    }
+    const USER_GET=async(id:string)=> {
+        const res = await getUser(id)
+        const { code } = res.data;
+        
+        if (code === 200) {
+            // setUserInfo(params)
         }
-        return res
+        return res.data
     }
 
 
     //无接口调用
     const setUserInfo=(params:User)=>{
-        Object.assign(userInfo,params)
-            //手动存入localStorage方式
-            //转换为字符串存入localStorage
-            // localStorage.setItem('userInfo',JSON.stringify(userInfo))
+        userInfo.username=params.username
+        // Object.assign(userInfo,params)
+        //手动存入localStorage方式
+        //转换为字符串存入localStorage
+        // localStorage.setItem('userInfo',JSON.stringify(userInfo))
     }
     const logOut=()=> {
-    //   removeToken()
         Object.assign(userInfo,init)
-        localStorage.removeItem('userinfo');
         localStorage.removeItem('Pinia-USER');
-        //   toLogin()
+        delToken();
     }
 
     //手动存入localStorage方式
@@ -88,6 +95,7 @@ export const useUserStore = defineStore(Names.USER, ()=>{
         USER_REG,
         USER_UPDATE,
         USER_DEL,
+        USER_GET,
         logOut,
         setUserInfo,
     }

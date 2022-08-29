@@ -10,6 +10,9 @@
 <script setup lang="ts">
 import AppProvider from '@/components/global/AppProvider.vue'
 import Root from '@/views/Root.vue'
+/**主title */
+document.title='hmmm'
+
 </script>
 
 <style lang="less">

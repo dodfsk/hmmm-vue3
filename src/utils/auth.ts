@@ -1,15 +1,15 @@
-const TokenKey = 'hmmm-token';
-const TokenPrefix = 'Bearer ';
-const isLogin = () => {
-  return !!localStorage.getItem(TokenKey);
+const TOKEN_KEY = 'access_token';
+export const TOKEN_PREFIX = 'Bearer ';
+export const isLogin = () => {
+  return !!localStorage.getItem(TOKEN_KEY);
 };
-const getToken = () => {
-  return localStorage.getItem(TokenKey);
+export const getToken = () => {
+  return localStorage.getItem(TOKEN_KEY);
 };
-const setToken = (token: string) => {
-  localStorage.setItem(TokenKey, token);
+export const setToken = (token: string) => {
+  localStorage.setItem(TOKEN_KEY, token);
 };
-const clearToken = () => {
-  localStorage.removeItem(TokenKey);
+export const delToken = () => {
+  localStorage.removeItem(TOKEN_KEY);
 };
-export { TokenPrefix, isLogin, getToken, setToken, clearToken };
+ 

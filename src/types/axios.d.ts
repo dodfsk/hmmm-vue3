@@ -2,8 +2,8 @@
 export interface Response<T = any> {
 	message?: string;
 	meta?: string;
-	status: string | number;
-	timestamp?: string | number;
+	code: number;
+	timestamp?: number;
 	data?: T;
 	url?: string; // 正确/错误的url地址
 }

@@ -92,15 +92,14 @@ const validateAction=()=>{
 const handleLogin = _.throttle(async() => {
     // const res=await login(userState)
     const res=await USER_LOGIN(userState)
-    const { status,message,meta } = res.data;
-    if(status=='200'){
+    const { code,message,meta } = res;
+    if(code==200){
         // window.$notification.success({
         //     title:'success',
         //     content:message||'登录成功!',
         //     meta:meta||`欢迎,${userState.username}`,
         //     duration: 3000,
         // })
-
         router.push({
             path: "/user/info",
         });

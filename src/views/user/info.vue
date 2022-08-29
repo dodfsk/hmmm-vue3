@@ -9,7 +9,7 @@
           show-trigger
           collapse-mode="width"
           :collapsed-width="64"
-          :width="240"
+          :width="220"
           :native-scrollbar="false"
           :inverted="inverted"
           style="max-height: 100%"
@@ -23,10 +23,17 @@
         </n-layout-sider>
 
             <n-layout-content  style="height: 90vh">
-                <n-space> <n-switch v-model:value="inverted" /> inverted </n-space>
-                {{demoOptions}}
+                <n-space vertical> 
+                <!-- {{demoOptions}}
                 <br>
-                {{demoComposition}} 
+                {{demoComposition}}
+                <br> -->
+                <n-button @click="getUserHmlc">
+                    查询hmlc
+                </n-button>
+
+                {{  hmlc_info   }}
+                </n-space>
             </n-layout-content>
 
       </n-layout>
@@ -38,7 +45,7 @@
 
 
 <script lang="ts" setup>
-import { h, ref, Component } from 'vue'
+import { h, ref, Component, reactive } from 'vue'
 import { NIcon } from 'naive-ui'
 import {
   BookOutline as BookIcon,
@@ -49,46 +56,53 @@ import {
     demoPiniaOptions,
     demoPiniaComposition
 } from '@/store/demo'
+import { useUserStore } from '@/store/user'
 
 const  inverted=ref(true)
 
-const demoOptions=demoPiniaOptions()
-const demoComposition=demoPiniaComposition()
-demoOptions.setState()
-demoComposition.setState()
-console.log(demoOptions);
-console.log(demoComposition);
+// const demoOptions=demoPiniaOptions()
+// const demoComposition=demoPiniaComposition()
+// demoOptions.setState()
+// demoComposition.setState()
+// console.log(demoOptions);
+// console.log(demoComposition);
 
+let hmlc_info=ref()
+const userStore=useUserStore()
+const getUserHmlc=async ()=>{
+    const res=await userStore.USER_GET('hmlc')
+    hmlc_info.value=res.data
+    console.log(hmlc_info);
+}
 
 function renderIcon (icon: Component) {
   return () => h(NIcon, null, { default: () => h(icon) })
 }
 const menuOptions = [
   {
-    label: '且听风吟',
+    label: '个人信息',
     key: 'hear-the-wind-sing',
-    icon: renderIcon(BookIcon)
-  },
-  {
-    label: '1973年的弹珠玩具',
-    key: 'pinball-1973',
     icon: renderIcon(BookIcon),
-    disabled: true,
     children: [
       {
-        label: '鼠',
-        key: 'rat'
+        label: '修改密码',
+        key: 'updatePsw'
       }
     ]
   },
   {
-    label: '寻羊冒险记',
-    key: 'a-wild-sheep-chase',
-    disabled: true,
-    icon: renderIcon(BookIcon)
+    label: '发布管理',
+    key: 'pinball-1973',
+    icon: renderIcon(BookIcon),
+    children: [
+      {
+        label: '我的发布',
+        key: 'myPublish'
+      }
+    ]
   },
   {
-    label: '舞，舞，舞',
+    label: '更多设置',
     key: 'dance-dance-dance',
     icon: renderIcon(BookIcon),
     children: [

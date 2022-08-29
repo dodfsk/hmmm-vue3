@@ -167,9 +167,9 @@ const validateAction=()=>{
 const handleRegister = _.throttle(async() => {
     const params=_.pick(userState, ['username', 'password']);
     const res=await USER_REG(params)
-    const { status, message } = res.data;
+    const { code, message } = res;
 
-    if(status=='200'){
+    if(code==200){
         window.$notification.success({
             title:'success',
             content:message||'注册成功!',

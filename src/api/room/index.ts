@@ -1,6 +1,6 @@
  import request from '@/utils/axios/index'
 
-export  const getRoom=async (id:string)=>{
+export  const getRoom=async (id?:string)=>{
     if (id) {
         return await request({
         url: `/room/${id}`,
@@ -21,7 +21,7 @@ export const setRoom=async(data:object)=>{
     })
 }
 
-export function delRoom(id:string) {
+export const delRoom=async(id:string)=>{
   return request({
     url: `/room/${id}`,
     method: 'delete',

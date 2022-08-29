@@ -1,6 +1,7 @@
 <template>
 <div class="content">
     <div class="header">
+        <n-space>
         <n-carousel autoplay style="width:500px">
             <img
             class="carousel-img"
@@ -21,23 +22,29 @@
         </n-carousel>
 
 
+            <n-button type="primary" @click="roomDraw">
+                发布Room
+            </n-button>
+
+        </n-space>
+
     </div>
 
     <div class="grid">
 
-        <n-card :title="item.title" v-for="item in roomList.data" hoverable>
+        <n-card :title="item.title" v-for="item in roomList" hoverable>
             <template #cover>
                 <img src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg">
             </template>
 
             <div class="box">
-                {{item.value}}
+                {{item.title}}
             </div>
 
             <template #action>
                 <n-space justify="space-around">
 
-                <n-button strong secondary @click="handleShowModal(item.vid)">
+                <n-button strong secondary @click="handleShowModal(item.hid)">
                     <template #icon>
                         <n-icon :component="Search">
                         <cash-icon />
@@ -46,7 +53,7 @@
                     Window
                 </n-button>
 
-                <n-button type="primary" @click="roomEnter(item.vid)">
+                <n-button type="primary" @click="roomEnter(item.hid)">
                     <template #icon>
                         <n-icon :component="ArrowUp">
                         <cash-icon />
@@ -76,11 +83,16 @@
             content: 'soft',
             footer: 'soft'
         }"
+        @after-leave="handleCloseModal"
     >
         <template #header-extra>
         噢!
         </template>
-        内容
+        <QuillEditorDeck
+            theme="bubble"
+            readOnly="true"
+            v-model:content="windowContent"
+        />
         <template #footer>
         尾部
         </template>
@@ -90,29 +102,60 @@
 </template>
 
 <script lang='ts' setup>
-import { ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import {useRouter,useRoute} from 'vue-router'
-import  roomList from "@/assets/json/videoList.json"
 import { Search,ArrowUp } from "@vicons/ionicons5";
+import  QuillEditorDeck  from '@/components/quill-editor/quillEditor.vue' 
+import { useRoomStore } from '@/store/room';
+import { Room } from '@/types/room';
 
 
 const router=useRouter()
 const route=useRoute()
+const roomStore=useRoomStore()
 const showModal=ref(false)
+const windowContent=ref<string>()
+let roomList=ref<Array<Room>>([])
 
-const roomEnter=(vid:string)=>{
+const roomDraw=()=>{
     router.push({
-        path:`/room/${vid}`,
+        path:`/room/draw`,
+    });
+}
+const roomEnter=(hid?:string)=>{
+    router.push({
+        path:`/room/${hid}`,
         // name:'hv',
-        params:{hv:vid},
+        params:{hv:hid},
         // query: mergeProps(route.query, {
         //   detailId: item,
         // }),
     });
 }
-const handleShowModal=(vid:string)=>{
+const handleShowModal=async (hid?:string)=>{
+    router.push({
+        query:{window:hid}
+    })
+    const res=await roomStore.ROOM_SEARCH(hid)
+    windowContent.value=res.data.content
     showModal.value=true
 }
+const handleCloseModal=()=>{
+    router.push({})
+}
+
+const getRoomList=async ()=>{
+    const res=await roomStore.ROOM_SEARCH()
+    const { code }=res
+    if(code==200){
+        roomList.value=res.data.roomList
+    }
+}
+onMounted(() => {
+    getRoomList()
+    console.log(roomList.value);
+    
+})
 </script>
 
 <style lang='less' scoped>

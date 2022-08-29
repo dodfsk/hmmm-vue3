@@ -4,35 +4,32 @@ import { getRoom,setRoom } from "@/api/room"
 // import { toLogin } from '@/utils/auth'
 import { Names } from "@/store/store-name";
 import { reactive,computed,onMounted } from 'vue'
-import { Room } from '@/interface/room';
+import { Room } from '@/types/room';
 
-export const useUserStore = defineStore(Names.USER, ()=>{
+export const useRoomStore = defineStore(Names.ROOM, ()=>{
 
-    
 
-    const ROOM_SEARCH=async(id:string)=> {
-
-        if(id){
-            const res = await getRoom(id)
-            const { data={}, status } = res.data;
+    const ROOM_SEARCH=async(id?:string)=> {
+        const res = await getRoom(id)
+        const { code,data={}  } = res.data;
+        // console.log('userInfo',userInfo);
+        // if (code === 200) {
+            // Object.assign(userInfo,data)
             // console.log('userInfo',userInfo);
-            if (status === '200') {
-                // Object.assign(userInfo,data)
-                // console.log('userInfo',userInfo);
-                //手动存入localStorage方式
-                //转换为字符串存入localStorage
-                // localStorage.setItem('userInfo',JSON.stringify(userInfo))
-            return res
-            }
-       
-        }
+            //手动存入localStorage方式
+            //转换为字符串存入localStorage
+            // localStorage.setItem('userInfo',JSON.stringify(userInfo))
+            return res.data
+        // }
+  
     }
 
     const ROOM_CREATE=async(params:Room)=> {
         const res = await setRoom(params)
-        const { status } = res.data;
-
-        return res
+        const { code,data={} } = res.data;
+        // if (code === 200) {
+            return res.data
+        // }
     }
 
     // const loginSave=(params:userType)=>{
@@ -61,6 +58,7 @@ export const useUserStore = defineStore(Names.USER, ()=>{
 
     return  {
         ROOM_SEARCH,
+        ROOM_CREATE,
     }
   },
   {
@@ -69,7 +67,7 @@ export const useUserStore = defineStore(Names.USER, ()=>{
         strategies:[
             {
                 storage:localStorage,//默认存储在sessionStorage
-                key:`Pinia-${Names.USER}`,//默认为$id
+                key:`Pinia-${Names.ROOM}`,//默认为$id
                 // paths:['name'],//指定存储,默认为全部
             },
             // {

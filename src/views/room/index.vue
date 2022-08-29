@@ -60,7 +60,11 @@
         <template #header-extra>
         噢!
         </template>
-        内容
+        <QuillEditorDeck
+            theme="bubble"
+            :readOnly="true"
+            content="windows"
+        />
         <template #footer>
         尾部
         </template>
@@ -74,6 +78,7 @@ import { ref } from 'vue'
 import {useRouter,useRoute} from 'vue-router'
 import  roomList from "@/assets/json/videoList.json"
 import { Search,ArrowUp } from "@vicons/ionicons5";
+import  QuillEditorDeck  from '@/components/quill-editor/quillEditor.vue' 
 
 const router=useRouter()
 const route=useRoute()
@@ -92,6 +97,9 @@ const roomEnter=(vid:string)=>{
     });
 }
 const handleShowModal=(vid:string)=>{
+    router.push({
+        query:{vid}
+    })
     showModal.value=true
 }
 </script>

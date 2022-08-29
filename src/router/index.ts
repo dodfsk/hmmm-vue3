@@ -36,6 +36,14 @@ const routes: Array<RouteRecordRaw> = [
 		},
 		component: () => import('@/views/room/hv.vue'),
 	},
+    {
+		path: '/room/draw',
+		name: 'room_draw',
+		meta: {
+			title: 'room',
+		},
+		component: () => import('@/views/room/draw.vue'),
+	},
 	{
 		path: '/search',
 		name: 'search',
@@ -104,7 +112,10 @@ const router = createRouter({
 NProgress.configure({ showSpinner: false });
 //路由前置守卫
 router.beforeEach(async (_to, _from, next) => {
-	NProgress.start(); //开启进度条
+    // console.log('_to, _from, next',_to, _from, next);
+    if(JSON.stringify(_to.query)=='{}'&&JSON.stringify(_from.query)=='{}'){
+	    NProgress.start(); //开启进度条
+    }
 	next(); //中间写其他的项目中所需要的一些代码，例如有些网页只有登录了才能进，在这里可以做出判断，判断完了满足要求后就可以放行
 });
 

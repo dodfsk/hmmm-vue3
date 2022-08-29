@@ -1,23 +1,7 @@
 import request from '@/utils/axios/index'
 import { User } from '@/types/user'
 
-export async function hello(params = {}) {
-    return await request({
-      url: '/user/hello',
-      method: 'get',
-      params
-    })
-  }
-
-export async function helloP(data = {}) {
-return await request({
-    url: '/user/helloP',
-    method: 'post',
-    data
-})
-}
-
-export async function login(data = {}) {
+export  const login=async (data = {})=>{
 return await request({
     url: '/user/login',
     method: 'post',
@@ -25,7 +9,7 @@ return await request({
 })
 }
 
-export async function register(data = {}) {
+export  const register=async (data = {})=>{
 return await request({
     url: '/user/register',
     method: 'post',
@@ -33,7 +17,7 @@ return await request({
 })
 }
 
-export function getUser(id:string) {
+export const getUser=async (id:string)=>{
   if (id) {
     return request({
       url: `/user/${id}`,
@@ -46,7 +30,7 @@ export function getUser(id:string) {
   })
 }
 
-export function setUser(data:User) {
+export const setUser=async (data:User)=>{
     return request({
       url: `/user/${data.username}`,
       method: 'patch',
@@ -54,7 +38,7 @@ export function setUser(data:User) {
     })
 }
 
-export function delUser(data:User) {
+export const delUser=async (data:User)=>{
     return request({
       url: `/user/${data.username}`,
       method: 'delete',
