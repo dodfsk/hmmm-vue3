@@ -1,0 +1,38 @@
+/**
+* animation-keyframes属性浏览器兼容性
+*  @prefix,//内核类型
+    @name,//动画名
+    @content,//动画内容
+
+*  #入口示例
+    .keyframes (all,widthChange,{
+        from {width:0px;}
+        to {width:100%;}
+    })
+*/
+.keyframes (@prefix,@name,@content) when (@prefix=default) {
+	@keyframes @name {
+		@content();
+	}
+}
+.keyframes (@prefix,@name,@content) when (@prefix=moz) {
+	@-moz-keyframes @name {
+		@content();
+	}
+}
+.keyframes (@prefix,@name,@content) when (@prefix=o) {
+	@-o-keyframes @name {
+		@content();
+	}
+}
+.keyframes (@prefix,@name,@content) when (@prefix=webkit) {
+	@-webkit-keyframes @name {
+		@content();
+	}
+}
+.keyframes (@prefix,@name,@content) when (@prefix=all) {
+	.keyframes(moz,@name,@content);
+	.keyframes(o,@name,@content);
+	.keyframes(webkit,@name,@content);
+	.keyframes(default,@name,@content);
+}

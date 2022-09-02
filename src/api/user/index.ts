@@ -31,8 +31,9 @@ export const getUser=async (id:string)=>{
 }
 
 export const setUser=async (data:User)=>{
+    const { username } = data
     return request({
-      url: `/user/${data.username}`,
+      url: `/user/${username}`,
       method: 'patch',
       data,
     })

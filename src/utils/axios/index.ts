@@ -5,6 +5,7 @@ import { Response } from '@/types/axios';
 import { getToken, TOKEN_PREFIX } from '@/utils/auth';
 import { useNotification, useMessage } from 'naive-ui';
 import { defineComponent } from 'vue';
+import { useUserStore } from '@/store/user';
 
 //全局默认设置
 axios.defaults.timeout = 15000; // 如果请求超时，请求将被中断
@@ -15,6 +16,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 
 const Nmessage = useMessage();
 const Nnotification = useNotification();
+
 //创建axios实例
 const instance: AxiosInstance = axios.create({
 	baseURL: apiUrl,
@@ -68,37 +70,43 @@ instance.interceptors.response.use(
 				title: 'error',
 				content: message || '',
 				meta: meta || '',
-				duration: 3000,
+				duration: 2000,
 			});
-		}else{
-            window.$notification.success({
+			if (code == 401 || code == 403) {
+                const userStore=useUserStore()
+				userStore.logOut();
+			}
+		} else {
+			window.$notification.success({
 				title: 'success',
 				content: message || '',
 				meta: meta || '',
 				duration: 1000,
 			});
-        }
+		}
 		return response;
 	},
 	// 对响应错误做点什么↓
 	(error: any) => {
-		const { data = {}, code, meta, message } = error.response.data;
 		console.log('error', error);
-		    if (error.response.status !== 200) {
-            // if (error.code == 'ERR_NETWORK') {
+		if (error.response.status !== 200) {
+			// if (error.code == 'ERR_NETWORK') {
 			window.$notification.warning({
 				title: 'warning',
 				content: '接口请求失败',
 				meta: '请检查服务器状态',
-				duration: 3000,
+				duration: 2000,
 			});
-		} else if (code !== 200) {
+			return Promise.reject(error);
+		}
+		const { data = {}, code, meta, message } = error.response.data;
+		if (code !== 200) {
 			// 请求已发出，但是不在2xx的范围
 			window.$notification.error({
 				title: 'error',
 				content: message || '',
 				meta: meta || '',
-				duration: 3000,
+				duration: 2000,
 			});
 		}
 		return Promise.reject(data);

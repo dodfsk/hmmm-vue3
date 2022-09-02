@@ -1,6 +1,6 @@
 <template>
-	<div class="hello">
-		<n-space vertical size="large">
+	<div class="container">
+		<n-space vertical size="large" class="hello">
 
 			<h1>Hello World</h1>
 
@@ -24,13 +24,20 @@ const aref = () => {
 </script>
 
 <style lang="less"  scoped>
-.hello {
+@import '@/views/root.less';
+.container {
+    // min-height: calc(100vh - 42px);
 	height: 100%;
-    min-height: 80vh;
+    // margin-bottom:auto;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	background: url("@/assets/images/login_bg.jpg") repeat;
     
+}
+.hello{
+	height: 100%;
+
 }
 
 </style>

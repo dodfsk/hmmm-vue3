@@ -1,5 +1,5 @@
 <template>
-	<div class="content">
+	<div class="container">
 		<div class="box">
 			<n-skeleton />
 			<n-card class="n-card-login" title="登录面板">
@@ -92,7 +92,7 @@ const validateAction=()=>{
 const handleLogin = _.throttle(async() => {
     // const res=await login(userState)
     const res=await USER_LOGIN(userState)
-    const { code,message,meta } = res;
+    const { code,message,meta } = res.data
     if(code==200){
         // window.$notification.success({
         //     title:'success',
@@ -124,8 +124,9 @@ const handleReg = () => {
 </script>
 
 <style lang="less" scoped>
-.content {
-	height: 90vh;    
+@import '@/views/root.less';
+.container {
+	height: 100%;    
 	text-align: center;
 	display: flex;
 	justify-content: center;
@@ -135,10 +136,11 @@ const handleReg = () => {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 90vw;
-	height: 90vh;
+	width: calc(100vw - 100px);
+	height: calc(100vh - 100px);
     min-width: 600px;
     min-height: 400px;
+    overflow-x: auto;
 	// background-color: rgba(100, 148, 237, 0.4);
 	border-radius: 3px;
 	box-shadow: 0 0 5px rgba(51, 51, 51, 0.721);
@@ -161,11 +163,25 @@ const handleReg = () => {
 	}
 }
 .n-skeleton {
-	height: 350px;
+	min-height: 350px;
+	min-width: 600px;
 	width: 600px;
-	border-right: 1px solid #888;
+	// border-right: 1px solid #888;
 	border-radius: 7px 0 0 7px;
 }
+@media screen and (max-width:900px){
+    .n-card-login {
+		width: 350px;
+		height: 350px;
+        min-width: 350px;
+		min-height: 350px;
+		border-radius: 7px;
+	}
+    .n-skeleton{
+        display:none; 
+    }
+}
+
 .n-button {
 	width: 90px;
 }

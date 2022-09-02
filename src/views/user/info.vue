@@ -1,8 +1,6 @@
 <template>
-  <n-space vertical>
-
+  <n-space vertical class="container">
     <n-layout>
-
       <n-layout has-sider>
         <n-layout-sider
           bordered
@@ -71,7 +69,8 @@ let hmlc_info=ref()
 const userStore=useUserStore()
 const getUserHmlc=async ()=>{
     const res=await userStore.USER_GET('hmlc')
-    hmlc_info.value=res.data
+    const { code,message,meta,data={} } = res.data
+    hmlc_info.value=data
     console.log(hmlc_info);
 }
 
@@ -154,5 +153,8 @@ const menuOptions = [
 </script>   
 
 <style lang="less" scoped>
-
+@import '@/views/root.less';
+.container{
+    height: 100%;
+}
 </style>

@@ -1,30 +1,36 @@
 <template>
-<div class="content">
+<div class="container">
     <div class="header">
-        <n-space>
-        <n-carousel autoplay style="width:500px">
-            <img
-            class="carousel-img"
-            src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg"
-            >
-            <img
-            class="carousel-img"
-            src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel2.jpeg"
-            >
-            <img
-            class="carousel-img"
-            src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel3.jpeg"
-            >
-            <img
-            class="carousel-img"
-            src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel4.jpeg"
-            >
-        </n-carousel>
-
-
+        <n-space justify="start" style="width: 1000px">
             <n-button type="primary" @click="roomDraw">
-                发布Room
+                绘制Room
             </n-button>
+            
+            
+            <n-carousel autoplay style="width:500px">
+                <img
+                class="carousel-img"
+                src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg"
+                >
+                <img
+                class="carousel-img"
+                src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel2.jpeg"
+                >
+                <img
+                class="carousel-img"
+                src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel3.jpeg"
+                >
+                <img
+                class="carousel-img"
+                src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel4.jpeg"
+                >
+            </n-carousel>
+
+            <n-card  v-for="(item,index)  in coinList" :key="index" class="coinBar" hoverable>
+                <h2>{{index}}</h2>
+                <div>CNY:{{item?.CNY}}</div>
+                <div>USD:{{item?.USD}}</div>
+            </n-card>
 
         </n-space>
 
@@ -38,7 +44,7 @@
             </template>
 
             <div class="box">
-                {{item.title}}
+                {{item.destription}}
             </div>
 
             <template #action>
@@ -73,10 +79,9 @@
 
     <n-modal
         v-model:show="showModal"
-        class="custom-card"
         preset="card"
         :style="{ width: '600px'}"
-        title="卡片预设"
+        title="视窗模式"
         size="huge"
         :bordered="false"
         :segmented="{
@@ -86,15 +91,16 @@
         @after-leave="handleCloseModal"
     >
         <template #header-extra>
-        噢!
+        
         </template>
         <QuillEditorDeck
             theme="bubble"
             readOnly="true"
+            :scrollingContainer="true"
             v-model:content="windowContent"
         />
         <template #footer>
-        尾部
+        点赞---点踩    
         </template>
     </n-modal>
 
@@ -105,17 +111,29 @@
 import { onMounted, reactive, ref } from 'vue'
 import {useRouter,useRoute} from 'vue-router'
 import { Search,ArrowUp } from "@vicons/ionicons5";
-import  QuillEditorDeck  from '@/components/quill-editor/quillEditor.vue' 
+import  QuillEditorDeck  from '@/components/rich-editor/quillEditor.vue' 
 import { useRoomStore } from '@/store/room';
 import { Room } from '@/types/room';
-
+import { api } from '@/api/common/coin';
+import axios from 'axios';
+import videoList from '@/assets/json/videoList.json'
 
 const router=useRouter()
 const route=useRoute()
 const roomStore=useRoomStore()
 const showModal=ref(false)
 const windowContent=ref<string>()
-let roomList=ref<Array<Room>>([])
+let roomList=ref<Array<Room>>(videoList.data)
+    
+type price={
+    CNY:string
+    USD:string
+}
+type CoinList={
+    BTC?:price
+    ETH?:price
+}
+let coinList=ref<CoinList>({})
 
 const roomDraw=()=>{
     router.push({
@@ -125,8 +143,8 @@ const roomDraw=()=>{
 const roomEnter=(hid?:string)=>{
     router.push({
         path:`/room/${hid}`,
-        // name:'hv',
-        params:{hv:hid},
+        // name:'id',
+        // params:{id:hid},
         // query: mergeProps(route.query, {
         //   detailId: item,
         // }),
@@ -136,8 +154,9 @@ const handleShowModal=async (hid?:string)=>{
     router.push({
         query:{window:hid}
     })
-    const res=await roomStore.ROOM_SEARCH(hid)
-    windowContent.value=res.data.content
+    const res=await roomStore.ROOM_GET(hid)
+    const { code,data={} } = res.data
+    windowContent.value=data.content
     showModal.value=true
 }
 const handleCloseModal=()=>{
@@ -145,25 +164,35 @@ const handleCloseModal=()=>{
 }
 
 const getRoomList=async ()=>{
-    const res=await roomStore.ROOM_SEARCH()
-    const { code }=res
-    if(code==200){
-        roomList.value=res.data.roomList
+    const res=await roomStore.ROOM_GET()
+    const { code,data={} } = res.data
+    if(res.status==200){
+        roomList.value=data.roomList
+        console.log('roomList',roomList.value,res.data.roomList);
+        
+    }
+}
+
+const getCoinList=async ()=>{
+    const res=await axios.get(api)
+    if(res.status==200){
+        coinList.value=res.data
     }
 }
 onMounted(() => {
     getRoomList()
-    console.log(roomList.value);
+    getCoinList()
     
 })
 </script>
 
 <style lang='less' scoped>
-.content{
-    width:90vw;
-    // height: 100%;
+.container{
+    width:90%;
+    height: 100%;
     // background-color: #ccc;
     margin:0 auto;
+    padding: 10px;
     // display: flex;
     // justify-content: center;
 	// align-items: center;
@@ -210,4 +239,12 @@ onMounted(() => {
         padding:5px;
     }
 }
+.coinBar{
+    height: 150px;
+    text-align: left;
+    div{
+        padding: 3px;
+    }
+}
+
 </style>

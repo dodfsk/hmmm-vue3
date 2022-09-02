@@ -1,0 +1,47 @@
+/**
+*   custom scrollbar
+*   批量修改容器的滚动条样式
+*   
+*   @x:.ql-toolbar.ql-snow;     #class无双引号
+*   @y:.ql-editor;
+*   @class:@x,@y;       #逗号隔开
+*   .scrollbar-to(@class);      #入口
+*/
+
+.scrollbar-to(@class){
+each(@class,{
+    @{value}{
+        cursor: default;
+        * {
+            cursor: text;
+        }
+        &::-webkit-scrollbar {
+            width: 14px;
+            height: 14px;
+            pointer-events: auto;
+        }
+        &::-webkit-scrollbar-thumb:hover {
+            cursor: pointer;
+            background-color: #666;
+        }
+        &::-webkit-scrollbar-track {
+            box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2) inset;
+        }
+        &::-webkit-scrollbar-track,
+        &::-webkit-scrollbar-thumb {
+            cursor: pointer;
+            border-radius: 999px;
+            border: 5px solid transparent;
+        }
+        &::-webkit-scrollbar-thumb {
+            min-height: 20px;
+            background-clip: content-box;
+            box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.2) inset;
+        }
+        &::-webkit-scrollbar-corner {
+            background: transparent;
+        }
+    }
+})
+}
+

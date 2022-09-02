@@ -1,33 +1,49 @@
 <template>
-	<div class="content">
-		<n-card class="box">
+	<div class="container">
+		<n-card class="content">
 			<template #header>
 				<div style="text-align: left">#绘制房间</div>
+                <div class="content-header">
+                    <n-input-group class="input-group">
+                            <n-input placeholder="请输入标题" v-model:value="title"  class="title" autofocus/>
+                            <n-input 
+                            placeholder="请输入描述" 
+                            v-model:value="destription" 
+                            :class="animationFlag?'destription-enabled':'destription'" 
+                            />
+                            <!-- @animationend="animationFlag=false" -->
+                            
+                    </n-input-group>
 
-				<n-input 
-                    placeholder="请输入标题" 
-                    v-model:value="roomTitle"
-                />
-			</template>
+                    <n-button-group>
+                            <n-button type="primary"  @click="handleAnimation">添加描述</n-button>
+                            <n-button type="info"  @click="handleCover"> 上传封面</n-button>
+                    </n-button-group>
+                </div>
+            </template>
 
-			<quill-editor-deck 
-                ref="quillEditorRef" 
-                v-model:content="quillContent" 
-                @textChange="quillChange()" 
-                @ready="quillReady" 
-            />
-			<!-- <video 
-                    src="@/assets/video/test.mp4"
-                    class="item"
-                    width="640" 
-                    height="480"
-                ></video> -->
-
+			<div class="edit_box">
+				<quill-editor-deck
+					v-if="editSwitch"
+					ref="quillEditorRef"
+					v-model:content="content"
+					@ready="quillReady"
+				/>
+				<!-- <video 
+                        src="@/assets/video/test.mp4"
+                        class="item"
+                        width="640" 
+                        height="480"
+                    ></video> -->
+				<tip-tap-editor v-if="!editSwitch" v-model="content"> 
+                
+                </tip-tap-editor>
+			</div>
 			<template #footer>
-				<n-space justify="end">
-					<n-button> 保存 </n-button>
+				<n-space justify="end" class="footer">
+					<n-button @click="handleSwitch"> 切 换 </n-button>
 
-					<n-button type="primary" @click="handlePush"> 发布 </n-button>
+					<n-button type="primary" @click="handlePush"> 发 布 </n-button>
 				</n-space>
 			</template>
 		</n-card>
@@ -36,72 +52,158 @@
 
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
-import QuillEditorDeck, { DefineExpose } from '@/components/quill-editor/quillEditor.vue';
-import { onMounted, provide, ref } from 'vue';
+import QuillEditorDeck, { DefineExpose } from '@/components/rich-editor/quillEditor.vue';
+import tipTapEditor from '@/components/rich-editor/tipTapEditor.vue';
+import { onMounted, provide, reactive, ref, toRefs, watch } from 'vue';
 import { Room } from '@/types/room';
-import { useRoomStore } from '@/store/room'
+import { useRoomStore } from '@/store/room';
 
 const route = useRoute();
 const router = useRouter();
-const roomStore=useRoomStore()
-console.log('route.params.hv', route.params.hv);
-// let quillEditorRef = ref();
-const quillEditorRef = ref<DefineExpose | undefined>();
+const roomStore = useRoomStore();
+console.log('route.params.id', route.params.id);
 
-const roomTitle = ref<string>('');
-const quillContent = ref<string>('');
-let quill: DefineExpose['quillEditorRef'] | undefined;
+const quillEditorRef = ref<DefineExpose | undefined>();
+let quill: DefineExpose['quill'] | undefined;
+let editSwitch = ref<boolean>(true);
+const animationFlag=ref(false)
+
+let roomState = reactive<Room>({
+	hid: undefined,
+	title: '',
+    destription:'',
+	content: '',
+});
+const { title,destription, content } = toRefs(roomState);
 
 onMounted(() => {
-	quill = quillEditorRef.value?.quillEditorRef;
-	console.log('quillEditorRef', quillEditorRef);
-	console.log('quillEditorRef.value...', quillEditorRef.value);
+	quill = quillEditorRef.value?.quill;
+	// console.log('quillEditorRef', quillEditorRef);
+	// console.log('quillEditorRef.value...', quillEditorRef.value);
 	// console.log('a=>',quillEditorInstance?.setHTML(
-	//     String(route.params.hv)
+	//     String(route.params.id)
 	// ));
 });
-const quillChange = () => {
-	console.log(quillContent.value);
-};
+// const contentChange = () => {
+// 	console.log(content.value);
+// };
 const quillReady = () => {
 	console.log('quill-editor is ready');
 };
-const handlePush =async () => {
-	if (quill?.getContents() != undefined) {
-		const room: Room = {
-			title: roomTitle.value,
-			content: quill?.getContents(),
-		};
-		console.log('room', room);
-        const res=await roomStore.ROOM_CREATE(room)
-        const { code,data={} }=res
-        if(code==200){
-            router.push({
-                path:`/room/${data.hid}`,
-            })
-        }
+const handleSwitch = () => {
+	editSwitch.value = !editSwitch.value;
+};
+
+const handlePush = async () => {
+    roomState.content=quill?.getHTML()//重新获取HTML
+	if (roomState.content) {
+		// const room: Room = {
+		// 	title: roomState.title,
+		// 	content: roomState.content,
+		// };
+		// console.log('room', room);
+		const res = await roomStore.ROOM_SET(roomState);
+		const { code, data = {} } = res.data;
+		if (code == 200) {
+			router.push({
+				path: `/room/${data.hid}`,
+			});
+		}
 	}
 };
+const handleAnimation=()=>{
+    animationFlag.value=!animationFlag.value
+}
+const handleCover=async ()=>{
+
+}
+
+const getRoomDetail = async (id: string) => {
+	const res = await roomStore.ROOM_GET(id);
+	const { code, data = {} } = res.data;
+	if (code == 200) {
+		// roomState={...(res?.data)}
+		// console.log(roomState);
+		// roomState.title=data.title
+		// roomState.content=data.content
+		// roomState.hid=data.hid
+		Object.assign(roomState, data);
+		quill?.setHTML(roomState.content);
+		// loading.value=false
+	}
+};
+
+watch(
+	() => roomState.content,
+	() => {
+		console.log('content', roomState.content);
+	}
+	// { immediate:true,deep:true}
+);
+watch(
+	() => route.query,
+	() => {
+		if (route.query.id) {
+			getRoomDetail(route.query.id as string);
+		}
+	},
+	{ immediate: true, deep: true }
+);
 </script>
 
 <style lang="less" scoped>
-.content {
-	width: 95%;
-	height: 90vh;
+@import '@/views/root.less';
+@import '@/utils/less/animation.less';
+
+.container {
+	width: 100%;
+    height: 100%;
+	// min-height: 100%;
 	// background-color: #ccc;
 	margin: 0 auto;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
-.box {
-	width: 80%;
+.content {
+	width: 90%;
+	height: 90%;
+	min-height: 500px;
+}
+.content-header{
+    display: flex;
+    justify-content: space-between;
+    // .title{
+    //     // min-width:20px;
+    // //    width: 800px;1
+    // //    width:100%;
+    // }
+    .destription{
+        display: none;
+        width: 0px;
+    }
+    .destription-enabled{
+        animation: widthChange 0.9s ease-out;
+    }
+    .keyframes (all,widthChange,{
+        from {width:0px;}
+        to {width:100%;}
+    })
+
+}
+.input-group{
+    justify-content: space-between;
+}
+.edit_box {
+	height: 500px;
+	// border: 1px solid #888;
+	// border-radius: 7px 0 0 7px;
+}
+.footer {
+	margin-top: 10px;
 }
 
-.n-skeleton {
-	height: 350px;
-	width: 600px;
-	border-right: 1px solid #888;
-	border-radius: 7px 0 0 7px;
+.n-button {
+	width: 90px;
 }
 </style>

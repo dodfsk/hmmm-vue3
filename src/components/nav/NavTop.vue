@@ -9,7 +9,7 @@
 
 
 		        <n-input 
-                    class="nav-search" 
+                    class="search" 
                     size="small" 
                     v-model:value="searchValue"
                     placeholder="输入搜索"
@@ -184,22 +184,22 @@ const handleLogOut=()=>{
 
 <style lang="less" scoped>
 .nav {
-	width: 100%;
-    height:42px;
+	// width: 100%;
+    // height:100%;
     padding:0  20px;
-	background-color: #fff;
+	background-color: rgba(255, 255, 255, 0.7);
 	box-shadow: 0 0 5px rgba(51, 51, 51, 0.721);
-	position: fixed;
+	// position: fixed;
+    // position:sticky;
+    // position:-webkit-sticky;
     // overflow:hidden;
-	top: 0;
-	left: 0;
-	z-index: 100;
+	// top: 42;
+	// left: 0;
+    // right:0;
     // margin-bottom: 20px;
 	display: flex;
 	// justify-content: start;
-	&-search {
-		width: 300px;
-	}
+	
     &-left{
         display: flex;
         justify-content: left;
@@ -208,6 +208,9 @@ const handleLogOut=()=>{
         display: flex;
         justify-content: center;
         align-items: center;
+        .search {
+		width: 300px;
+	    }
     }
     &-right{
         display: flex;

@@ -11,13 +11,13 @@
             </template>
 
             <div class="box">
-                {{item.value}}
+                {{item.destription}}
             </div>
 
             <template #action>
                 <n-space justify="space-around">
 
-                <n-button strong secondary @click="handleShowModal(item.vid)">
+                <n-button strong secondary @click="handleShowModal(item.hid)">
                     <template #icon>
                         <n-icon :component="Search">
                         <cash-icon />
@@ -26,7 +26,7 @@
                     Window
                 </n-button>
 
-                <n-button type="primary" @click="roomEnter(item.vid)">
+                <n-button type="primary" @click="roomEnter(item.hid)">
                     <template #icon>
                         <n-icon :component="ArrowUp">
                         <cash-icon />
@@ -78,7 +78,7 @@ import { ref } from 'vue'
 import {useRouter,useRoute} from 'vue-router'
 import  roomList from "@/assets/json/videoList.json"
 import { Search,ArrowUp } from "@vicons/ionicons5";
-import  QuillEditorDeck  from '@/components/quill-editor/quillEditor.vue' 
+import  QuillEditorDeck  from '@/components/rich-editor/quillEditor.vue' 
 
 const router=useRouter()
 const route=useRoute()
@@ -86,19 +86,19 @@ const showModal=ref(false)
 
 
 
-const roomEnter=(vid:string)=>{
+const roomEnter=(hid:string)=>{
     router.push({
-        path:`/room/${vid}`,
+        path:`/room/${hid}`,
         // name:'hv',
-        params:{hv:vid},
+        params:{id:hid},
         // query: mergeProps(route.query, {
         //   detailId: item,
         // }),
     });
 }
-const handleShowModal=(vid:string)=>{
+const handleShowModal=(hid:string)=>{
     router.push({
-        query:{vid}
+        query:{hid}
     })
     showModal.value=true
 }

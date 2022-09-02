@@ -10,6 +10,7 @@
 <script setup lang="ts">
 import AppProvider from '@/components/global/AppProvider.vue'
 import Root from '@/views/Root.vue'
+
 /**主title */
 document.title='hmmm'
 
@@ -24,7 +25,7 @@ document.title='hmmm'
 html,body,#app{
 	height: 100%;
     // overflow: hidden;
-    overflow-y: overlay;
+    // overflow-y: overlay;
     .n-config-provider {
     height: inherit;
     }

@@ -1,5 +1,5 @@
 <template>
-	<div class="content">
+	<div class="container">
 		<div class="box">
 			<n-card class="n-card-login" title="注册面板">
 				<n-form ref="formRef" :model="userState" :rules="rules">
@@ -167,7 +167,7 @@ const validateAction=()=>{
 const handleRegister = _.throttle(async() => {
     const params=_.pick(userState, ['username', 'password']);
     const res=await USER_REG(params)
-    const { code, message } = res;
+    const { code, message } = res.data
 
     if(code==200){
         window.$notification.success({
@@ -195,8 +195,9 @@ const handleBack=()=>{
 </script>
 
 <style lang="less" scoped>
-.content {
-	height: 90vh;
+@import '@/views/root.less';
+.container {
+	height: 100%;
 	text-align: center;
 	display: flex;
 	justify-content: center;

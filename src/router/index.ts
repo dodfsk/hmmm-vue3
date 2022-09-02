@@ -29,7 +29,7 @@ const routes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
-		path: '/room/:hv',
+		path: '/room/:id',
 		name: 'hv',
 		meta: {
 			title: 'room',

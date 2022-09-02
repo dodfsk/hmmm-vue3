@@ -7,6 +7,8 @@ import { fileURLToPath, URL } from 'url';
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers';
+import  injectPlugin from '@rollup/plugin-inject'
+// const inject =require('@rollup/plugin-inject')
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -23,6 +25,9 @@ export default defineConfig({
 		Components({
 			resolvers: [NaiveUiResolver()], // unplugin-auto-import自动引入
 		}),
+        injectPlugin({
+            'window.Quill': ['@vueup/vue-quill', 'Quill']
+        })
 	],
 	resolve: {
 		alias: {
