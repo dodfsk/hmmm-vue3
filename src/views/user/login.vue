@@ -126,11 +126,13 @@ const handleReg = () => {
 <style lang="less" scoped>
 @import '@/views/root.less';
 .container {
-	height: 100%;    
+	height: 100%;
+    // width:100%;
 	text-align: center;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	background: url("@/assets/images/login_bg.jpg") repeat;
 }
 .box {
 	display: flex;
@@ -138,7 +140,7 @@ const handleReg = () => {
 	align-items: center;
 	width: calc(100vw - 100px);
 	height: calc(100vh - 100px);
-    min-width: 600px;
+    min-width: 350px;
     min-height: 400px;
     overflow-x: auto;
 	// background-color: rgba(100, 148, 237, 0.4);

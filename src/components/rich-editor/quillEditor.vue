@@ -1,14 +1,16 @@
 <template>
-	<QuillEditor ref="quill" v-bind="$attrs" :contentType="contentType" :options="editorOption">
-		<!-- <template #[slotName]="slotProps" v-for="(slot, slotName) in $slots" >
-        <slot :name="slotName" v-bind="slotProps"></slot>
-    </template> -->
-		<!-- :content="content" -->
+    <div class="contianer">
+        <QuillEditor ref="quill" v-bind="$attrs" :contentType="contentType" :options="editorOption">
+            <!-- <template #[slotName]="slotProps" v-for="(slot, slotName) in $slots" >
+            <slot :name="slotName" v-bind="slotProps"></slot>
+        </template> -->
+            <!-- :content="content" -->
 
-		<template #toolbar class="my-toolbar">
-			<div class="my-toolbar"></div>
-		</template>
-	</QuillEditor>
+            <template #toolbar class="my-toolbar">
+                <div class="my-toolbar"></div>
+            </template>
+        </QuillEditor>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -57,29 +59,47 @@ Quill.register('modules/resize', ResizeModule);
 //     }
 // }
 // const Syntax=Quill.import('modules/syntax')
-
 const toolbarOptions = [
 	[
 		// { 'font': [] },{ 'size': ['small', false, 'large', 'huge'] },
 		{ header: [1, 2, 3, false] },
-	], //下拉选择
-	[
 		{ color: [] },
 		{ background: [] }, // 文字颜色  背景颜色
 		'bold',
 		'italic',
 		'underline',
 		'strike',
-	], // 切换按钮
-	[{ list: 'ordered' }, { list: 'bullet' }, 'code-block', 'blockquote'], //  代码块,引用
-	['image', 'video', 'link'], // 图片 视频  超链接
+	{ list: 'ordered' }, { list: 'bullet' }, 'code-block', 'blockquote', //  代码块,引用
+	'image', 'video', 'link', // 图片 视频  超链接
 
-	[{ align: [] }, { direction: 'rtl' }], // 列表    对齐方式    文本方向
+	{ align: [] }, { direction: 'rtl' }, // 列表    对齐方式    文本方向
 
-	[{ indent: '-1' }, { indent: '+1' }], // outdent/indent
-	['clean'], // remove formatting button
+	{ indent: '-1' }, { indent: '+1' }, // outdent/indent
+	'clean'], // remove formatting button
 	//   [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
 ];
+// const toolbarOptions = [
+// 	[
+// 		// { 'font': [] },{ 'size': ['small', false, 'large', 'huge'] },
+// 		{ header: [1, 2, 3, false] },
+// 	], //下拉选择
+// 	[
+// 		{ color: [] },
+// 		{ background: [] }, // 文字颜色  背景颜色
+// 		'bold',
+// 		'italic',
+// 		'underline',
+// 		'strike',
+// 	], // 切换按钮
+// 	[{ list: 'ordered' }, { list: 'bullet' }, 'code-block', 'blockquote'], //  代码块,引用
+// 	['image', 'video', 'link'], // 图片 视频  超链接
+
+// 	[{ align: [] }, { direction: 'rtl' }], // 列表    对齐方式    文本方向
+
+// 	[{ indent: '-1' }, { indent: '+1' }], // outdent/indent
+// 	['clean'], // remove formatting button
+// 	//   [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+// ];
 // // 自定义字体
 // let fontList = ['SimSun', 'SimHei', 'Microsoft-YaHei', 'KaiTi', 'FangSong']
 // Quill.import('formats/font').whitelist = fontList; //将字体加入到白名单
@@ -149,7 +169,9 @@ const addQuillTitle = () => {
 		item.parentNode.title = titleConfig[item.classList[0]];
 	});
 };
-
+const cls=ref()
+let toolbar:any
+let option:any
 onMounted(() => {
 	// console.log('useAttrs',useAttrs());
 	// console.log('useSlots',useSlots());
@@ -158,6 +180,23 @@ onMounted(() => {
 	//     console.log(emits('update:content',content.value))
 	// ,1000)
 	// addQuillTitle()
+    let options=document.querySelectorAll('.ql-picker-options')
+    toolbar=document.querySelector('.ql-toolbar.ql-snow')
+    let div = document.createElement('div')
+    // div.style.overflowY="visible"
+    // div.style.overflowX="auto"
+    // format?.parentNode?.insertBefore(div, format)
+    setTimeout(()=>
+    options.forEach((item,index)=>{
+            console.log(item);
+            console.log(toolbar);
+            cls.value=item.scrollHeight
+
+            if(toolbar){
+                // toolbar.setAttribute('style','overflow-x:clip')
+            }
+    })
+    ,2000)
 });
 
 // const quillChange=()=>{
@@ -197,6 +236,17 @@ onMounted(() => {
 //     // {immediate:true,deep:true}
 // );
 
+
+watch(
+	() => quill.value?.getToolbar().clientHeight,
+	() => {
+		console.log('cls',quill.value?.getToolbar().scrollHeight);
+        if(null){
+            quill.value?.getToolbar().setAttribute('style','overflow-x:clip')
+        }
+	},
+	{ immediate:true,deep:true}
+);
 defineExpose({
 	quill,
 });
@@ -206,26 +256,40 @@ defineExpose({
 
 <style lang="less">
 @import '@/utils/less/scrollbar.less';
-@x:.ql-toolbar.ql-snow;
-@y:.ql-editor;
-@class:@x,@y;
+@editor:.ql-editor;
+@toolbar:.ql-toolbar.ql-snow;
+@class:@editor;
 .scrollbar-to(@class);
 
 // p {
 //   margin: 10px;
 // }
 
+.contianer{
+    height: 100%;
+}
+
 .ql-toolbar.ql-snow {
 	text-align: left !important;
+    display: flex;
 	white-space: nowrap;
-	overflow-x: auto;
+    max-height:65px;
+    // overflow: clip;
+	// overflow-y:visible;     
+    // height:auto;
 }
+
 .ql-container.ql-snow {
-	min-height: 300px;
-	height: calc(100% - 30px);
-	.ql-editor {
-		min-height: 300px;
-	}
+	// min-height: 300px;
+	// height: calc(100% - 45px);
+	max-height: 450px;
+	// .ql-editor {
+	// 	min-height: 300px;
+	// }
+}
+.ql-editor{
+	overflow: auto;
+	overflow: overlay;
 }
 // .ql-container.ql-bubble{
 //     min-height: 300px;
@@ -291,12 +355,6 @@ defineExpose({
     } */
 
 
-// .ql-editor{
-//     cursor: default;
-// 	* {
-// 		cursor: text;
-// 	}
-// }
 // .ql-editor::-webkit-scrollbar,
 // .ql-toolbar.ql-snow::-webkit-scrollbar {
 // 	width: 14px;

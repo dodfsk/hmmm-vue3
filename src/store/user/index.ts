@@ -40,7 +40,7 @@ export const useUserStore = defineStore(
 			// }
 			return res;
 		};
-		const USER_UPDATE = async (params: User) => {
+		const USER_SET = async (params: User) => {
 			const res = await setUser(params);
 			const { code } = res.data;
 
@@ -99,7 +99,7 @@ export const useUserStore = defineStore(
 			userInfo,
 			USER_LOGIN,
 			USER_REG,
-			USER_UPDATE,
+			USER_SET,
 			USER_DEL,
 			USER_GET,
 			logOut,

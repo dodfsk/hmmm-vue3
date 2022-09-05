@@ -1,18 +1,16 @@
+import {Comment} from '@/types/comment'
+
 export type Room={
     _id?:string,
     hid?: string,
     title: string,
     content?:string|Delta,
-    destription?:string,
+    description?:string,
     cover?:string,
     assest?:string,
     from?: string,
     createdAt?: Date,
     updateAt?: Date,
-    comment?: Array<Comments>
+    comment?: Array<Comment>
 }
 
-export type Comments={
-    username:string,
-    comment:string,
-}

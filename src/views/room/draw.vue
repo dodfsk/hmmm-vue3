@@ -5,11 +5,11 @@
 				<div style="text-align: left">#绘制房间</div>
                 <div class="content-header">
                     <n-input-group class="input-group">
-                            <n-input placeholder="请输入标题" v-model:value="title"  class="title" autofocus/>
+                            <n-input placeholder="标题" v-model:value="title"  class="title" autofocus/>
                             <n-input 
-                            placeholder="请输入描述" 
-                            v-model:value="destription" 
-                            :class="animationFlag?'destription-enabled':'destription'" 
+                            placeholder="描述" 
+                            v-model:value="description" 
+                            :class="animationFlag?'description-enabled':'description'" 
                             />
                             <!-- @animationend="animationFlag=false" -->
                             
@@ -43,7 +43,7 @@
 				<n-space justify="end" class="footer">
 					<n-button @click="handleSwitch"> 切 换 </n-button>
 
-					<n-button type="primary" @click="handlePush"> 发 布 </n-button>
+					<n-button type="primary" @click="handlePublish"> 发 布 </n-button>
 				</n-space>
 			</template>
 		</n-card>
@@ -71,18 +71,36 @@ const animationFlag=ref(false)
 let roomState = reactive<Room>({
 	hid: undefined,
 	title: '',
-    destription:'',
+    description:'',
 	content: '',
 });
-const { title,destription, content } = toRefs(roomState);
+const { title,description, content } = toRefs(roomState);
 
 onMounted(() => {
 	quill = quillEditorRef.value?.quill;
-	// console.log('quillEditorRef', quillEditorRef);
+	console.log('quill', quill);
 	// console.log('quillEditorRef.value...', quillEditorRef.value);
 	// console.log('a=>',quillEditorInstance?.setHTML(
 	//     String(route.params.id)
 	// ));
+    // let options=document.querySelectorAll('.ql-header.ql-picker')
+    // let options=document.querySelectorAll('.ql-picker-options')
+    // let toolbar=document.querySelector('.ql-toolbar.ql-snow')
+    // let div = document.createElement('div')
+    // // div.style.overflowY="visible"
+    // // div.style.overflowX="auto"
+    // // format?.parentNode?.insertBefore(div, format)
+    // setTimeout(()=>
+    // options.forEach((item,index)=>{
+    //         console.log(item);
+    //         console.log(toolbar);
+
+    //         if(toolbar){
+    //             toolbar.setAttribute('style','overflow-x:clip')
+    //         }
+    // })
+    // ,2000)
+
 });
 // const contentChange = () => {
 // 	console.log(content.value);
@@ -94,8 +112,10 @@ const handleSwitch = () => {
 	editSwitch.value = !editSwitch.value;
 };
 
-const handlePush = async () => {
-    roomState.content=quill?.getHTML()//重新获取HTML
+const handlePublish = async () => {
+    if(editSwitch.value){
+        roomState.content=quill?.getHTML()//重新获取HTML
+    }
 	if (roomState.content) {
 		// const room: Room = {
 		// 	title: roomState.title,
@@ -178,11 +198,11 @@ watch(
     // //    width: 800px;1
     // //    width:100%;
     // }
-    .destription{
+    .description{
         display: none;
         width: 0px;
     }
-    .destription-enabled{
+    .description-enabled{
         animation: widthChange 0.9s ease-out;
     }
     .keyframes (all,widthChange,{

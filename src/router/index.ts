@@ -1,10 +1,11 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
+import { useUserStore } from '@/store/user';
 
 declare module 'vue-router' {
 	interface RouteMeta {
-		title: string;
+		key: string;
 	}
 }
 
@@ -17,30 +18,30 @@ const routes: Array<RouteRecordRaw> = [
 		component: () => import('@/views/home/index.vue'),
 		// redirect: {name: 'home'},
 		meta: {
-			title: 'home',
+			key: 'home',
 		},
 	},
-    {
+	{
 		path: '/room',
 		name: 'room',
 		component: () => import('@/views/room/index.vue'),
 		meta: {
-			title: 'room',
+			key: 'room',
 		},
 	},
 	{
 		path: '/room/:id',
-		name: 'hv',
+		name: 'room_hv',
 		meta: {
-			title: 'room',
+			key: 'room',
 		},
 		component: () => import('@/views/room/hv.vue'),
 	},
-    {
+	{
 		path: '/room/draw',
 		name: 'room_draw',
 		meta: {
-			title: 'room',
+			key: 'room',
 		},
 		component: () => import('@/views/room/draw.vue'),
 	},
@@ -48,43 +49,56 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/search',
 		name: 'search',
 		meta: {
-			title: 'search',
+			key: 'search',
 		},
 		component: () => import('@/views/room/hv.vue'),
 	},
 	{
-		path: '/hello',
-		name: 'hello',
-		component: () => import('@/components/HelloWorld.vue'),
-		meta: {
-			title: 'hello',
-		},
-		children: [],
-	},
-	{
 		path: '/user',
 		name: 'user',
-		redirect: '/user/login',
+		// redirect: '/user/homepage',
+		component: () => import('@/views/user/index.vue'),
 		meta: {
-			title: 'user',
+			key: 'user',
 		},
 		children: [
 			{
-				path: '/user/info',
-				name: 'userInfo',
-				component: () => import('@/views/user/info.vue'),
+				path: '',
+				name: 'user_homepage',
+				component: () => import('@/views/user/component/homepage.vue'),
 			},
 			{
-				path: '/user/login',
-				name: 'login',
-				component: () => import('@/views/user/login.vue'),
+				path: 'info',
+				name: 'user_info',
+				component: () => import('@/views/user/component/info.vue'),
 			},
 			{
-				path: '/user/register',
-				name: 'register',
-				component: () => import('@/views/user/register.vue'),
+				path: 'publish',
+				name: 'user_publish',
+				component: () => import('@/views/user/component/publish.vue'),
+			},
+			{
+				path: 'more',
+				name: 'user_more',
+				component: () => import('@/views/user/component/more.vue'),
 			},
 		],
+	},
+	{
+		path: '/user/login',
+		name: 'login',
+		component: () => import('@/views/user/login.vue'),
+		meta: {
+			key: 'login',
+		},
+	},
+	{
+		path: '/user/register',
+		name: 'register',
+		component: () => import('@/views/user/register.vue'),
+		meta: {
+			key: 'register',
+		},
 	},
 ];
 
@@ -97,13 +111,16 @@ const router = createRouter({
 	routes,
 	scrollBehavior: (_to, _from, savePosition) => {
 		console.log('savePosition', savePosition);
-
 		if (savePosition) {
 			return savePosition;
 		} else {
-			return {
-				top: 0,
-			};
+			if (JSON.stringify(_to.query) == '{}' && JSON.stringify(_from.query) == '{}') {
+				//路由修改query时候不做处理
+				return {
+					left: 0,
+					top: 0,
+				};
+			}
 		}
 	}, //滚动行为
 });
@@ -112,16 +129,27 @@ const router = createRouter({
 NProgress.configure({ showSpinner: false });
 //路由前置守卫
 router.beforeEach(async (_to, _from, next) => {
-    // console.log('_to, _from, next',_to, _from, next);
-    if(JSON.stringify(_to.query)=='{}'&&JSON.stringify(_from.query)=='{}'){
-	    NProgress.start(); //开启进度条
+	// console.log('_to, _from, next',_to, _from, next);
+    if(_to.meta.key=='user'){
+    const userStore=useUserStore()
+        if(userStore.userInfo.username==null){
+            //未登录状态禁止访问user模块
+            router.push({
+                path:'/user/login'
+            })
+        }
     }
+	if (JSON.stringify(_to.query) == '{}' && JSON.stringify(_from.query) == '{}') {
+		//路由修改query时候不做处理
+		NProgress.start(); //开启进度条
+	}
 	next(); //中间写其他的项目中所需要的一些代码，例如有些网页只有登录了才能进，在这里可以做出判断，判断完了满足要求后就可以放行
 });
 
 //路由后置守卫
-router.afterEach((_to) => {
+router.afterEach((_to, _from, _next) => {
 	NProgress.done(); //完成进度条
+	// window.scrollTo(0, 0)
 });
 
 export default router;

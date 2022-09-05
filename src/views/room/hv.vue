@@ -4,9 +4,16 @@
 			<n-card class="content-left" header-style="padding: 10px;" content-style="padding: 0;">
 				<template #header class="content-left-header">
 					<n-space justify="start" >
-						{{ title }}
+						{{ `${title}_____from:${from}` }}
 					</n-space>
 				</template>
+                <template #header-extra>
+					<n-button-group>
+						<n-button type="primary" round @click="handleEdit"> 编 辑 </n-button>
+						<n-button type="error" round @click="handleDel"> 删 除 </n-button>
+					</n-button-group>
+				</template>
+
 
 				<n-skeleton v-if="loading" :sharp="false" />
 				<div class="edit-box" v-else>
@@ -30,27 +37,27 @@
 			<n-card class="content-right" hoverable>
 				<template #header class="content-right-header">
 					<n-button-group>
-						<n-button type="primary" round @click="handleEdit"> 编 辑 </n-button>
-						<n-button type="error" round @click="handleDel"> 删 除 </n-button>
+						<!-- <n-button type="primary" round @click="handleEdit"> 编 辑 </n-button>
+						<n-button type="error" round @click="handleDel"> 删 除 </n-button> -->
 					</n-button-group>
 				</template>
 			</n-card>
             
 		</div>
-		<div class="comment">
+		<div class="comment" v-for="item in roomState.comment">
 			<n-card class="comment-left" header-style="padding: 10px;" content-style="padding: 0;">
 				<template #header>
 					<n-space justify="start" class="comment-left-header">
-						{{ title }}
+						{{ `from:${item.from}` }}
 					</n-space>
 				</template>
 
-				<!-- <template #header-extra>
+				<template #header-extra>
 					<n-button-group>
 						<n-button type="primary" round @click="handleEdit"> 编 辑 </n-button>
 						<n-button type="error" round @click="handleDel"> 删 除 </n-button>
 					</n-button-group>
-				</template> -->
+				</template>
 
 				<n-skeleton v-if="loading" :sharp="false" />
 				<div class="edit-box" v-else>
@@ -59,7 +66,7 @@
 						ref="quillEditorRef"
 						theme="bubble"
 						readOnly="true"
-						v-model:content="content"
+						v-model:content="item.content"
 						@ready="quillReady"
 					/>
 					<!-- <tip-tap-editor
@@ -70,6 +77,16 @@
 
 				<!-- :readOnly="true" -->
 			</n-card>
+
+            <n-card class="comment-right" hoverable>
+				<template #header class="comment-right-header">
+					<!-- <n-button-group>
+						<n-button type="primary" round @click="handleEdit"> 编 辑 </n-button>
+						<n-button type="error" round @click="handleDel"> 删 除 </n-button>
+					</n-button-group> -->
+				</template>
+			</n-card>
+
 		</div>
 	</div>
 </template>
@@ -97,8 +114,10 @@ let roomState = reactive<Room>({
 	hid: undefined,
 	title: '',
 	content: '',
+    from:'',
+    comment:undefined
 });
-const { title, content } = toRefs(roomState);
+const { title, content,from,comment } = toRefs(roomState);
 
 const quillReady = () => {
 	console.log('quill-editor is ready');
@@ -151,6 +170,7 @@ onMounted(() => {
 	//     // String(route.params.id)
 	//     '<h1><span class="ql-size-huge">他妈的我真是服了</span><strong class="ql-size-huge"><em><s><u>你这个老六</u></s></em></strong></h1>'
 	// ));
+
 });
 
 watch(
@@ -165,37 +185,48 @@ watch(
 <style lang="less" scoped>
 @import '@/views/root.less';
 .container {
-	width: 90%;
+	width: 100%;
 	height: 100%;
 	// min-height: 100%;
 	// background-color: #ccc;
-	margin: 0 auto;
+	// margin: 0 auto;
 	display: flex;
 	flex-direction: column;
 	// justify-content:space-evenly;
-	// align-items: center;
+	align-items: center;
+    overflow:auto;
+
     .content {
-        margin-top: 20px;
+        // margin:0 auto;
+	    // width: 100%;
+	    // width: 1200px;
+	// width: 100%;
+        margin: 0 auto;
+        padding:20px;
         display: flex;
+        // justify-content:  center;
+        // flex-wrap: wrap;
     }
     .comment{
-        min-width:600px;
+	    // width: 80%;
 	    display: flex;
+        // justify-content: center;
+        margin: 0 auto
     }
 }
 
 .content-left,.comment-left{
-	width: 80%;
-    min-width:600px;
+    max-width:900px;
+    width:60vw;
+    min-width:450px;
 	height: 100%;
-	margin-right: 20px;
     margin-bottom: 10px;
 	// .area_header{}
-       :deep(.n-card-header) {
-		    border: 2px solid #666;
-            
-            min-height: 50px;
-	    }
+    :deep(.n-card-header) {
+        border: 2px solid #666;
+        
+        min-height: 50px;
+    }
 
 	.n-skeleton {
 		min-height: 500px;
@@ -214,11 +245,12 @@ watch(
 		}
 	}
 }
-.content-right {
-	width: 300px;
-	min-width: 300px;
-	height: 500px;
-	min-height: 300px;
+.content-right,.comment-right {
+	width: 200px;
+	// min-width: 100px;
+	height: 300px;
+	margin-left: 12px;
+	min-height: 200px;
 	// border: 2px solid #666;
 	// position: fixed;
     :deep(.n-card-header){
@@ -227,7 +259,12 @@ watch(
         justify-content: end;
     }
 }
+@media screen and (max-width:520px){
+    .content-right,.comment-right{
+        display:none;
 
+    }
+}
 
 :deep(#editor-resizer) {
 	display: none;

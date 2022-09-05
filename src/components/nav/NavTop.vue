@@ -1,91 +1,90 @@
 <template>
-	<!-- <div class="nav"> -->
-		<n-grid x-gap="12" :cols="24" class="nav">
-			<n-gi span="8" class="nav-left">
-				<n-menu mode="horizontal" :options="menuOptions" :value="route.meta.title"                />
-			</n-gi>
-
-			<n-gi span="8" class="nav-center">
-
-
-		        <n-input 
-                    class="search" 
-                    size="small" 
-                    v-model:value="searchValue"
-                    placeholder="输入搜索"
-                    @keyup.enter="handleSearch"
-                >
-                     <template #suffix>
-                        <n-button quaternary circle @click="handleSearch">
-                        <n-icon :component="SearchOutline" />
-
-                        </n-button>
-                    </template>
-                </n-input>
-
-
-			</n-gi>
-            <n-gi span="8" class="nav-right">
-                <!-- <div class="circle">
+	<div class="nav">
+        <div class="nav-left">
+            <n-icon :component="SparklesSharp" size="24" color="black" style="margin-top:1px" />
+			<n-menu mode="horizontal" :options="menuOptions" :value="route.meta.key" />
+        </div>
+        <!-- <div class="nav-center">
+			<n-input
+				class="search"
+				v-model:value="searchValue"
+				placeholder="输入搜索"
+				@keyup.enter="handleSearch"
+			>
+				<template #suffix>
+					<n-button quaternary circle @click="handleSearch">
+						<n-icon :component="SearchOutline" />
+					</n-button>
+				</template>
+			</n-input>
+        </div> -->
+        <div class="nav-right">
+			<!-- <div class="circle">
                     <n-icon :component="Person" @click="handleSearch"/>
                     hmlc
                 </div> -->
-                <!-- <n-switch v-model:value="inverted" />   -->
+			<!-- <n-switch v-model:value="inverted" />   -->
+            
+            <n-input
+				class="search"
+				v-model:value="searchValue"
+				placeholder="输入搜索"
+				@keyup.enter="handleSearch"
+			>
+				<template #suffix>
+					<n-button quaternary circle size='tiny' @click="handleSearch">
+						<n-icon :component="SearchOutline" />
+					</n-button>
+				</template>
+			</n-input>
+			<n-popover placement="bottom" trigger="hover" v-if="userStore?.userInfo?.username" ref="roomPopover">
+				<template #trigger>
+					<n-button type="info"> Room </n-button>
+				</template>
 
+				<n-space vertical>
+					<n-button type="primary" @click="roomDraw"> 绘制 </n-button>
+				</n-space>
+			</n-popover>
 
-                <n-popover  
-                    placement="bottom-end" 
-                    trigger="hover" 
-                    :disabled="!userStore?.userInfo?.username"
-                    ref="popover" 
-                >
-                    <template #trigger>
-                        
-                    <n-button color="#8a2be2" @click="handleUser">
-                        <template #icon>
-                            <n-icon :component="Person">
-                            <cash-icon />
-                            </n-icon>
-                        </template>
-                        {{`${userStore?.userInfo?.username||'未登录'}`}}
-                    </n-button>
-                    
-                    </template>
+			<n-popover placement="bottom" trigger="hover" :disabled="!userStore?.userInfo?.username" ref="userPopover">
+				<template #trigger>
+					<n-button color="#8a2be2" v-if="userStore?.userInfo?.username">
+						<template #icon>
+							<n-icon :component="Person">
+								<cash-icon />
+							</n-icon>
+						</template>
+						{{ `${userStore?.userInfo?.username}` }}
+					</n-button>
 
-                    <n-space vertical>
-                        <n-button 
-                        @click="handleUser"
-                        >
-                            个人信息
-                        </n-button>
+                    <n-button color="#8a2be2" v-else @click="handleUnlogin">
+						{{ `未登录` }}
+					</n-button>
 
-                        <n-button 
-                        color="green"  
-                        @click="handleLogOut"
-                        >
-                            LogOut
-                        </n-button>
-                    </n-space>
+				</template>
 
-                </n-popover>
+				<n-space vertical>
+					<n-button @click="handleUser"> 个人中心 </n-button>
 
-			</n-gi>
-
-		</n-grid>
-	<!-- </div> -->
+					<n-button type="error"  @click="handleLogOut"> 登出 </n-button>
+				</n-space>
+			</n-popover>
+        </div>
+	</div>
 </template>
 
 <script setup lang="ts">
-import { h, ref,reactive, Component,onMounted } from "vue";
-import { useRouter,useRoute } from "vue-router";
-import { NIcon } from "naive-ui";
-import type { MenuOption,PopoverProps } from "naive-ui";
-import { RouterLink } from "vue-router";
-import { HomeOutline, TvOutline, PersonOutline,SearchOutline,Person } from "@vicons/ionicons5";
-import {useUserStore} from "@/store/user"
+import { h, ref, reactive, Component, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { NIcon } from 'naive-ui';
+import type { MenuOption, PopoverProps } from 'naive-ui';
+import { RouterLink } from 'vue-router';
+import {  SparklesSharp, SearchOutline, Person, HomeSharp, Square, Reader } from '@vicons/ionicons5';
+import { useUserStore } from '@/store/user';
 
 const renderIcon = (icon: Component) => {
-	return () => h(NIcon, null, { default: () => h(icon) });
+        return () => h(NIcon, {size:"18",style:'margin-top:2px'}, { default: () => h(icon) });
 };
 
 const menuOptions: MenuOption[] = [
@@ -95,16 +94,40 @@ const menuOptions: MenuOption[] = [
 				RouterLink,
 				{
 					to: {
-						name: "home",
+						name: 'home',
 						params: {
-							lang: "zh-CN",
+							lang: 'zh-CN',
 						},
 					},
+					// replace:true,
+                    style:"width:100px"
 				},
-				{ default: () => "Home" }
+				{ default: () => 'Home' }
 			),
-		key: "home",
-		icon: renderIcon(HomeOutline),
+		key: 'home',
+		icon: renderIcon(HomeSharp),
+	},
+	{
+		label: () =>
+			h(
+				// 'a',{
+				//     onClick:pushRoom
+				// },
+				RouterLink,
+				{
+					to: {
+						// name: "room",
+						path: '/room',
+						params: {
+							lang: 'zh-CN',
+						},
+					},
+					// replace:true,
+				},
+				{ default: () => 'Room' }
+			),
+		key: 'room',
+		icon: renderIcon(Square),
 	},
 	{
 		label: () =>
@@ -112,127 +135,200 @@ const menuOptions: MenuOption[] = [
 				RouterLink,
 				{
 					to: {
-						name: "hello",
+						path:'/user',
 						params: {
-							lang: "zh-CN",
+							lang: 'zh-CN',
 						},
 					},
+					// replace:true,
 				},
-				{ default: () => "Hello" }
+				{ default: () => 'User' }
 			),
-		key: "hello",
-		icon: renderIcon(TvOutline),
-	},
-	{
-		label: () =>
-			h(
-				RouterLink,
-				{
-					to: {
-						name: "userInfo",
-						params: {
-							lang: "zh-CN",
-						},
-					},
-				},
-				{ default: () => "User" }
-			),
-		key: "user",
-		icon: renderIcon(PersonOutline),
+		key: 'user',
+		icon: renderIcon(Reader),
 	},
 ];
 
-const route = useRoute()
-const router = useRouter()
-const userStore=useUserStore()
-const popover=ref()
+const route = useRoute();
+const router = useRouter();
+const userStore = useUserStore();
+const userPopover = ref();
+const roomPopover = ref();
 
-console.log('route',route);
+console.log('route', route);
 
-let searchValue=ref()
+let searchValue = ref();
 
-const handleSearch=()=>{
-    router.push({
-            path: "/search",
-            query:{keyword:searchValue.value},
-    });
-}
+const handleSearch = () => {
+	router.push({
+		path: '/search',
+		query: { keyword: searchValue.value },
+	});
+};
 
-const handleUser=()=>{
-    console.log('userStore.userInfo',userStore.userInfo);
-    if(userStore.userInfo.username!=null){
-        router.push({
-            path: "/user/info",
-        });
-    }else if(route.path!=='/user/login'){
-        router.push({
-            path: "/user/login",
-        });
+
+const handleUnlogin=()=>{
+    if (userStore.userInfo.username == null) {
+		router.push({
+			path: '/user/login',
+		});
     }
 }
 
-const handleLogOut=()=>{
-    popover.value.setShow(false)//手动关闭popover
-    userStore.logOut()
-    router.push({
-        path: "/user/login",
-    });
-}
+const roomDraw = () => {
+	roomPopover.value.setShow(false); //手动关闭popover
+	if (userStore.userInfo.username != null) {
+        router.push({
+            path: `/room/draw`,
+        });
+    }else{
+        router.push({
+			path: '/user/login',
+		});
+    }
+};
 
+const handleUser = () => {
+	userPopover.value.setShow(false); //手动关闭popover
+	console.log('userStore.userInfo', userStore.userInfo);
+	if (userStore.userInfo.username != null) {
+		router.push({
+			path: '/user',
+		});
+	} else if (route.path !== '/user/login') {
+		router.push({
+			path: '/user/login',
+		});
+	}
+};
 
+const handleLogOut = () => {
+	userPopover.value.setShow(false); //手动关闭popover
+	userStore.logOut();
+	router.push({
+		path: '/user/login',
+	});
+};
+
+// const pushRoom=()=>{
+//     router.push({
+//         path: "/room",
+//     });
+// }
 </script>
 
 <style lang="less" scoped>
+@import '@/utils/less/scrollbar.less';
+@class:.nav;
+.scrollbar-to(@class);
+
+
 .nav {
-	// width: 100%;
-    // height:100%;
-    padding:0  20px;
-	background-color: rgba(255, 255, 255, 0.7);
-	box-shadow: 0 0 5px rgba(51, 51, 51, 0.721);
+	width: 100%;
+	// height:100%;
+	padding: 0 20px;
+	// background-color: rgba(255, 255, 255, 0.7);
+	// box-shadow: 0 0 5px rgba(51, 51, 51, 0.721);
 	// position: fixed;
-    // position:sticky;
-    // position:-webkit-sticky;
-    // overflow:hidden;
+	// position:sticky;
+	// position:-webkit-sticky;
+	overflow:auto;
+	// overflow:overlay;
 	// top: 42;
 	// left: 0;
-    // right:0;
-    // margin-bottom: 20px;
+	// right:0;
+	// margin-bottom: 20px;
 	display: flex;
-	// justify-content: start;
-	
-    &-left{
-        display: flex;
-        justify-content: left;
-    }
-    &-center{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .search {
-		width: 300px;
-	    }
-    }
-    &-right{
-        display: flex;
-        justify-content: end;
-        align-items: center;
-    }
+	justify-content: space-between;
+
+	&-left {
+        // width:33%;
+		display: flex;
+		justify-content: left;
+	}
+	// &-center {
+    //     // width:33%;
+	// 	display: flex;
+	// 	justify-content: center;
+	// 	align-items: center;
+    //     :deep(.n-input-wrapper){
+    //             padding-right: 0;
+    //     }
+	// 	.search {
+	// 		// max-width: 100px;
+    //         min-width:120px;
+    //         width:50%;
+
+    //         .n-input__suffix{
+    //             .n-button{
+    //                 width:10px;
+    //              }
+    //         }
+	// 	}
+	// }
+	&-right {
+        // width:33%;
+		display: flex;
+		justify-content: end;
+		align-items: center;
+		gap: 12px;
+          :deep(.n-input-wrapper){
+                padding-right: 0;
+        }
+		.search {
+			// max-width: 100px;
+            min-width:120px;
+            // width:50%;
+
+            .n-input__suffix{
+                .n-button{
+                    width:30px;
+                }
+            }
+		}
+
+        // overflow-x: overlay;
+        // overflow: overlay;
+	}
 }
-.circle{
-    margin-right: 50px;
-    padding: 3px;
-    border: 1px solid #000;
-    border-radius: 20px;
-}   
+.circle {
+	margin-right: 50px;
+	padding: 3px;
+	border: 1px solid #000;
+	border-radius: 20px;
+}
 .popover-grid {
-  display: grid;
-  grid-template-columns: auto auto auto auto auto;
-  grid-gap: 12px;
-  justify-content: center;
-  align-items: center;
+	display: grid;
+	grid-template-columns: auto auto auto auto auto;
+	grid-gap: 12px;
+	justify-content: center;
+	align-items: center;
 }
 
 .large-text {
-  font-size: 24px;
+	font-size: 24px;
 }
+
+:deep(.n-menu-item-content){
+    padding:0 15px !important;
+}
+:deep(.n-menu-item-content__icon){
+        display: none !important;
+}
+@media screen and (max-width:520px){
+    :deep(.n-menu-item-content){
+        padding:0 10px !important;
+    }
+    :deep(.n-menu-item-content__icon){
+        display:inline !important;
+    }
+    :deep(.n-menu-item-content--header){
+        display: none !important;
+}
+}
+
+.n-button{
+    min-width:80px;
+}
+
 </style>
