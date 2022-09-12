@@ -137,7 +137,7 @@ const addQuillTitle = () => {
 		'ql-script': '上标/下标',
 		'ql-underline': '下划线',
 		'ql-blockquote': '引用',
-		'ql-header': '标题',
+		'ql-header': '标题大小',
 		'ql-indent': '缩进',
 		'ql-list': '列表',
 		'ql-align': '文本对齐',
@@ -148,12 +148,13 @@ const addQuillTitle = () => {
 		'ql-video': '视频',
 		'ql-clean': '清除字体样式',
 	};
-	let oToolBar = document.querySelector('.ql-toolbar');
+	let oToolBar = document.querySelector('.ql-formats');
 	if (!oToolBar) {
 		return;
 	}
 	let aButton = oToolBar.querySelectorAll('button');
-	let aSelect = oToolBar.querySelectorAll('select');
+	let aSpan = document.querySelectorAll('.ql-formats > span');``
+ 
 	aButton.forEach((item) => {
 		if (item.className === 'ql-script') {
 			item.value === 'sub' ? (item.title = '下标') : (item.title = '上标');
@@ -165,8 +166,9 @@ const addQuillTitle = () => {
 			item.title = titleConfig[item.classList[0]];
 		}
 	});
-	aSelect.forEach((item: any) => {
-		item.parentNode.title = titleConfig[item.classList[0]];
+
+    aSpan.forEach((item: any) => {
+		item.title = titleConfig[item.classList[0]];
 	});
 };
 const cls=ref()
@@ -179,24 +181,24 @@ onMounted(() => {
 	// setTimeout(()=>
 	//     console.log(emits('update:content',content.value))
 	// ,1000)
-	// addQuillTitle()
+	addQuillTitle()
     let options=document.querySelectorAll('.ql-picker-options')
     toolbar=document.querySelector('.ql-toolbar.ql-snow')
     let div = document.createElement('div')
     // div.style.overflowY="visible"
     // div.style.overflowX="auto"
     // format?.parentNode?.insertBefore(div, format)
-    setTimeout(()=>
-    options.forEach((item,index)=>{
-            console.log(item);
-            console.log(toolbar);
-            cls.value=item.scrollHeight
+    // setTimeout(()=>
+    // options.forEach((item,index)=>{
+    //         console.log(item);
+    //         console.log(toolbar);
+    //         cls.value=item.scrollHeight
 
-            if(toolbar){
-                // toolbar.setAttribute('style','overflow-x:clip')
-            }
-    })
-    ,2000)
+    //         if(toolbar){
+    //             // toolbar.setAttribute('style','overflow-x:clip')
+    //         }
+    // })
+    // ,2000)
 });
 
 // const quillChange=()=>{

@@ -61,9 +61,9 @@ onMounted(()=>{
 	// position: block;
 	// min-height: 100%;
 	// min-height: calc(100% - 66px);
-	// height: calc(100% - 42px);
+	// height: calc(100vh - 42px);
     // height:100%;
-    // height:0;
+    // height:fit-content;//根据内容自适应尺寸
 	box-sizing: content-box;
     // align-items:stretch;
     // flex:1;

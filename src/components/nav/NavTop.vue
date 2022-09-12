@@ -39,7 +39,7 @@
 			</n-input>
 			<n-popover placement="bottom" trigger="hover" v-if="userStore?.userInfo?.username" ref="roomPopover">
 				<template #trigger>
-					<n-button type="info"> Room </n-button>
+					<n-button type="info"> 创作中心 </n-button>
 				</template>
 
 				<n-space vertical>
@@ -282,7 +282,7 @@ const handleLogOut = () => {
 
             .n-input__suffix{
                 .n-button{
-                    width:30px;
+                    min-width:30px;
                 }
             }
 		}

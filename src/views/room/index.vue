@@ -109,8 +109,8 @@
 </template>
 
 <script lang='ts' setup>
-import { onMounted, reactive, ref } from 'vue'
-import {useRouter,useRoute} from 'vue-router'
+import { onMounted, reactive, ref, watch } from 'vue'
+import {useRouter,useRoute, onBeforeRouteUpdate, onBeforeRouteLeave} from 'vue-router'
 import { Search,ArrowUp } from "@vicons/ionicons5";
 import  QuillEditorDeck  from '@/components/rich-editor/quillEditor.vue' 
 import { useRoomStore } from '@/store/room';
@@ -153,7 +153,7 @@ const roomEnter=(hid?:string)=>{
 }
 const handleShowModal=async (hid?:string)=>{
     router.push({
-        query:{window:hid}
+        query:{...route.query,window:hid}
     })
     const res=await roomStore.ROOM_GET(hid)
     const { code,data={} } = res.data
@@ -161,11 +161,18 @@ const handleShowModal=async (hid?:string)=>{
     showModal.value=true
 }
 const handleCloseModal=()=>{
-    router.push({})
+    const { window,...backQuery }= route.query
+    //解构取反
+    router.push({query:backQuery})
 }
 
 const getRoomList=async ()=>{
-    const res=await roomStore.ROOM_GET()
+    const {keyword}=route.query
+    let query:object|undefined=undefined
+    if(keyword){
+         query={from:keyword}
+    }
+    const res=await roomStore.ROOM_LIST(query)
     const { code,data={} } = res.data
     if(res.status==200){
         roomList.value=data.roomList
@@ -181,9 +188,21 @@ const getCoinList=async ()=>{
     }
 }
 onMounted(() => {
-    getRoomList()
+    // getRoomList()
     getCoinList()
 })
+
+watch(
+    ()=>route.query,
+    (newValue, oldValue)=>{
+        console.log('newValue, oldValue',newValue, oldValue);
+        if(!newValue.window&&!oldValue?.window)
+            if(route.name=='room'||route.name=='search')
+                getRoomList()
+    },
+    {immediate:true,deep:true}
+)
+
 
 //定义modal的style
 const windowStyle={
@@ -192,6 +211,8 @@ const windowStyle={
 </script>
 
 <style lang='less' scoped>
+@import '@/views/root.less';
+
 .container{
     width:calc(100vw - 14%);
     // min-width:600px;
@@ -221,6 +242,7 @@ const windowStyle={
 
 }
 .grid {
+    height:100%;
     justify-content: space-evenly;
     display: grid;
     grid-template-columns: repeat(auto-fill, 240px);
@@ -257,4 +279,7 @@ const windowStyle={
     width:calc(100vw - 30%);
 }
 
+:deep(#editor-resizer) {
+	display: none;
+} //关闭富文本图片resize模块
 </style>

@@ -51,7 +51,7 @@ const routes: Array<RouteRecordRaw> = [
 		meta: {
 			key: 'search',
 		},
-		component: () => import('@/views/room/hv.vue'),
+		component: () => import('@/views/room/index.vue'),
 	},
 	{
 		path: '/user',
@@ -65,17 +65,17 @@ const routes: Array<RouteRecordRaw> = [
 			{
 				path: '',
 				name: 'user_homepage',
-				component: () => import('@/views/user/component/homepage.vue'),
+				component: () => import('@/views/user/homepage/homepage.vue'),
 			},
 			{
 				path: 'info',
 				name: 'user_info',
-				component: () => import('@/views/user/component/info.vue'),
+				component: () => import('@/views/user/info/info.vue'),
 			},
 			{
 				path: 'publish',
 				name: 'user_publish',
-				component: () => import('@/views/user/component/publish.vue'),
+				component: () => import('@/views/user/publish/publish.vue'),
 			},
 			{
 				path: 'more',
@@ -87,7 +87,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/user/login',
 		name: 'login',
-		component: () => import('@/views/user/login.vue'),
+		component: () => import('@/views/user/auth/login.vue'),
 		meta: {
 			key: 'login',
 		},
@@ -95,7 +95,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/user/register',
 		name: 'register',
-		component: () => import('@/views/user/register.vue'),
+		component: () => import('@/views/user/auth/register.vue'),
 		meta: {
 			key: 'register',
 		},

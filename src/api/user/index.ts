@@ -3,7 +3,7 @@ import { User } from '@/types/user'
 
 export  const login=async (data = {})=>{
 return await request({
-    url: '/user/login',
+    url: '/auth/login',
     method: 'post',
     data
 })

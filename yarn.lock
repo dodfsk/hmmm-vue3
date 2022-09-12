@@ -512,10 +512,10 @@
   resolved "https://registry.npmmirror.com/@vue/shared/-/shared-3.2.38.tgz#e823f0cb2e85b6bf43430c0d6811b1441c300f3c"
   integrity sha512-dTyhTIRmGXBjxJE+skC8tTWCGLCVc4wQgRRLt8+O9p5ewBAjoBwtCAkLPrtToSr1xltoe3st21Pv953aOZ7alg==
 
-"@vueup/vue-quill@^1.0.0-beta.9":
-  version "1.0.0-beta.9"
-  resolved "https://registry.npmmirror.com/@vueup/vue-quill/-/vue-quill-1.0.0-beta.9.tgz#1a7b8a2822026b25ef59afc8351dc7c44e01f463"
-  integrity sha512-ELiUgN6MIJVvT4gS/e/GsdOvs5+VgmJ7SVdq2oc7Nc/3YTfak+fbgpA8iwQXsWZwqNKu463geyH8bFAchrEUBw==
+"@vueup/vue-quill@^1.0.0-beta.10":
+  version "1.0.0-beta.10"
+  resolved "https://registry.npmmirror.com/@vueup/vue-quill/-/vue-quill-1.0.0-beta.10.tgz#c523ca72726a6e510c342164c755e99f64a49122"
+  integrity sha512-A3jAiO216/JfGaU04Xixheu/+lLEXOfn9IPXiV9RrLr/jjf/m90gnXRv5lTF/qOUVRexO69I/AiaVoIiemJevQ==
   dependencies:
     quill "^1.3.7"
     quill-delta "^4.2.2"

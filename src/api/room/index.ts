@@ -1,15 +1,19 @@
 import request from '@/utils/axios/index';
 import { Room } from '@/types/room';
 
+export const getRoomList = async (query?:any) => {
+	let url: string;
+		url = `/room`;
+	return await request({
+		url,
+        params:query,
+		method: 'get',
+	});
+};
+
 export const getRoom = async (id?: string) => {
 	let url: string;
-
-	if (id) {
-		url = `/room/${id}`;
-	} else {
-		url = `/room`;
-	}
-
+    url = `/room/${id}`;
 	return await request({
 		url,
 		method: 'get',

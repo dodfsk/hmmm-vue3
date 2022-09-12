@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { delRoom, getRoom,setRoom } from "@/api/room"
+import { getRoom,getRoomList,setRoom,delRoom } from "@/api/room"
 // import { removeToken } from '@/utils/token'
 // import { toLogin } from '@/utils/auth'
 import { Names } from "@/store/store-name";
@@ -8,19 +8,16 @@ import { Room } from '@/types/room';
 
 export const useRoomStore = defineStore(Names.ROOM, ()=>{
 
+    
+    const ROOM_LIST=async(query?:object)=> {
+        const res = await getRoomList(query)
+        const { code,data={}  } = res.data;
+        return res
+    }
 
     const ROOM_GET=async(id?:string)=> {
         const res = await getRoom(id)
         const { code,data={}  } = res.data;
-        // console.log('userInfo',userInfo);
-        // if (res.status === 200) {
-            // Object.assign(userInfo,data)
-            // console.log('userInfo',userInfo);
-            //手动存入localStorage方式
-            //转换为字符串存入localStorage
-            // localStorage.setItem('userInfo',JSON.stringify(userInfo))
-            // return res.data
-        // }
         return res
     }
 
@@ -65,6 +62,7 @@ export const useRoomStore = defineStore(Names.ROOM, ()=>{
     // })
 
     return  {
+        ROOM_LIST,
         ROOM_GET,
         ROOM_SET,
         ROOM_DEL,

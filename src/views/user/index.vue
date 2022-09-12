@@ -48,15 +48,14 @@ const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
 const inverted = ref(true);
-const id = ref();
 
-let hmlc_info = ref();
-const getUserHmlc = async () => {
-	const res = await userStore.USER_GET('hmlc');
-	const { code, message, meta, data = {} } = res.data;
-	hmlc_info.value = data;
-	console.log(hmlc_info);
-};
+// let hmlc_info = ref();
+// const getUserHmlc = async () => {
+// 	const res = await userStore.USER_GET('hmlc');
+// 	const { code, message, meta, data = {} } = res.data;
+// 	hmlc_info.value = data;
+// 	console.log(hmlc_info);
+// };
 
 function renderIcon(icon: Component) {
 	return () => h(NIcon, null, { default: () => h(icon) });
