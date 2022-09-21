@@ -33,9 +33,10 @@
 import { h, ref, Component, reactive } from 'vue';
 import { NIcon } from 'naive-ui';
 import {
-	BookOutline as BookIcon,
+    BookOutline,
 	HomeOutline,
-	PersonOutline as PersonIcon,
+    IdCardOutline,
+    HappyOutline,
 	PersonOutline,
 	SettingsOutline,
 	WineOutline as WineIcon,
@@ -84,40 +85,52 @@ const menuOptions = [
 				RouterLink,
 				{
 					to: {
-						path: '/user/info',
+						path: '/user/profile',
 						params: {
 							lang: 'zh-CN',
 						},
 					},
 				},
-				{ default: () => '个人信息' }
+				{ default: () => '我的资料' }
 			),
-		key: 'user_info',
-		icon: renderIcon(PersonOutline),
+		key: 'user_profile',
+		icon: renderIcon(IdCardOutline),
 	},
-	{
-		label: '发布管理',
-		key: 'pinball-1973',
-		icon: renderIcon(BookIcon),
-		children: [
-			{
-				label: () =>
-					h(
-						RouterLink,
-						{
-							to: {
-								path: '/user/publish',
-								params: {
-									lang: 'zh-CN',
-								},
-							},
+    {
+		label: () =>
+			h(
+				RouterLink,
+				{
+					to: {
+						path: '/user/face',
+						params: {
+							lang: 'zh-CN',
 						},
-						{ default: () => '我的发布' }
-					),
-				key: 'user_publish',
-			},
-		],
+					},
+				},
+				{ default: () => '我的头像' }
+			),
+		key: 'user_face',
+		icon: renderIcon(HappyOutline),
 	},
+    {
+            label: () =>
+                h(
+                    RouterLink,
+                    {
+                        to: {
+                            path: '/user/publish',
+                            params: {
+                                lang: 'zh-CN',
+                            },
+                        },
+                    },
+                    { default: () => '我的发布' }
+                ),
+            key: 'user_publish',
+		    icon: renderIcon(BookOutline),
+    },  
+
 	{
 		label: '更多设置',
 		key: 'dance-dance-dance',
@@ -131,12 +144,12 @@ const menuOptions = [
 					{
 						label: '叙事者',
 						key: 'narrator',
-						icon: renderIcon(PersonIcon),
+						icon: renderIcon(PersonOutline),
 					},
 					{
 						label: '羊男',
 						key: 'sheep-man',
-						icon: renderIcon(PersonIcon),
+						icon: renderIcon(PersonOutline),
 					},
 				],
 			},

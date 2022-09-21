@@ -5,4 +5,5 @@ export type User = {
 	phone?: string;
 	email?: string;
 	birth?: Date;
+    avatar?:string;
 };

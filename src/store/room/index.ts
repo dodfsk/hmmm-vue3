@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia'
 import { getRoom,getRoomList,setRoom,delRoom } from "@/api/room"
-// import { removeToken } from '@/utils/token'
-// import { toLogin } from '@/utils/auth'
+// import { removeToken } from '@/utils/common/token'
+// import { toLogin } from '@/utils/common/auth'
 import { Names } from "@/store/store-name";
 import { reactive,computed,onMounted } from 'vue'
 import { Room } from '@/types/room';
+import { ImgReplace } from '@/utils/img/imgReplace';
 
 export const useRoomStore = defineStore(Names.ROOM, ()=>{
 
@@ -18,6 +19,7 @@ export const useRoomStore = defineStore(Names.ROOM, ()=>{
     const ROOM_GET=async(id?:string)=> {
         const res = await getRoom(id)
         const { code,data={}  } = res.data;
+        data.content=ImgReplace(data.content)//替换img地址
         return res
     }
 

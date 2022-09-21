@@ -4,4 +4,5 @@ export const enum Names {
     NAIVE='NAIVE',
     USER='USER',
     ROOM='ROOM',
+    MINIO='MINIO',
 }

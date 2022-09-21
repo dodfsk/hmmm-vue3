@@ -1,8 +1,7 @@
 import apiUrl from '@/api';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { getErrorMessage } from './errorList';
 import { Response } from '@/types/axios';
-import { getToken, TOKEN_PREFIX } from '@/utils/auth';
+import { getToken, TOKEN_PREFIX } from '@/utils/common/auth';
 import { useNotification, useMessage } from 'naive-ui';
 import { defineComponent } from 'vue';
 import { useUserStore } from '@/store/user';

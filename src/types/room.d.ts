@@ -9,6 +9,7 @@ export type Room={
     cover?:string,
     assest?:string,
     from?: string,
+    isPublic?:boolean;
     createdAt?: Date,
     updateAt?: Date,
     comment?: Array<Comment>

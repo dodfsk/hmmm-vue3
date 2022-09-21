@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { login, register, setUser, delUser, getUser } from '@/api/user';
-import { setToken, getToken, delToken } from '@/utils/auth';
+import { setToken, getToken, delToken } from '@/utils/common/auth';
 import { Names } from '@/store/store-name';
 import { reactive, computed, onMounted } from 'vue';
 import { User } from '@/types/user';

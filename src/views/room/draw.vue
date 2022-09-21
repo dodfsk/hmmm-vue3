@@ -161,13 +161,13 @@ watch(
 	// { immediate:true,deep:true}
 );
 watch(
-	() => route.query,
+	() => route.query.id,
 	() => {
 		if (route.query.id) {
 			getRoomDetail(route.query.id as string);
 		}
 	},
-	{ immediate: true, deep: true }
+	{ immediate: true }
 );
 </script>
 
@@ -215,7 +215,7 @@ watch(
     justify-content: space-between;
 }
 .edit_box {
-	height: 500px;
+	height: 550px;
 	// border: 1px solid #888;
 	// border-radius: 7px 0 0 7px;
 }

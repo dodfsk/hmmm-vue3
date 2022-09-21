@@ -1,39 +1,20 @@
 <template>
 <div class="container">
     <div class="header">
-        <n-space justify="start" style="width: 100%">
-            <!-- <n-button type="primary" @click="roomDraw">
-                绘制Room
-            </n-button> -->
-            
-            <n-carousel autoplay  class="my-carousel">
-                <img
-                class="carousel-img"
-                src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg"
-                >
-                <img
-                class="carousel-img"
-                src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel2.jpeg"
-                >
-                <img
-                class="carousel-img"
-                src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel3.jpeg"
-                >
-                <img
-                class="carousel-img"
-                src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel4.jpeg"
-                >
-            </n-carousel>
-                    
-            <n-card  v-for="(item,index)  in coinList" :key="index" class="coinBar" hoverable>
-                <h2>{{index}}</h2>
-                <div>CNY:{{item?.CNY}}</div>
-                <div>USD:{{item?.USD}}</div>
-            </n-card>
-
+        <n-space>
+            <n-input
+                placeholder="请输入查询条件"
+                v-model:value="searchValue"
+                @keyup.enter="handleSearch"
+            >
+            </n-input>
+            <n-button
+                type="primary"
+                @click="handleSearch"
+            >
+            搜索
+            </n-button>
         </n-space>
-
-
     </div>
 
     <div class="grid">
@@ -125,7 +106,8 @@ const roomStore=useRoomStore()
 const showModal=ref(false)
 const windowContent=ref<string>()
 let roomList=ref<Array<Room>>(videoList.data)
-    
+const searchValue=ref()
+
 type price={
     CNY:string
     USD:string
@@ -166,6 +148,14 @@ const handleCloseModal=()=>{
     router.push({query:backQuery})
 }
 
+const handleSearch=()=>{
+    router.push({
+        path: '/search',
+		query: { keyword: searchValue.value },
+        }
+    )
+}
+
 const getRoomList=async ()=>{
     const {keyword}=route.query
     let query:object|undefined=undefined
@@ -188,20 +178,20 @@ const getCoinList=async ()=>{
     }
 }
 onMounted(() => {
-    getRoomList()
+    // getRoomList()
     getCoinList()
 })
 
-// watch(
-//     ()=>route.query,
-//     (newValue, oldValue)=>{
-//         console.log('newValue, oldValue',newValue, oldValue);
-//         if(!newValue.window&&!oldValue?.window)
-//             if(route.name=='room'||route.name=='search')
-//                 getRoomList()
-//     },
-//     {immediate:true,deep:true}
-// )
+watch(
+    ()=>route.query,
+    (newValue, oldValue)=>{
+        console.log('newValue, oldValue',newValue, oldValue);
+        if(!newValue.window&&!oldValue?.window)
+            if(route.name=='room'||route.name=='search')
+                getRoomList()
+    },
+    {immediate:true,deep:true}
+)
 
 
 //定义modal的style
@@ -227,11 +217,13 @@ const windowStyle={
 }
 .header{
     width: 100%;
+    height: 80px;
     padding: 10px;
     display: flex;
     justify-content: center;
 	align-items: center;
     margin-bottom: 40px;
+    background-color: rgba(255, 255, 255, 0.731);
 }
 .box{
     // width: 200px;

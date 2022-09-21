@@ -174,11 +174,13 @@ onMounted(() => {
 });
 
 watch(
-	() => route.params,
+	() => route.params.id,
 	() => {
-		getRoomDetail(route.params.id as string);
+		if (route.params.id) {
+		    getRoomDetail(route.params.id as string);
+        }
 	},
-	{ immediate: true, deep: true }
+	{ immediate: true }
 );
 </script>
 

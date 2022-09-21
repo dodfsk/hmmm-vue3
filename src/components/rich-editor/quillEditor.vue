@@ -284,7 +284,7 @@ defineExpose({
 .ql-container.ql-snow {
 	// min-height: 300px;
 	// height: calc(100% - 45px);
-	max-height: 450px;
+	max-height: 500px;
 	// .ql-editor {
 	// 	min-height: 300px;
 	// }
@@ -293,6 +293,13 @@ defineExpose({
 	overflow: auto;
 	overflow: overlay;
 }
+
+#editor-resizer {
+    margin:auto;
+	max-height: 480px;
+} //关闭富文本图片resize模块
+
+
 // .ql-container.ql-bubble{
 //     min-height: 300px;
 // }

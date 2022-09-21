@@ -51,7 +51,7 @@ const routes: Array<RouteRecordRaw> = [
 		meta: {
 			key: 'search',
 		},
-		component: () => import('@/views/room/index.vue'),
+		component: () => import('@/views/search/index.vue'),
 	},
 	{
 		path: '/user',
@@ -68,14 +68,19 @@ const routes: Array<RouteRecordRaw> = [
 				component: () => import('@/views/user/homepage/homepage.vue'),
 			},
 			{
-				path: 'info',
-				name: 'user_info',
-				component: () => import('@/views/user/info/info.vue'),
+				path: 'profile',
+				name: 'user_profile',
+				component: () => import('@/views/user/myProfile/index.vue'),
+			},
+            {
+				path: 'face',
+				name: 'user_face',
+				component: () => import('@/views/user/myFace/index.vue'),
 			},
 			{
 				path: 'publish',
 				name: 'user_publish',
-				component: () => import('@/views/user/publish/publish.vue'),
+				component: () => import('@/views/user/myPublish/index.vue'),
 			},
 			{
 				path: 'more',

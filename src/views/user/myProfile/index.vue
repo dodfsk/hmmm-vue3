@@ -4,7 +4,7 @@
 
         <div class="header">
             <div class="header-left">
-                <h2>个人资料</h2>
+                <h2>我的资料</h2>
                 <hr>
             </div>
             <n-button type="primary" @click="handleUpdate"> 修 改</n-button>
@@ -67,43 +67,39 @@
 
 
             </n-form>
-            <div class="content-right">
-                
-                个人头像
-                <n-upload
-                    action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
-                    list-type="image-card"
-                    @before-upload="beforeUpload"
-                >
-                    <!-- <n-button>Edit</n-button> -->
-                </n-upload>
-            </div>
-
+   
         </div>
+
         </div>
 
 	</div>
 </template>
 
 <script lang="ts" setup>
-import { h, ref, Component, reactive, onMounted } from 'vue';
-import { FormInst, FormItemInst, FormItemRule, FormRules, NIcon, UploadFileInfo, useMessage } from 'naive-ui';
+import { h, ref, Component, reactive, onMounted, computed } from 'vue';
+import { FormInst, FormItemInst, FormItemRule, FormRules, NIcon, UploadCustomRequestOptions, UploadFileInfo, useMessage } from 'naive-ui';
 import { BookOutline as BookIcon, PersonOutline as PersonIcon, WineOutline as WineIcon } from '@vicons/ionicons5';
 import { demoPiniaOptions, demoPiniaComposition } from '@/store/demo';
 import { useUserStore } from '@/store/user';
+import {useMinioStore} from '@/store/minio';
 import { RouterLink } from 'vue-router';
 import { User } from '@/types/user';
+import { OssReplace } from '@/utils/img/imgReplace';
+import { fileToBase64 } from '@/utils/img/imgToBase64';
+import { imgCompress } from '@/utils/img/imgCompress';
 
 const inverted = ref(true);
 
 let hmlc_info = ref();
 const userStore = useUserStore();
 
-const message = useMessage();
-
+const loading=ref(true)
 const formRef = ref<FormInst | null>(null);
 const rPasswordFormItemRef = ref<FormItemInst | null>(null);
 const modelRef = ref<User>({});
+const imgSrc=ref<string>('')
+
+
 
 const  validatePasswordStartWith=(rule: FormItemRule, value: string): boolean =>{
 	return (
@@ -158,30 +154,25 @@ const rules: FormRules = {
 // 	}
 // };
 
-const beforeUpload=async (data: {
-        file: UploadFileInfo
-        fileList: UploadFileInfo[]
-      })=>{
-        if (data.file.file?.type !== 'image/png') {
-          message.error('只能上传png格式的图片文件，请重新上传')
-          return false
-        }
-        return true
-    }
 
 const getUserInfo = async () => {
 	const res = await userStore.USER_GET(userStore.userInfo.username!)
+    if(!res){
+        return
+    }
 	const { code, message, meta, data = {} } = res.data
 	hmlc_info.value = data
     if(data.birth){
         data.birth=new Date(data.birth)
+    }
+    if(data.avatar){
+        imgSrc.value=OssReplace(data.avatar)
     }
 	Object.assign(modelRef.value, data)
 };
 const handleUpdate=async ()=>{
 	const res = await userStore.USER_SET(modelRef.value)
 	const { code, message, meta, data = {} } = res.data
-
 }
 
 onMounted(() => {
@@ -240,18 +231,13 @@ onMounted(() => {
     justify-content: center;
     flex-wrap: wrap;
     .form{
-    width:50%;
+    width:80%;
     min-width:286px;
     }
     .n-input{
-        max-width: 80%;
+        max-width: 350px;
     }
-    &-right{
-        width:30%;
-        display:flex;
-        flex-direction: column;
-        align-items: start;
-    }
+
 }
 
 .n-button {
