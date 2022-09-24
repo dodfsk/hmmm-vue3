@@ -1,15 +1,16 @@
 <template>
-    <div id="img-container">
-    </div>
-    <input type="file" id="file" @change="getFile"/>
+        <div id="clipper-container"
+        >
+        </div>
+        <input type="file" id="file" @change="getFile"/>
 
 </template>
 
 <script setup lang='ts'>
-import {nextTick,onMounted} from 'vue'
+import {nextTick,onMounted,ref} from 'vue'
 import {ImgResize} from '@/utils/img/imgResize'
 
-let imgResize:any
+let clipper=ref<any>()
 let file:File
 
 nextTick(()=>{
@@ -20,27 +21,27 @@ nextTick(()=>{
 
 const getFile=()=>{
     file = (document.querySelector('#file') as HTMLInputElement).files?.item(0)!;
-    imgResize=new ImgResize(file,{
-        container:'#img-container',
-        width:'100%',
-        height:'500px',
+    clipper.value=new ImgResize(file,{
+        container:'#clipper-container',
+        width:'800px',
+        height:'400px',
     })
-    console.log(imgResize);
+    console.log(clipper);
 }
 
 </script>
 
 <style lang='less' scoped>
-#img-container{
+#clipper-container{
     margin:0 auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-sizing: content-box;
-    border:1px solid #000;
-    padding:5px;
+    // box-sizing: content-box;
+    border:1px solid #ccc;
+    // padding:5px;
     min-height:200px;
-    overflow: auto;
+    overflow: hidden;
 }
 </style>
 

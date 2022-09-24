@@ -19,27 +19,10 @@
 			<n-button>上传文件</n-button>
 		</n-upload>
 
-            <input type="file" id="file"  @change="handleCut"/>
-            <br />
-           
-            <demo
-                :preW = "90"
-                :preH = "90"
-                :whRatio = "1"
-                :isAvatar = "true"
-                :showPreview = "true"
-                :customCutBtn = "true"
-                :cutBoxW = "180"
-                :cutBoxH = "200"
-                :customUploadBtn = "false"
-                :imgMaxSize = "4096"
-            >
-                    
-            <img id="tImg"/>
-            <img id="pImg"/>
-            <div id="cFrame"></div></demo>
-		<!-- <n-skeleton style="height:10000px;background-color: blueviolet;" />
-     -->
+        <div id="clipper-container">
+        </div>
+        <input type="file" id="file" @change="getFile"/>
+
 	</div>
 </template>
 
@@ -49,6 +32,7 @@ import { useMinioStore } from '@/store/minio';
 import { UploadCustomRequestOptions, useMessage } from 'naive-ui';
 import request from '@/utils/axios/index';
 import axios from 'axios';
+import { ImgResize } from '@/utils/img/imgResize';
 
 const a = ref<string>('a');
 const minioStore = useMinioStore();
@@ -132,36 +116,20 @@ const customRequest = async ({
 		onFinish();
 	}
 };
-const props={
-            originW: 0,
-            originH: 0,
-            preW: 0,
-            preH: 0,
-            whRatio: 0,
-            isAvatar: false,
-            files: {
-            minSize: 0,
-            maxSize: 0,
-            minW: 0,
-            minH: 0,
-        }
-    }
-const handleCut=()=>{
-    const file=document.querySelector('#file') as HTMLInputElement
-    const {files}=file
-    if(!files?.length){
-        return
-    }
-    let reader = new FileReader();
-    reader.readAsDataURL(files[0])
-    filesUrl.value=reader.result
-    // const cutimg=new CutImg()
-    // cutimg.selected(files[0])
-    // cutimg.setId('tImg','pImg','cFrame')
-    // console.log(cutimg,file.files);
-    
-}
 
+let clipper:any
+let file:File
+
+
+const getFile=()=>{
+    file = (document.querySelector('#file') as HTMLInputElement).files?.item(0)!;
+    clipper=new ImgResize(file,{
+        container:'#clipper-container',
+        width:'800px',
+        height:'400px',
+    })
+    console.log(clipper);
+}
 </script>
 
 <style lang="less" scoped>
@@ -175,4 +143,16 @@ const handleCut=()=>{
 //     width:400px;
 //     height:400px;
 // }
+#clipper-container{
+    margin:0 auto;
+    display: flex;
+    justify-content: center;
+    // align-items: center;
+    // box-sizing: content-box;
+    border:1px solid #ccc;
+    // padding:5px;
+    // min-height:200px;
+    overflow: hidden;
+}
+
 </style>

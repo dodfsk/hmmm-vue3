@@ -43,21 +43,23 @@
         <n-modal
             v-model:show="showModal"
             preset="card"
-            title="视窗模式"
+            title="Clipper Tool"
             size="small"
-            style="width:900px;min-height:600px;"
+            style="width:800px;min-height:500px;-webkit-user-drag: none;"
             :bordered="false"
             :block-scroll="true"
             :segmented="{
-                content: 'soft',
+                // content: 'soft',
                 footer: 'soft'
             }"
         >   
-            <uploadModal
+        <imgResize></imgResize>
+
+            <!-- <uploadModal
                 ref="modalRef"
                 :src="modelRef.avatar"
             >
-            </uploadModal>
+            </uploadModal> -->
             <!-- @after-leave="handleCloseModal" -->
         </n-modal>
 	</div>
@@ -76,6 +78,7 @@ import { OssReplace } from '@/utils/img/imgReplace';
 import { fileToBase64 } from '@/utils/img/imgToBase64';
 import { imgCompress } from '@/utils/img/imgCompress';
 import uploadModal from './uploadModal.vue';
+import imgResize from './imgResize.vue'
 
 const inverted = ref(true);
 

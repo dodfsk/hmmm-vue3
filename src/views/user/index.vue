@@ -188,10 +188,13 @@ const menuOptions = [
 // .container {
 // 	// height: calc(100vh - 42px);
 //     // height:100%;
-//     // overflow-y: hidden;
+//     overflow-y: hidden;
 // }
 // .content{
-//     // overflow:scroll;
-// 	height: calc(100vh - 42px);
+//     overflow:scroll;
+// 	// height: calc(100vh - 42px);
 // }
+:deep(.n-layout-scroll-container){
+    overflow:hidden;
+}
 </style>
