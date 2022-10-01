@@ -23,8 +23,11 @@ const getFile=()=>{
     file = (document.querySelector('#file') as HTMLInputElement).files?.item(0)!;
     clipper.value=new ImgResize(file,{
         container:'#clipper-container',
-        width:'800px',
-        height:'400px',
+        cWidth:'800px',
+        cHeight:'400px',
+        fixed:1,
+        iWidth:300,
+        iHeight:300,
     })
     console.log(clipper);
 }

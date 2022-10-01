@@ -18,10 +18,12 @@
 		>
 			<n-button>上传文件</n-button>
 		</n-upload>
+        <input type="file" id="file" @change="getFile"/>
 
         <div id="clipper-container">
+
         </div>
-        <input type="file" id="file" @change="getFile"/>
+        <n-button @click="getAlter">生成</n-button>
 
 	</div>
 </template>
@@ -32,7 +34,7 @@ import { useMinioStore } from '@/store/minio';
 import { UploadCustomRequestOptions, useMessage } from 'naive-ui';
 import request from '@/utils/axios/index';
 import axios from 'axios';
-import { ImgResize } from '@/utils/img/imgResize';
+import { ImgClipper } from '@/utils/img/imgClipper';
 
 const a = ref<string>('a');
 const minioStore = useMinioStore();
@@ -123,21 +125,31 @@ let file:File
 
 const getFile=()=>{
     file = (document.querySelector('#file') as HTMLInputElement).files?.item(0)!;
-    clipper=new ImgResize(file,{
+    clipper=new ImgClipper(file,{
         container:'#clipper-container',
-        width:'800px',
-        height:'400px',
+        cWidth:'800px',
+        cHeight:'400px',
+        // fixed:1920/1080,
+        // iWidth:1280,
+        // iHeight:720,
     })
     console.log(clipper);
+}
+const getAlter=()=>{
+    console.log(
+        clipper.getAlter()
+    );
 }
 </script>
 
 <style lang="less" scoped>
 .container {
 	padding: 40px;
-	// display:flex;
-	// flex-direction: column;
-	// align-items: center;
+	// background-color:#ccc;
+    // display:flex;
+    // flex-direction: column;
+    // align-items: center;
+    overflow: auto;
 }
 // img{
 //     width:400px;
@@ -150,6 +162,8 @@ const getFile=()=>{
     // align-items: center;
     // box-sizing: content-box;
     border:1px solid #ccc;
+    min-width:800px;
+    min-height:400px;
     // padding:5px;
     // min-height:200px;
     overflow: hidden;

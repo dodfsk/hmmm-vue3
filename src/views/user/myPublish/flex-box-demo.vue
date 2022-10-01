@@ -143,4 +143,7 @@
     background-color:darkslateblue;
 }
 
+:deep(#editor-resizer) {
+	display: none;
+} //关闭富文本图片resize模块
 </style>

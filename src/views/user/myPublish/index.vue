@@ -202,7 +202,9 @@ onMounted(() => {
 }
 
 :deep(.ql-editor){
-			overflow: hidden !important;
-
+    overflow: hidden !important;
 }
+:deep(#editor-resizer) {
+	display: none;
+} //关闭富文本图片resize模块
 </style>

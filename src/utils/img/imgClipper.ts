@@ -28,6 +28,8 @@ type EventRecord={
     sy:number,
     left:number,
     top:number,
+    right:number,
+    bottom:number,
     width:number,//记录原宽度
     height:number,//记录原高度
 }
@@ -37,7 +39,7 @@ type Result={
 }
 type Direction='nw'|'ne'|'se'|'sw'
 
-export class ImgResize {
+export class ImgClipper {
     public container:HTMLElement   //传入目标容器
     public reader : FileReader = new FileReader()  //  文件读取器
     public original : HTMLImageElement = new Image()    // 原始图片实例
@@ -70,6 +72,8 @@ export class ImgResize {
         sy:0,
         left:0,
         top:0,
+        right:0,
+        bottom:0,
         width:0,
         height:0,
     }
@@ -109,8 +113,11 @@ export class ImgResize {
         this.original.setAttribute("style","-webkit-user-drag:none;")//关闭拖拽动作
         // this.original.setAttribute("style","filter:brightness(0.5)")//滤镜模式
         this.original.style.objectFit='contain'
+        this.original.style.border='2px solid #000'
         this.original.style.maxWidth='100%'
         this.original.style.maxHeight='100%'
+        this.original.style.margin='0'
+        this.original.style.padding='0'
         this.original.style.userSelect='none'
         this.original.style.position='absolute'
         this.original.crossOrigin = "Anonymous"
@@ -167,8 +174,8 @@ export class ImgResize {
         this.selection.style.zIndex='999'
         this.selection.style.touchAction='none'//当触控事件发生在元素上时,不进行任何操作
         
-        this.selection.style.left='43%'
-        this.selection.style.top='40%'
+        this.selection.style.left=(this.container.offsetWidth-this.selection.offsetWidth) / 2 + 'px'
+        this.selection.style.top=(this.container.offsetHeight-this.selection.offsetHeight) / 2 + 'px'
 
         // this.selection.style.maxWidth=this.options.iWidth||'100%'
         // this.selection.style.maxHeight=this.options.iHeight||'100%'
@@ -181,8 +188,24 @@ export class ImgResize {
             // console.log(e.clientX,e.clientY,this.selection.offsetLeft,this.selection.offsetTop);
             this.eventRecord.x = e.clientX - this.selection.offsetLeft;
             this.eventRecord.y = e.clientY - this.selection.offsetTop;
+
+            this.eventRecord.width = this.selection.offsetWidth
+            this.eventRecord.height = this.selection.offsetHeight
+
+            this.eventRecord.left = this.selection.offsetLeft
+            this.eventRecord.top = this.selection.offsetTop
+            this.eventRecord.right = this.container.offsetWidth-(this.eventRecord.left+this.eventRecord.width)
+            this.eventRecord.bottom = this.container.offsetHeight-(this.eventRecord.top+this.eventRecord.height)
+
+
+
+            this.selection.style.left=this.eventRecord.left+'px'
+            this.selection.style.right=''
+            this.selection.style.top=this.eventRecord.top+'px'
+            this.selection.style.bottom=''
+
             this.eventRecord.allowDrap = true; //设为true表示可以移动
-    
+            console.log(this.eventRecord);
             window.onpointermove=(e)=>this.dragEvent(e)
         }
         window.onpointerup=(e)=>{
@@ -205,7 +228,7 @@ export class ImgResize {
             const span=document.createElement('span') as HTMLSpanElement
             span.setAttribute('id',`${direction}-resizer`)
             span.style.backgroundColor='rgba(51, 153, 255)'
-            span.style.opacity='0.5'
+            span.style.opacity='0.7'
             span.style.position='absolute'
             span.style.border='1px solid #ccc'
             span.style.height='8px'
@@ -241,20 +264,58 @@ export class ImgResize {
             span.onpointerdown=(e)=>{
                 e.preventDefault();
                 e.stopPropagation();
-                this.eventRecord.x = e.clientX - this.selection.offsetLeft//鼠标-选择框的左距离=偏差值
-                this.eventRecord.y = e.clientY - this.selection.offsetTop//鼠标-选择框的上距离=偏差值
+                this.eventRecord.x = e.clientX 
+                this.eventRecord.y = e.clientY
+
+                // this.eventRecord.x = e.clientX - this.selection.offsetLeft//鼠标-选择框的左距离=偏差值
+                // this.eventRecord.y = e.clientY - this.selection.offsetTop//鼠标-选择框的上距离=偏差值
 
                 this.eventRecord.sx = e.clientX - span.offsetLeft;//鼠标位置-四角的左距离=偏差值
                 this.eventRecord.sy = e.clientY - span.offsetTop;//鼠标位置-四角的上距离=偏差值
                 
+                // this.eventRecord.width = this.selection.clientWidth
+                // this.eventRecord.height = this.selection.clientWidth
+                this.eventRecord.width = this.selection.getBoundingClientRect().width
+                this.eventRecord.height = this.selection.getBoundingClientRect().height
                 
                 //记录选择框改变前的数值-左边/上边/宽度/高度
                 this.eventRecord.left = this.selection.offsetLeft
                 this.eventRecord.top = this.selection.offsetTop
-                this.eventRecord.width = this.selection.offsetWidth
-                this.eventRecord.height = this.selection.offsetHeight
+                this.eventRecord.right = this.container.offsetWidth-(this.eventRecord.left+this.eventRecord.width)-2
+                this.eventRecord.bottom = this.container.offsetHeight-(this.eventRecord.top+this.eventRecord.height)-2
+
 
                 this.eventRecord.allowScale = true; //设为true表示可以缩放
+                switch(direction){
+                    case 'nw':
+                        this.selection.style.left=''
+                        this.selection.style.right=this.eventRecord.right+'px'
+                        this.selection.style.top=''
+                        this.selection.style.bottom=this.eventRecord.bottom+'px'
+                    break;
+    
+                    case 'ne':
+                        this.selection.style.left=this.eventRecord.left+'px'
+                        this.selection.style.right=''
+                        this.selection.style.top=''
+                        this.selection.style.bottom=this.eventRecord.bottom+'px'
+                    break;
+    
+                    case 'se':
+                        this.selection.style.left=this.eventRecord.left+'px'
+                        this.selection.style.right=''
+                        this.selection.style.top=this.eventRecord.top+'px'
+                        this.selection.style.bottom=''
+                    break;
+    
+                    case 'sw':
+                        this.selection.style.left=''
+                        this.selection.style.right=this.eventRecord.right+ 'px'
+                        this.selection.style.top=this.eventRecord.top+'px'
+                        this.selection.style.bottom=''
+                    break;
+                }
+                console.log(this.eventRecord);
                 window.onpointermove=(e)=>this.scaleEvent(e,direction)
             }
             window.onpointerup=(e)=>{
@@ -311,111 +372,76 @@ export class ImgResize {
         e.preventDefault();
         e.stopPropagation();
         if(this.eventRecord.allowScale){
-            const x = e.clientX -  this.eventRecord.x - 4 
-            const y = e.clientY -  this.eventRecord.y - 4
+            const x = e.clientX - this.eventRecord.x
+            const y = e.clientY - this.eventRecord.y
+            const fixed = this.options.fixed
+            let newW : number
+            let newH : number
+            let overX : boolean
+            let overY : boolean
 
-            const sx = e.clientX -  this.eventRecord.sx
-            const sy = e.clientY -  this.eventRecord.sy
-
-            const newW=this.eventRecord.width - sx
-            const newH=this.eventRecord.height - sy
-
-            const fixed=this.options.fixed
-
-            const test=this.eventRecord.y + this.eventRecord.width-(e.clientX - this.eventRecord.sx*fixed!)
-            console.log(fixed);
-            console.log('x,y',x,y);
-            console.log('sx,sy',sx,sy);
-            console.log('newW,newH',newW,newH);
-            
             switch(d){
                 case 'nw'://左上
-                    if(newW<=0){
-                        this.selection.style.width= '0px'
-                        this.selection.style.left=this.eventRecord.width+this.eventRecord.left+ 'px'
-                    }else{
-                        this.selection.style.width= newW+'px'
-                        this.selection.style.left=x+ 'px'
-                    }
-
-                    if((fixed?(newW/fixed):newH)<=0){
-                        this.selection.style.height='0px'
-                        this.selection.style.top=this.eventRecord.height+this.eventRecord.top + 'px'
-                    }else{
-                        this.selection.style.height= (fixed?(newW/fixed):newH) +'px'
-                        this.selection.style.top=(fixed?(this.eventRecord.height+this.eventRecord.top-(newW/fixed)):y) + 'px'
-                    }
-
+                    newW=this.eventRecord.width - x
+                    newH=this.eventRecord.height - y
+                    overX=this.eventRecord.right>=this.container.offsetWidth-newW
+                    overY=this.eventRecord.bottom>=this.container.offsetHeight-(fixed?(newW/fixed):newH)
                 break;
 
                 case 'ne'://右上
-                    if(sx<=0){
-                        this.selection.style.width= '0px'
-                    }else{
-                        this.selection.style.width=sx+'px'
-                    }
-                    if((fixed?(sx/fixed):newH)<=0){
-                        this.selection.style.height='0px'
-                        this.selection.style.top=this.eventRecord.height+this.eventRecord.top + 'px'
-                    }else{
-                        this.selection.style.height= (fixed?(sx/fixed):newH)+'px'
-                        this.selection.style.top=(fixed?(this.eventRecord.height+this.eventRecord.top-(sx/fixed)):y) + 'px'
-                    }
-
+                    newW=this.eventRecord.width + x
+                    newH=this.eventRecord.height - y
+                    overX=this.eventRecord.left>=this.container.offsetWidth-newW
+                    overY=this.eventRecord.bottom>=this.container.offsetHeight-(fixed?(newW/fixed):newH)
                 break;
 
                 case  'se'://右下
-                    this.selection.style.maxHeight=this.container.offsetHeight-this.eventRecord.top+'px'
-                    this.selection.style.maxWidth=this.container.offsetWidth-this.eventRecord.left+'px'
-                
-                    const maxLeft=sx+this.eventRecord.left>=this.container.offsetWidth
-                    const maxTop=(fixed?(sx/fixed):sy)+this.eventRecord.top>=this.container.offsetHeight
-                    //left和width
-                    if(sx<=0){
-                        this.selection.style.width='0px'
-                    }
-                    else{
-                        this.selection.style.width=sx+'px'
-                    }
-                    //top和height
-                    if((fixed?(sx/fixed):sy)<=0){
-                        this.selection.style.height='0px'
-                    }
-                    else{
-                        this.selection.style.height=(fixed?(sx/fixed):sy)+'px'
-                    }
-                    //处理越界
-                    if(maxTop){
-                        this.selection.style.height=this.container.offsetHeight-this.eventRecord.top+'px'
-                        if(fixed)this.selection.style.width=(this.container.offsetHeight-this.eventRecord.top)*fixed+'px'
-                    }else if(maxLeft){
-                        this.selection.style.width=this.container.offsetWidth-this.eventRecord.left+'px'
-                        if(fixed)this.selection.style.height=(this.container.offsetWidth-this.eventRecord.left)/fixed+'px'
-                    }
-
-                    // if(fixed)this.selection.style.width=(this.container.offsetHeight-this.eventRecord.top)*fixed+'px'
-                    // if(fixed)this.selection.style.height=(this.container.offsetWidth-this.eventRecord.left)/fixed+'px'
-
+                    newW=this.eventRecord.width + x
+                    newH=this.eventRecord.height + y
+                    overX=this.eventRecord.left>=this.container.offsetWidth-newW
+                    overY=this.eventRecord.top>=this.container.offsetHeight-(fixed?(newW/fixed):newH)
                 break;
 
                 case 'sw'://左下
-                    if(newW<=0){
-                        this.selection.style.width='0px'
-                        this.selection.style.left=this.eventRecord.width+this.eventRecord.left+ 'px'
-                    }else {
-                        this.selection.style.width= newW +'px'
-                        this.selection.style.left=x+ 'px'
-                    }
-                    
-                    if((fixed?(newW/fixed):sy)<=0){
-                        this.selection.style.height='0px'
-                    }else{
-                        this.selection.style.height=(fixed?(newW/fixed):sy)+'px'
-                    }
-
-
+                    newW=this.eventRecord.width - x
+                    newH=this.eventRecord.height + y
+                    overX=this.eventRecord.right>=this.container.offsetWidth-newW
+                    overY=this.eventRecord.top>=this.container.offsetHeight-(fixed?(newW/fixed):newH)
                 break;
             }
+
+            //更新宽高↓
+            //width
+            if(newW>0&&!overX){
+            this.selection.style.width=newW+'px'
+            }else if(newW<=0){
+                this.selection.style.width='0px'
+            }
+            //height
+            if(newH>0&&!overY){
+                this.selection.style.height=(fixed?(newW/fixed):newH)+'px'
+            }else if(newH<=0){
+                this.selection.style.height='0px'
+            }
+
+            // if(fixed){
+            //     if(overX){
+
+            //     }
+            //     if(overY){
+
+            //     }
+            // }
+
+            //处理越界
+            // if(maxTop){
+            //     this.selection.style.height=this.container.offsetHeight-this.eventRecord.top+'px'
+            //     if(fixed)this.selection.style.width=(this.container.offsetHeight-this.eventRecord.top)*fixed+'px'
+            // }else if(maxLeft){
+            //     this.selection.style.width=this.container.offsetWidth-this.eventRecord.left+'px'
+            //     if(fixed)this.selection.style.height=(this.container.offsetWidth-this.eventRecord.left)/fixed+'px'
+            // }
+
         }
     }
     //剪裁事件
@@ -434,6 +460,7 @@ export class ImgResize {
             width:(this.selection.offsetWidth),
             height:(this.selection.offsetHeight),
         }
+        
         const { x,y,width,height } = this.selectionP
         const { iWidth,iHeight } = this.options
         //初始化canvas宽高

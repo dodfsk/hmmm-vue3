@@ -191,8 +191,8 @@ const menuOptions = [
 //     overflow-y: hidden;
 // }
 // .content{
-//     overflow:scroll;
-// 	// height: calc(100vh - 42px);
+//     // overflow:scroll;
+// 	height: 100%;
 // }
 :deep(.n-layout-scroll-container){
     overflow:hidden;

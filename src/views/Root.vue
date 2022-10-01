@@ -69,7 +69,7 @@ onMounted(()=>{
     // flex:1;
 	// background: url("@/assets/images/login_bg.jpg") repeat;
 	// background:#ccdbe8b0;
-	background: #6494be85;
+    background-color: rgb(233, 233, 233);
     // overflow: auto;   
     // overflow-y: auto;
     // overflow-y: hidden;
