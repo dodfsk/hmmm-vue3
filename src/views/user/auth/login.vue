@@ -36,7 +36,7 @@ import { reactive, toRefs, ref } from 'vue';
 import { useRouter } from 'vue-router';
 // import { login } from "@/api/user/demo"
 import { useUserStore } from '@/store/user';
-import _ from 'lodash';
+import _ from 'lodash-es';
 import { FormItemRule, FormRules, FormInst } from 'naive-ui';
 
 const router = useRouter();
@@ -44,12 +44,12 @@ const { USER_LOGIN } = useUserStore();
 
 const formRef = ref<FormInst | null>(null);
 
-interface userType {
+interface loginType {
 	username: string | null;
 	password: string | null;
 }
 
-const userState = reactive<userType>({
+const userState = reactive<loginType>({
 	username: null,
 	password: null,
 });
@@ -97,7 +97,6 @@ const handleLogin = _.throttle(
 				path: '/user',
 			});
 		}
-		console.log(useUserStore());
 	},
 	800,
 	{

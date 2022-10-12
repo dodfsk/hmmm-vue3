@@ -16,22 +16,16 @@
             <n-space vertical>
                 
                 <n-avatar
-                     :size="120"
-                    :src="modelRef.avatar"
+                    :size="120"
+                    :src="imgSrc"
+                    fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
                     object-fit="cover"
                     lazy
                     round
                 />
 
-                <n-upload
-                    @before-upload="beforeUpload"
-                >
-                    <!-- list-type="image-card" -->
-                    <!-- :custom-request="customRequest" -->
-                    <n-button type="info">上传</n-button>
-                </n-upload>
-
                 <n-button type="error" @click="showModal=true">打开</n-button>
+                <n-button type="info" :disabled="!faceState.base64" @click="handleUpload">上传</n-button>
 
             </n-space>
 
@@ -45,121 +39,119 @@
             preset="card"
             title="Clipper Tool"
             size="small"
-            style="width:800px;min-height:500px;-webkit-user-drag: none;"
+            style="width:800px;min-height:300px;-webkit-user-drag: none;"
             :bordered="false"
             :block-scroll="true"
-            :segmented="{
-                // content: 'soft',
-                footer: 'soft'
-            }"
         >   
-        <imgResize></imgResize>
 
-            <!-- <uploadModal
-                ref="modalRef"
+            <uploadModal
+                ref="uploadModalRef"
                 :src="modelRef.avatar"
             >
-            </uploadModal> -->
+            </uploadModal>
             <!-- @after-leave="handleCloseModal" -->
+            <n-button @click="handleModalOk" :style="{float:'right'}">确定</n-button>
         </n-modal>
 	</div>
 </template>
 
 <script lang="ts" setup>
-import { h, ref, Component, reactive, onMounted, computed } from 'vue';
-import { FormInst, FormItemInst, FormItemRule, FormRules, NIcon, UploadCustomRequestOptions, UploadFileInfo, useMessage } from 'naive-ui';
-import { BookOutline as BookIcon, PersonOutline as PersonIcon, WineOutline as WineIcon } from '@vicons/ionicons5';
-import { demoPiniaOptions, demoPiniaComposition } from '@/store/demo';
+import { ref,provide, reactive, onMounted, computed } from 'vue';
+import { useMessage } from 'naive-ui';
 import { useUserStore } from '@/store/user';
 import {useMinioStore} from '@/store/minio';
-import { RouterLink } from 'vue-router';
 import { User } from '@/types/user';
 import { OssReplace } from '@/utils/img/imgReplace';
 import { fileToBase64 } from '@/utils/img/imgToBase64';
 import { imgCompress } from '@/utils/img/imgCompress';
 import uploadModal from './uploadModal.vue';
-import imgResize from './imgResize.vue'
+import type {Result} from '@/utils/img/imgClipper'
+import {cloneDeep} from 'lodash-es'
 
-const inverted = ref(true);
-
-let hmlc_info = ref();
 const userStore = useUserStore();
 const minioStore=useMinioStore()
 const message = useMessage();
 
 const loading=ref(true)
-const formRef = ref<FormInst | null>(null);
-const rPasswordFormItemRef = ref<FormItemInst | null>(null);
-const modelRef = ref<User>({});
-const imgSrc=ref<string>('')
-const showModal=ref(false)
-const modalRef=ref()
 
-const avatarObject:{
+const showModal=ref(false)
+const uploadModalRef=ref()
+
+const preSignInfo:{
     url?:string,
     fileName?:string
 }={}
 
-const beforeUpload=async (data: {
-    file: UploadFileInfo
-    fileList: UploadFileInfo[]
-    })=>{
-    const mimeType=data.file.file?.type
-    console.log(mimeType,data.file.file?.name);
-    
-    if (mimeType !== 'image/png'&&mimeType!='image/jpeg') {
-        message.error('只能上传png/jpg格式的图片文件，请重新上传')
-        return false
+const modelRef = ref<User>({});
+const imgSrc=ref<string>('')
+const faceState=reactive<Result>({
+    base64:'',
+    file:null,
+})
+
+const handleUpload=async ()=>{
+    // fileToBase64((file.file)as File,(base64:string)=>{
+    //         console.log('压缩前',base64);
+    //         modelRef.value.avatar=base64
+    //     // imgCompress(base64,(res:string)=>{
+    //     //     console.log('压缩后',res);
+    //         // modelRef.value.avatar=res
+    //         showModal.value=true
+    // })
+    // preSignInfo.fileName=faceState.file?.name
+    preSignInfo.fileName='avatar.png'
+
+    const params={
+        bucketName:'picture',
+        fileName:preSignInfo.fileName,
+    }
+    //获取预签名url
+    const url=await minioStore.MINIO_GET_URL(params)
+    if(url)preSignInfo.url=url.data.data.url
+    //put方法直接上传file至预签名url
+    const res=await minioStore.MINIO_PUT({
+        url:preSignInfo.url,
+        data:faceState.file,
+        headers: {
+            'Content-Type': faceState.file?.type
+        },
+    })
+    //上传成功回调
+    if(res){
+        message.success('上传成功')
+        handleUpdate()            
+        loading.value=false
+        faceState.base64=''
+        faceState.file=null
     }
 
-    fileToBase64((data.file.file)as File,(base64:string)=>{
-            console.log('压缩前',base64);
-            modelRef.value.avatar=base64
-        // imgCompress(base64,(res:string)=>{
-        //     console.log('压缩后',res);
-            // modelRef.value.avatar=res
-            showModal.value=true
-        // })
-        
-    })
-
-    // avatarObject.fileName=`avatar.${data.file.file?.name.split('.').pop()?.toLocaleLowerCase()}`
-    // console.log(data.file);
-
-    // const params={
-    //     bucketName:'picture',
-    //     fileName:avatarObject.fileName,
-    // }
-    // const res=await minioStore.MINIO_GET_URL(params)
-    // if(res)avatarObject.url=res.data.data.url
-    
-    return true
 }
 
-const customRequest=async ({file,onFinish}:UploadCustomRequestOptions)=>{
-    const res=await minioStore.MINIO_PUT({
-            url:avatarObject.url,
-            data:file.file,
-            headers: {
-                'Content-Type': file.file?.type
-            },
-        })
-        if(res){
-            message.success('上传成功')
-            modelRef.value.avatar=`oss/picture/${modelRef.value.username}/${avatarObject.fileName}`
-            // imgSrc.value=file.file
-            handleUpdate()            
-                loading.value=false
-            onFinish()
-        }
 
+
+const handleModalOk=async ()=>{
+    const alter=await uploadModalRef.value.getAlter()
+    console.log('alter,alter.file',alter,alter.file);
+    if(alter){
+        imgSrc.value=alter.base64
+        Object.assign(faceState,alter)
+        modelRef.value.avatar=alter.base64
+        showModal.value=false
+    }
 }
 
 const handleUpdate=async ()=>{
+    modelRef.value.avatar=`@oss/picture/${modelRef.value.username}/${preSignInfo.fileName}`
 	const res = await userStore.USER_SET(modelRef.value)
 	const { code, message, meta, data = {} } = res.data
+    if(data.birth){
+        data.birth=new Date(data.birth)
+    }
+    if(data.avatar){
+        data.avatar=OssReplace(data.avatar)+`?${new Date().getTime()}`
+    }
+	Object.assign(modelRef.value, data)
 }
-
 
 const getUserInfo = async () => {
 	const res = await userStore.USER_GET(userStore.userInfo.username!)
@@ -167,14 +159,15 @@ const getUserInfo = async () => {
         return
     }
 	const { code, message, meta, data = {} } = res.data
-	hmlc_info.value = data
     if(data.birth){
         data.birth=new Date(data.birth)
     }
     if(data.avatar){
-        imgSrc.value=OssReplace(data.avatar)
+        data.avatar=OssReplace(data.avatar)+`?${new Date().getTime()}`
     }
 	Object.assign(modelRef.value, data)
+    imgSrc.value=data.avatar
+    
 };
 onMounted(() => {
 	getUserInfo();

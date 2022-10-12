@@ -129,15 +129,16 @@ const getFile=()=>{
         container:'#clipper-container',
         cWidth:'800px',
         cHeight:'400px',
-        // fixed:1920/1080,
-        // iWidth:1280,
-        // iHeight:720,
+        fixed:1920/1080,
+        iWidth:1280,
+        iHeight:720,
     })
     console.log(clipper);
 }
 const getAlter=()=>{
     console.log(
-        clipper.getAlter()
+        clipper.getAlter(),
+        clipper.result
     );
 }
 </script>

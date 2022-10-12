@@ -24,7 +24,7 @@
                     hmlc
                 </div> -->
 			<!-- <n-switch v-model:value="inverted" />   -->
-            
+
             <n-input
 				class="search"
 				v-model:value="searchValue"
@@ -37,6 +37,8 @@
 					</n-button>
 				</template>
 			</n-input>
+
+
 			<n-popover placement="bottom" trigger="hover" v-if="userStore?.userInfo?.username" ref="roomPopover">
 				<template #trigger>
 					<n-button type="info"> 创作中心 </n-button>
@@ -50,18 +52,25 @@
 			<n-popover placement="bottom" trigger="hover" :disabled="!userStore?.userInfo?.username" ref="userPopover">
 				<template #trigger>
 					<n-button color="#8a2be2" v-if="userStore?.userInfo?.username">
-						<template #icon>
+						<!-- <template #icon>
 							<n-icon :component="Person">
 								<cash-icon />
 							</n-icon>
-						</template>
+						</template> -->
+
+                        <n-avatar
+                            :size="28"
+                            :src="userStore.userInfo.avatar?OssReplace(userStore.userInfo.avatar)+`?${new Date().getTime()}`:''"
+                            fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+                            object-fit="cover"
+                            round
+                        />
 						{{ `${userStore?.userInfo?.username}` }}
 					</n-button>
 
                     <n-button color="#8a2be2" v-else @click="handleUnlogin">
 						{{ `未登录` }}
 					</n-button>
-
 				</template>
 
 				<n-space vertical>
@@ -70,18 +79,20 @@
 					<n-button type="error"  @click="handleLogOut"> 登出 </n-button>
 				</n-space>
 			</n-popover>
+
         </div>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { h, ref, reactive, Component, onMounted } from 'vue';
+import { h, ref, reactive, Component, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { NIcon } from 'naive-ui';
 import type { MenuOption, PopoverProps } from 'naive-ui';
 import { RouterLink } from 'vue-router';
 import {  SparklesSharp, SearchOutline, Person, HomeSharp, Square, Reader } from '@vicons/ionicons5';
 import { useUserStore } from '@/store/user';
+import { OssReplace } from '@/utils/img/imgReplace';
 
 const renderIcon = (icon: Component) => {
         return () => h(NIcon, {size:"18",style:'margin-top:2px'}, { default: () => h(icon) });
@@ -154,6 +165,7 @@ const router = useRouter();
 const userStore = useUserStore();
 const userPopover = ref();
 const roomPopover = ref();
+const imgSrc=ref<string>('')
 
 console.log('route', route);
 
@@ -215,6 +227,16 @@ const handleLogOut = () => {
 //         path: "/room",
 //     });
 // }
+
+// watch(
+//     ()=>userStore.userInfo.avatar,
+//     ()=>{
+//     if(userStore.userInfo.avatar!=undefined){
+//         imgSrc.value=OssReplace(userStore.userInfo.avatar)+`?${new Date().getTime()}`
+//         console.log('imgSrc',imgSrc.value);
+        
+//     }
+// })
 </script>
 
 <style lang="less" scoped>
@@ -271,7 +293,7 @@ const handleLogOut = () => {
 		display: flex;
 		justify-content: end;
 		align-items: center;
-		gap: 12px;
+		gap: 10px;
           :deep(.n-input-wrapper){
                 padding-right: 0;
         }

@@ -20,7 +20,6 @@ export  const getUploadUrl=async (data = {})=>{
 export  const putObecjt=async (params:any)=>{
     const { url,headers,data={} }=params
     console.log('params',params);
-    
     return await axios({
         url,
         headers,

@@ -23,7 +23,12 @@
 
             <n-form ref="formRef" :model="modelRef" :rules="rules" class="form">
                 <n-form-item path="username" label="用户名" >
-                    <n-input v-model:value="modelRef.username" @keydown.enter.prevent  disabled />
+                    <n-input 
+                        v-model:value="modelRef.username" 
+                        placeholder=""
+                        @keydown.enter.prevent  
+                        disabled 
+                    />
                 </n-form-item>
                 <!-- <n-form-item path="password" label="密码">
                     <n-input

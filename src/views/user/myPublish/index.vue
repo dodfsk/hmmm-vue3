@@ -39,6 +39,10 @@
 						</div>
 					</div>
 				</div>
+
+                <div v-if="noPublish" style="text-align:center;width:100%">
+                        你还没有发布任何内容哦
+                </div>
 			</div>
 		</div>
 	</div>
@@ -52,12 +56,13 @@ import { useRoute, useRouter } from 'vue-router';
 import quillEditorDeck  from '@/components/rich-editor/quillEditor.vue'
 import { format } from 'date-fns'
 import { Room } from '@/types/room';
+import { ImgReplace } from '@/utils/img/imgReplace';
 
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
 const roomStore = useRoomStore();
-
+const noPublish=ref<boolean>(false)
 const publishList= ref<Room[]>([]
     // [
     //     {
@@ -89,10 +94,17 @@ const publishList= ref<Room[]>([]
 const getPublishList = async () => {
 	const res = await roomStore.ROOM_LIST({from:userStore.userInfo.username!})
 	const { code, message, meta, data = {} } = res.data
-    data.roomList.forEach((item:Room) => {
-        item.createdAt=new Date(item.createdAt!)
-    });
-    publishList.value=data.roomList
+    if(code!==200){
+        noPublish.value=true
+    }
+    if(data.roomList){
+        data.roomList.forEach((item:Room) => {
+            item.createdAt=new Date(item.createdAt!)
+            item.content=ImgReplace(item.content)//替换img地址
+        });
+        publishList.value=data.roomList
+    }
+
 };
 
 onMounted(() => {

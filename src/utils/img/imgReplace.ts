@@ -9,7 +9,7 @@ export  const ImgReplace=(data:string)=>{
 }
 
 export  const OssReplace=(data:string)=>{
-    const regex=/<img [^>]*src=['"]@oss/g
+    const regex=/@oss/g
     //只修改oss前缀为oss地址
     // const a=/[o][s][s]/
     const oss=import.meta.env.VITE_APP_OSS

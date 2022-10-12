@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import _ from 'lodash';
+import _ from 'lodash-es';
 import { reactive, toRefs, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { GlassesOutline, Glasses } from '@vicons/ionicons5';

@@ -1,5 +1,4 @@
 
-
 type Options={
     container:string,
     cWidth:string,//容器宽
@@ -24,8 +23,6 @@ type EventRecord={
     allowScale:boolean,
     x:number,
     y:number,
-    sx:number,
-    sy:number,
     left:number,
     top:number,
     right:number,
@@ -33,9 +30,9 @@ type EventRecord={
     width:number,//记录原宽度
     height:number,//记录原高度
 }
-type Result={
+export type Result={
     base64?:string,
-    file?:File
+    file:File|null
 }
 type Direction='nw'|'ne'|'se'|'sw'
 
@@ -49,7 +46,10 @@ export class ImgClipper {
     public selection : HTMLDivElement = document.createElement('div') as HTMLDivElement   //选择区域
     public file:File//传入的图片file
     public options:Options
-    public result:Result={}//返回的图片
+    public result:Result={
+        base64:'',
+        file:null,
+    }//返回的图片
     public sizeRatio:string='auto'
     public scaleRatio:number=1
 
@@ -68,8 +68,6 @@ export class ImgClipper {
         allowScale:false,
         x:0,
         y:0,
-        sx:0,
-        sy:0,
         left:0,
         top:0,
         right:0,
@@ -167,8 +165,8 @@ export class ImgClipper {
         this.selection.style.outlineWidth='3000px'
         this.selection.style.border='1px dashed rgba(238, 238, 238, 1)'
         this.selection.style.boxSizing="border-box"
-        this.selection.style.width='100px'
-        this.selection.style.height='100px'
+        this.selection.style.width=100+'px'
+        this.selection.style.height=(this.options.fixed?100/this.options.fixed:100)+'px'
         this.selection.style.cursor='move'
         this.selection.style.position='absolute'
         this.selection.style.zIndex='999'
@@ -270,8 +268,8 @@ export class ImgClipper {
                 // this.eventRecord.x = e.clientX - this.selection.offsetLeft//鼠标-选择框的左距离=偏差值
                 // this.eventRecord.y = e.clientY - this.selection.offsetTop//鼠标-选择框的上距离=偏差值
 
-                this.eventRecord.sx = e.clientX - span.offsetLeft;//鼠标位置-四角的左距离=偏差值
-                this.eventRecord.sy = e.clientY - span.offsetTop;//鼠标位置-四角的上距离=偏差值
+                // this.eventRecord.sx = e.clientX - span.offsetLeft;//鼠标位置-四角的左距离=偏差值
+                // this.eventRecord.sy = e.clientY - span.offsetTop;//鼠标位置-四角的上距离=偏差值
                 
                 // this.eventRecord.width = this.selection.clientWidth
                 // this.eventRecord.height = this.selection.clientWidth
@@ -344,8 +342,8 @@ export class ImgClipper {
             const right=this.container.offsetWidth-this.selection.offsetWidth
             const bottom=this.container.offsetHeight-this.selection.offsetHeight
 
-            //边距10自动吸附
-            const adsorbSize=10
+            //边距5自动吸附
+            const adsorbSize=5
 
             if(left<adsorbSize){
                 this.selection.style.left=0 + 'px'
@@ -377,76 +375,67 @@ export class ImgClipper {
             const fixed = this.options.fixed
             let newW : number
             let newH : number
-            let overX : boolean
-            let overY : boolean
-
+            let maxW : number
+            let maxH : number
             switch(d){
                 case 'nw'://左上
                     newW=this.eventRecord.width - x
-                    newH=this.eventRecord.height - y
-                    overX=this.eventRecord.right>=this.container.offsetWidth-newW
-                    overY=this.eventRecord.bottom>=this.container.offsetHeight-(fixed?(newW/fixed):newH)
+                    newH=fixed?(newW/fixed):(this.eventRecord.height - y)
+                    maxW=this.container.offsetWidth-this.eventRecord.right
+                    maxH=this.container.offsetHeight-this.eventRecord.bottom
                 break;
 
                 case 'ne'://右上
                     newW=this.eventRecord.width + x
-                    newH=this.eventRecord.height - y
-                    overX=this.eventRecord.left>=this.container.offsetWidth-newW
-                    overY=this.eventRecord.bottom>=this.container.offsetHeight-(fixed?(newW/fixed):newH)
+                    newH=fixed?(newW/fixed):(this.eventRecord.height - y)
+                    maxW=this.container.offsetWidth-this.eventRecord.left
+                    maxH=this.container.offsetHeight-this.eventRecord.bottom
                 break;
 
                 case  'se'://右下
                     newW=this.eventRecord.width + x
-                    newH=this.eventRecord.height + y
-                    overX=this.eventRecord.left>=this.container.offsetWidth-newW
-                    overY=this.eventRecord.top>=this.container.offsetHeight-(fixed?(newW/fixed):newH)
+                    newH=fixed?(newW/fixed):(this.eventRecord.height + y)
+                    maxW=this.container.offsetWidth-this.eventRecord.left
+                    maxH=this.container.offsetHeight-this.eventRecord.top
                 break;
 
                 case 'sw'://左下
                     newW=this.eventRecord.width - x
-                    newH=this.eventRecord.height + y
-                    overX=this.eventRecord.right>=this.container.offsetWidth-newW
-                    overY=this.eventRecord.top>=this.container.offsetHeight-(fixed?(newW/fixed):newH)
+                    newH=fixed?(newW/fixed):(this.eventRecord.height + y)
+                    maxW=this.container.offsetWidth-this.eventRecord.right
+                    maxH=this.container.offsetHeight-this.eventRecord.top
                 break;
             }
-
+            //处理固定尺寸时的越界
+            if(fixed){
+                (maxW/fixed<=maxH)?
+                    maxH=maxW/fixed:maxW=maxH*fixed
+            }
             //更新宽高↓
             //width
-            if(newW>0&&!overX){
+            if(newW>0&&newW<maxW){
             this.selection.style.width=newW+'px'
             }else if(newW<=0){
                 this.selection.style.width='0px'
+            }else if(newW>maxW){
+                this.selection.style.width=maxW+'px'
             }
             //height
-            if(newH>0&&!overY){
-                this.selection.style.height=(fixed?(newW/fixed):newH)+'px'
+            if(newH>0&&newH<maxH){
+                this.selection.style.height=newH+'px'
             }else if(newH<=0){
                 this.selection.style.height='0px'
+            }else if(newH>maxH){
+                this.selection.style.height=maxH+'px'
             }
 
-            // if(fixed){
-            //     if(overX){
-
-            //     }
-            //     if(overY){
-
-            //     }
-            // }
-
-            //处理越界
-            // if(maxTop){
-            //     this.selection.style.height=this.container.offsetHeight-this.eventRecord.top+'px'
-            //     if(fixed)this.selection.style.width=(this.container.offsetHeight-this.eventRecord.top)*fixed+'px'
-            // }else if(maxLeft){
-            //     this.selection.style.width=this.container.offsetWidth-this.eventRecord.left+'px'
-            //     if(fixed)this.selection.style.height=(this.container.offsetWidth-this.eventRecord.left)/fixed+'px'
-            // }
 
         }
     }
     //剪裁事件
     getAlter(){
-        // const canvas: HTMLCanvasElement = document.createElement('canvas')   
+        // const canvas: HTMLCanvasElement = document.createElement('canvas')
+        return new Promise((resolve)=>{
         const ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D;
         ctx!.imageSmoothingQuality = 'high'
 
@@ -481,18 +470,23 @@ export class ImgClipper {
         let imgbase64= this.canvas.toDataURL("image/png");
         this.original.src=imgbase64
         this.result.base64=imgbase64
-        console.log(imgbase64);
+        // console.log(imgbase64);
 
         //保存file
         this.canvas.toBlob((blob)=>{
             if(blob)
-            this.result.file = new File([blob], 'result', {
+            this.result.file = new File([blob], 'result.png', {
                 type : 'image/png'
             })
+            resolve(this.result)
         })
 
-        return this.result
+        })
         
     };
+
+    getFile(){
+        return Promise.resolve(this.result)
+    }
     
 }

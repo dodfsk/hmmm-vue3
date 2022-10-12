@@ -13,21 +13,26 @@ export const useUserStore = defineStore(
 		//state
 		const router = useRouter();
 		const init: User = {
-			username: null,
-			password: null,
+			username: undefined,
+            // password: undefined,
+            role:undefined,
+            phone: undefined,
+            email: undefined,
+            birth: undefined,
+            avatar: undefined,
 		};
-		const userInfo = reactive<User>({
-			username: null,
-			password: null,
-		});
+		let userInfo = reactive<User>({
+            // password:null,
+        });
 
 		//action
 		const USER_LOGIN = async (params: User) => {
 			const res = await login(params);
 			const { code, data = {} } = res.data;
 			if (code === 200) {
-				setUserInfo(params);
 				setToken(data.token);
+                const {username,role,phone,email,birth,avatar}=(await USER_GET(params.username!)).data.data
+                setUserInfo({username,role,phone,email,birth,avatar})
 			}
 			return res;
 		};
@@ -70,19 +75,19 @@ export const useUserStore = defineStore(
 
 		//无接口调用
 		const setUserInfo = (params: User) => {
-			userInfo.username = params.username;
-			// Object.assign(userInfo,params)
+			// userInfo.username = params.username;
+			Object.assign(userInfo,params)
 			//手动存入localStorage方式
 			//转换为字符串存入localStorage
 			// localStorage.setItem('userInfo',JSON.stringify(userInfo))
 		};
 		const logOut = () => {
-			Object.assign(userInfo, init);
-			localStorage.removeItem('Pinia-USER');
-			delToken();
+			Object.assign(userInfo, init)
+			localStorage.removeItem('Pinia-USER')
+			delToken()
 			router.push({
 				path: '/user/login',
-			});
+			})
 		};
 
 		//手动存入localStorage方式
