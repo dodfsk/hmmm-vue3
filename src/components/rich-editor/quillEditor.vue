@@ -272,7 +272,7 @@ defineExpose({
 }
 
 .ql-toolbar.ql-snow {
-	text-align: left !important;
+	// text-align: left !important;
     display: flex;
 	white-space: nowrap;
     max-height:65px;

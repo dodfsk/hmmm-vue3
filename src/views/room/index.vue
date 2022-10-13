@@ -214,7 +214,7 @@ const windowStyle={
 @import '@/views/root.less';
 
 .container{
-    width:calc(100vw - 14%);
+    width:calc(100vw - 8%);
     // min-width:600px;
     height: 100%;
     // background-color: #ccc;
@@ -245,13 +245,13 @@ const windowStyle={
     height:100%;
     justify-content: space-evenly;
     display: grid;
-    grid-template-columns: repeat(auto-fill, 240px);
-    grid-gap: 15px;
+    grid-template-columns: repeat(auto-fill, 270px);
+    grid-gap: 12px;
     .n-card{
-    max-width: 240px;
-    height: 350px;
+    max-width: 270px;
+    height: 250px;
     :deep(&-cover){
-        max-height: 145px;
+        max-height: 120px;
     }
     :deep(&__content){
         text-overflow: ellipsis;

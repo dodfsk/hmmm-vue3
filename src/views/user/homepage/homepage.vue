@@ -7,7 +7,6 @@
     /> -->
 
 		<n-upload
-			:action="uploadUrl"
 			:headers="{
 				'naive-info': 'hello!',
 			}"
@@ -16,8 +15,9 @@
 			}"
 			:custom-request="customRequest"
 		>
-			<n-button>上传文件</n-button>
+			<n-button>上传文件至MINIO</n-button>
 		</n-upload>
+        clipper图片裁剪组件demo
         <input type="file" id="file" @change="getFile"/>
 
         <div id="clipper-container">
@@ -32,14 +32,11 @@
 import { ref,nextTick } from 'vue';
 import { useMinioStore } from '@/store/minio';
 import { UploadCustomRequestOptions, useMessage } from 'naive-ui';
-import request from '@/utils/axios/index';
-import axios from 'axios';
 import { ImgClipper } from '@/utils/img/imgClipper';
 
 const a = ref<string>('a');
 const minioStore = useMinioStore();
 const message = useMessage();
-const uploadUrl = ref(`/upload/getUrl`);
 const filesUrl=ref()
 
 const handleUpload = async () => {
@@ -92,17 +89,15 @@ const customRequest = async ({
 	//     })
 	//   }
 	formData.append('file', file.file as File);
-	const res = await request({
-		url: uploadUrl.value,
-		method: 'post',
-		data: {
-			bucketName: 'picture',
-			fileName: file.name,
-		},
-	});
+
 	//   let reg_str =/^http:\/\/\d+\.\d+\.\d+\.\d+:\d+/
-	const url = res.data.data.url;
+    const params= {
+        bucketName: 'picture',
+        fileName: file.name,
+    }
 	//   .replace(reg_str,import.meta.env.VITE_APP_OSS)
+    const res=await minioStore.MINIO_GET_URL(params)
+	const url = res.data.data.url;
 
 	console.log(file, formData);
 

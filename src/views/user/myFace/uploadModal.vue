@@ -33,13 +33,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, nextTick, watch,ref,inject } from 'vue';
+import { onMounted, nextTick, watch,ref,inject, Ref } from 'vue';
 import { ImgClipper } from '@/utils/img/imgClipper';
 import { ArchiveOutline } from '@vicons/ionicons5'
 import { UploadFileInfo } from 'naive-ui';
 
 export type DefineExpose = {
 	// cropper: InstanceType<typeof Cropper>;
+        isClipperReady:Ref<boolean>,
         getAlter:Function,
         getResult:Function,
 };
@@ -105,6 +106,7 @@ const getResult=async ()=>{
 }
 
 defineExpose<DefineExpose>({
+    isClipperReady,
 	getAlter,
     getResult,
 });

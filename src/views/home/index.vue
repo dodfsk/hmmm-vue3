@@ -44,7 +44,7 @@ const aref = () => {
 	justify-content: center;
 	align-items: center;
 	background: url("@/assets/images/login_bg.jpg") repeat;
-    
+    text-align: center;
 }
 
 .hello{

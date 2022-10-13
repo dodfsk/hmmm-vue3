@@ -141,6 +141,7 @@
 	// border: 1px solid #000;
 	border-radius: 50px;
     background-color:darkslateblue;
+    text-align: center;
 }
 
 :deep(#editor-resizer) {

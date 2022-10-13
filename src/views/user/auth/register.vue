@@ -63,20 +63,21 @@ import { GlassesOutline, Glasses } from '@vicons/ionicons5';
 // import { register } from "@/api/user/demo"
 import { useUserStore } from '@/store/user';
 import { FormItemRule, FormRules, FormInst } from 'naive-ui';
+import { User } from '@/types/user';
 
 const router = useRouter();
 const { USER_REG } = useUserStore();
 
 type registerType = {
-	username: string | null;
-	password: string | null;
-	reenteredPassword: string | null;
+	username?: string ;
+	password?: string ;
+	reenteredPassword?: string;
 };
 
 const userState = reactive<registerType>({
-	username: null,
-	password: null,
-	reenteredPassword: null,
+	username: undefined,
+	password: undefined,
+	reenteredPassword: undefined,
 });
 
 // let { name, password } = toRefs(userState);
@@ -149,7 +150,9 @@ const validateAction = () => {
 
 const handleRegister = _.throttle(
 	async () => {
-		const params=_.pick(userState, ['username', 'password']);
+		const params:User={}
+        params.username=userState.username
+        params.password=userState.password
 		const res = await USER_REG(params);
 		const { code, message } = res.data;
 

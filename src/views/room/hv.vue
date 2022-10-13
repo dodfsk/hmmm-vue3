@@ -242,9 +242,9 @@ watch(
 		height: 80%;
 		border: 2px solid #666;
 		border-top: none;
-		.html-box {
-			text-align: left;
-		}
+		// .html-box {
+			// text-align: left;
+		// }
 	}
 }
 .content-right,.comment-right {

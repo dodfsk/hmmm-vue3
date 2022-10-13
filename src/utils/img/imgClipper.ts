@@ -1,12 +1,12 @@
 
 type Options={
-    container:string,
+    container:string,//容器#id
     cWidth:string,//容器宽
     cHeight:string,//容器高
     //----------//
-    fixed?:number,//固定尺寸,如1920/1080
-    iWidth?:number,//输出图像宽
-    iHeight?:number,//输出图像高
+    fixed?:number,//固定尺寸,例1920/1080
+    iWidth?:number,//最终输出图像的宽
+    iHeight?:number,//最终输出图像的高
 }
 type ImgData={
     width:number,
@@ -30,11 +30,12 @@ type EventRecord={
     width:number,//记录原宽度
     height:number,//记录原高度
 }
+type Direction='nw'|'ne'|'se'|'sw'
+
 export type Result={
     base64?:string,
     file:File|null
 }
-type Direction='nw'|'ne'|'se'|'sw'
 
 export class ImgClipper {
     public container:HTMLElement   //传入目标容器
@@ -50,8 +51,8 @@ export class ImgClipper {
         base64:'',
         file:null,
     }//返回的图片
-    public sizeRatio:string='auto'
-    public scaleRatio:number=1
+    // public sizeRatio:string='auto'
+    // public scaleRatio:number=1
 
     public imgOriginal:ImgData={//原始图片信息
         width:0,
@@ -434,7 +435,6 @@ export class ImgClipper {
     }
     //剪裁事件
     getAlter(){
-        // const canvas: HTMLCanvasElement = document.createElement('canvas')
         return new Promise((resolve)=>{
         const ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D;
         ctx!.imageSmoothingQuality = 'high'

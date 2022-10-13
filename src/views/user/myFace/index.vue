@@ -7,7 +7,7 @@
                 <h2>我的头像</h2>
                 <hr>
             </div>
-            <n-button type="primary" @click="handleUpdate"> 保 存</n-button>
+            <!-- <n-button type="primary" @click="handleUpdate"> 保 存</n-button> -->
 
         </div>
 
@@ -50,7 +50,7 @@
             >
             </uploadModal>
             <!-- @after-leave="handleCloseModal" -->
-            <n-button @click="handleModalOk" :style="{float:'right'}">确定</n-button>
+            <n-button  @click="handleModalOk" :style="{float:'right'}">确定</n-button>
         </n-modal>
 	</div>
 </template>
@@ -130,13 +130,18 @@ const handleUpload=async ()=>{
 
 
 const handleModalOk=async ()=>{
-    const alter=await uploadModalRef.value.getAlter()
-    console.log('alter,alter.file',alter,alter.file);
-    if(alter){
-        imgSrc.value=alter.base64
-        Object.assign(faceState,alter)
-        modelRef.value.avatar=alter.base64
-        showModal.value=false
+    // console.log(uploadModalRef.value);
+    if(uploadModalRef.value.isClipperReady){
+        const alter=await uploadModalRef.value.getAlter()
+        console.log('alter,alter.file',alter,alter.file);
+        if(alter){
+            imgSrc.value=alter.base64
+            Object.assign(faceState,alter)
+            modelRef.value.avatar=alter.base64
+            showModal.value=false
+        }
+    }else{
+        message.error('请先选择图片')
     }
 }
 

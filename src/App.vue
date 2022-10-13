@@ -35,15 +35,12 @@ html,body,#app{
 	font-family: Avenir, Helvetica, Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	text-align: center;
 	color: #2c3e50;
 }
 #nprogress .bar {
 	background: rgb(35, 186, 35) !important; /* 这里可以修改进度条颜色 */
 	height: 3px !important;
 }
-.n-input {
-	text-align: left;
-}
+
 
 </style>

@@ -24,18 +24,12 @@
 
 			<div class="edit_box">
 				<quill-editor-deck
-					v-if="editSwitch"
+					v-if="!editSwitch"
 					ref="quillEditorRef"
 					v-model:content="content"
 					@ready="quillReady"
 				/>
-				<!-- <video 
-                        src="@/assets/video/test.mp4"
-                        class="item"
-                        width="640" 
-                        height="480"
-                    ></video> -->
-				<tip-tap-editor v-if="!editSwitch" v-model="content"> 
+				<tip-tap-editor v-else v-model="content"> 
                 
                 </tip-tap-editor>
 			</div>
@@ -153,13 +147,14 @@ const getRoomDetail = async (id: string) => {
 	}
 };
 
-watch(
-	() => roomState.content,
-	() => {
-		console.log('content', roomState.content);
-	}
-	// { immediate:true,deep:true}
-);
+// watch(
+// 	() => roomState.content,
+// 	() => {
+// 		console.log('content', roomState.content);
+// 	}
+// 	// { immediate:true,deep:true}
+// );
+
 watch(
 	() => route.query.id,
 	() => {

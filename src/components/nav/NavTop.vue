@@ -247,7 +247,7 @@ const handleLogOut = () => {
 
 .nav {
 	width: 100%;
-	// height:100%;
+	height:45px;
 	padding: 0 20px;
 	// background-color: rgba(255, 255, 255, 0.7);
 	// box-shadow: 0 0 5px rgba(51, 51, 51, 0.721);
