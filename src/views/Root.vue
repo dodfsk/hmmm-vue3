@@ -29,6 +29,8 @@
 <script setup lang="ts">
 import NavTop from '@/components/nav/NavTop.vue';
 import { onMounted, ref } from 'vue';
+
+
 // import Menu from "@/components/global/menu/Menu.vue";
 // import Footer from "@/components/layout/footer/Footer.vue";
 const inverted = ref(false);

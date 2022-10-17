@@ -7,7 +7,16 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    App: typeof import('./src/components/rich-editor/tiptap-media-resize-main/src/App.vue')['default']
     AppProvider: typeof import('./src/components/global/AppProvider.vue')['default']
+    CodeBlockComponent: typeof import('./src/components/rich-editor/CodeBlockComponent.vue')['default']
+    CodeBlockCompotent: typeof import('./src/components/rich-editor/CodeBlockCompotent.vue')['default']
+    HelloWorld: typeof import('./src/components/rich-editor/tiptap-media-resize-main/src/components/HelloWorld.vue')['default']
+    ImagePreviewComponent: typeof import('./src/components/rich-editor/tiptap-extension-image-freely/src/ImagePreviewComponent.vue')['default']
+    ImageResizeComponent: typeof import('./src/components/rich-editor/ImageResizeComponent.vue')['default']
+    ImageRotateComponent: typeof import('./src/components/rich-editor/tiptap-extension-image-freely/src/ImageRotateComponent.vue')['default']
+    ImageWithTool: typeof import('./src/components/rich-editor/tiptap-extension-image-freely/src/ImageWithTool.vue')['default']
+    ImgPlaceholder: typeof import('./src/components/rich-editor/tiptap-extension-image-upload/src/imgPlaceholder.vue')['default']
     NAvatar: typeof import('naive-ui')['NAvatar']
     NavTop: typeof import('./src/components/nav/NavTop.vue')['default']
     NButton: typeof import('naive-ui')['NButton']
@@ -36,8 +45,10 @@ declare module '@vue/runtime-core' {
     NUpload: typeof import('naive-ui')['NUpload']
     NUploadDragger: typeof import('naive-ui')['NUploadDragger']
     QuillEditor: typeof import('./src/components/rich-editor/quillEditor.vue')['default']
+    ResizableMediaNodeView: typeof import('./src/components/rich-editor/tiptap-media-resize-main/src/components/resizableMedia/ResizableMediaNodeView.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Tiptap: typeof import('./src/components/rich-editor/tiptap-media-resize-main/src/components/Tiptap.vue')['default']
     TipTapEditor: typeof import('./src/components/rich-editor/tipTapEditor.vue')['default']
   }
 }

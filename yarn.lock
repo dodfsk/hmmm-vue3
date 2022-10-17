@@ -126,6 +126,15 @@
   resolved "https://registry.npmmirror.com/@tiptap/extension-bullet-list/-/extension-bullet-list-2.0.0-beta.199.tgz#72df0c94c6a9a5bce97ee1e0180657f1a63ffe18"
   integrity sha512-gGRQRqdQqCZQstB3ztSy8yzIdm5/5IIYxhCuFNb3Z9c9p/CzyRmaNqa7XkRLrXSajp4lS0OH8RkFUJqL6U+/9w==
 
+"@tiptap/extension-code-block-lowlight@^2.0.0-beta.199":
+  version "2.0.0-beta.199"
+  resolved "https://registry.npmmirror.com/@tiptap/extension-code-block-lowlight/-/extension-code-block-lowlight-2.0.0-beta.199.tgz#1861abababe8d17f3cd36ebcefb39ba95b649dc1"
+  integrity sha512-1FWMdut6ZB/c0/3qbd+ljiB1M/YWADiGHBpm9bVhnoMcPGGkVS5ww+bUYpLBdBpTDcemfzkt7FtrfV0SKEg3+g==
+  dependencies:
+    prosemirror-model "^1.18.1"
+    prosemirror-state "^1.4.1"
+    prosemirror-view "^1.28.2"
+
 "@tiptap/extension-code-block@^2.0.0-beta.199":
   version "2.0.0-beta.199"
   resolved "https://registry.npmmirror.com/@tiptap/extension-code-block/-/extension-code-block-2.0.0-beta.199.tgz#145baa37276601bce75ddad55ab4926bc78b28fc"
@@ -181,6 +190,11 @@
   resolved "https://registry.npmmirror.com/@tiptap/extension-heading/-/extension-heading-2.0.0-beta.199.tgz#b766de44fd09843364280a03d1e180db346f1ccd"
   integrity sha512-WGQ7ET2TBpldrD8JX37OXHXq05LU3OWItIVBs9nKGh4otZTUwPtwfOyMlFfA+IMfQif+ilwLGvUC6EHOw/LwxQ==
 
+"@tiptap/extension-highlight@^2.0.0-beta.199":
+  version "2.0.0-beta.199"
+  resolved "https://registry.npmmirror.com/@tiptap/extension-highlight/-/extension-highlight-2.0.0-beta.199.tgz#e814555b2bf45dd578f5255f1460b867eb395e57"
+  integrity sha512-tMRL2VTBK99q3UKf+uyM/t5LZJU1ZNHADo3drMYA6BXETjx5WzCBe0qyExZtUGMsWv5bop+Her82r5CKSxFqnQ==
+
 "@tiptap/extension-history@^2.0.0-beta.199":
   version "2.0.0-beta.199"
   resolved "https://registry.npmmirror.com/@tiptap/extension-history/-/extension-history-2.0.0-beta.199.tgz#ff83184b6f7e0ed9a5c6362cfbc15319a451b960"
@@ -197,7 +211,7 @@
 
 "@tiptap/extension-image@^2.0.0-beta.199":
   version "2.0.0-beta.199"
-  resolved "https://registry.npmmirror.com/@tiptap/extension-image/-/extension-image-2.0.0-beta.199.tgz#48704c12e0cfc3da06a17cd44d2d8a8b9fd33de7"
+  resolved "https://registry.npmjs.org/@tiptap/extension-image/-/extension-image-2.0.0-beta.199.tgz#48704c12e0cfc3da06a17cd44d2d8a8b9fd33de7"
   integrity sha512-prmFRXdJucUeWVhSprrPfcn9pAtYkzm57N8WOUlVad5ocdeR9aMz9+0u0akb5v6XhaVAQgWqwqNb0Kx8lSuqhA==
 
 "@tiptap/extension-italic@^2.0.0-beta.199":
@@ -285,6 +299,13 @@
     prosemirror-state "^1.4.1"
     prosemirror-view "^1.28.2"
 
+"@types/hast@^2.0.0":
+  version "2.3.4"
+  resolved "https://registry.npmmirror.com/@types/hast/-/hast-2.3.4.tgz#8aa5ef92c117d20d974a82bdfb6a648b08c0bafc"
+  integrity sha512-wLEm0QvaoawEDoTRwzTXp4b4jpwiJDvR5KMnFnVodm3scufTlBOWRD6N1OBf9TZMhjlNsSfcO5V+7AF4+Vy+9g==
+  dependencies:
+    "@types/unist" "*"
+
 "@types/lodash-es@^4.17.6":
   version "4.17.6"
   resolved "https://registry.npmmirror.com/@types/lodash-es/-/lodash-es-4.17.6.tgz"
@@ -311,6 +332,11 @@
   version "0.2.0"
   resolved "https://registry.npmjs.org/@types/nprogress/-/nprogress-0.2.0.tgz"
   integrity sha512-1cYJrqq9GezNFPsWTZpFut/d4CjpZqA0vhqDUPFWYKF1oIyBz5qnoYMzR+0C/T96t3ebLAC1SSnwrVOm5/j74A==
+
+"@types/unist@*":
+  version "2.0.6"
+  resolved "https://registry.npmmirror.com/@types/unist/-/unist-2.0.6.tgz#250a7b16c3b91f672a24552ec64678eeb1d3a08d"
+  integrity sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==
 
 "@types/webidl-conversions@*":
   version "6.1.1"
@@ -395,6 +421,16 @@
     estree-walker "^2.0.2"
     source-map "^0.6.1"
 
+"@vue/compiler-core@3.2.41":
+  version "3.2.41"
+  resolved "https://registry.npmmirror.com/@vue/compiler-core/-/compiler-core-3.2.41.tgz#fb5b25f23817400f44377d878a0cdead808453ef"
+  integrity sha512-oA4mH6SA78DT+96/nsi4p9DX97PHcNROxs51lYk7gb9Z4BPKQ3Mh+BLn6CQZBw857Iuhu28BfMSRHAlPvD4vlw==
+  dependencies:
+    "@babel/parser" "^7.16.4"
+    "@vue/shared" "3.2.41"
+    estree-walker "^2.0.2"
+    source-map "^0.6.1"
+
 "@vue/compiler-dom@3.2.40", "@vue/compiler-dom@^3.2.40":
   version "3.2.40"
   resolved "https://registry.npmmirror.com/@vue/compiler-dom/-/compiler-dom-3.2.40.tgz#c225418773774db536174d30d3f25ba42a33e7e4"
@@ -403,7 +439,31 @@
     "@vue/compiler-core" "3.2.40"
     "@vue/shared" "3.2.40"
 
-"@vue/compiler-sfc@3.2.40", "@vue/compiler-sfc@^3.2.40":
+"@vue/compiler-dom@3.2.41":
+  version "3.2.41"
+  resolved "https://registry.npmmirror.com/@vue/compiler-dom/-/compiler-dom-3.2.41.tgz#dc63dcd3ce8ca8a8721f14009d498a7a54380299"
+  integrity sha512-xe5TbbIsonjENxJsYRbDJvthzqxLNk+tb3d/c47zgREDa/PCp6/Y4gC/skM4H6PIuX5DAxm7fFJdbjjUH2QTMw==
+  dependencies:
+    "@vue/compiler-core" "3.2.41"
+    "@vue/shared" "3.2.41"
+
+"@vue/compiler-sfc@3.2.41":
+  version "3.2.41"
+  resolved "https://registry.npmmirror.com/@vue/compiler-sfc/-/compiler-sfc-3.2.41.tgz#238fb8c48318408c856748f4116aff8cc1dc2a73"
+  integrity sha512-+1P2m5kxOeaxVmJNXnBskAn3BenbTmbxBxWOtBq3mQTCokIreuMULFantBUclP0+KnzNCMOvcnKinqQZmiOF8w==
+  dependencies:
+    "@babel/parser" "^7.16.4"
+    "@vue/compiler-core" "3.2.41"
+    "@vue/compiler-dom" "3.2.41"
+    "@vue/compiler-ssr" "3.2.41"
+    "@vue/reactivity-transform" "3.2.41"
+    "@vue/shared" "3.2.41"
+    estree-walker "^2.0.2"
+    magic-string "^0.25.7"
+    postcss "^8.1.10"
+    source-map "^0.6.1"
+
+"@vue/compiler-sfc@^3.2.40":
   version "3.2.40"
   resolved "https://registry.npmmirror.com/@vue/compiler-sfc/-/compiler-sfc-3.2.40.tgz#61823283efc84d25d9d2989458f305d32a2ed141"
   integrity sha512-tzqwniIN1fu1PDHC3CpqY/dPCfN/RN1thpBC+g69kJcrl7mbGiHKNwbA6kJ3XKKy8R6JLKqcpVugqN4HkeBFFg==
@@ -427,6 +487,14 @@
     "@vue/compiler-dom" "3.2.40"
     "@vue/shared" "3.2.40"
 
+"@vue/compiler-ssr@3.2.41":
+  version "3.2.41"
+  resolved "https://registry.npmmirror.com/@vue/compiler-ssr/-/compiler-ssr-3.2.41.tgz#344f564d68584b33367731c04ffc949784611fcb"
+  integrity sha512-Y5wPiNIiaMz/sps8+DmhaKfDm1xgj6GrH99z4gq2LQenfVQcYXmHIOBcs5qPwl7jaW3SUQWjkAPKMfQemEQZwQ==
+  dependencies:
+    "@vue/compiler-dom" "3.2.41"
+    "@vue/shared" "3.2.41"
+
 "@vue/devtools-api@^6.1.4":
   version "6.2.0"
   resolved "https://registry.npmmirror.com/@vue/devtools-api/-/devtools-api-6.2.0.tgz"
@@ -448,42 +516,65 @@
     estree-walker "^2.0.2"
     magic-string "^0.25.7"
 
-"@vue/reactivity@3.2.40", "@vue/reactivity@^3.2.40":
+"@vue/reactivity-transform@3.2.41":
+  version "3.2.41"
+  resolved "https://registry.npmmirror.com/@vue/reactivity-transform/-/reactivity-transform-3.2.41.tgz#9ff938877600c97f646e09ac1959b5150fb11a0c"
+  integrity sha512-mK5+BNMsL4hHi+IR3Ft/ho6Za+L3FA5j8WvreJ7XzHrqkPq8jtF/SMo7tuc9gHjLDwKZX1nP1JQOKo9IEAn54A==
+  dependencies:
+    "@babel/parser" "^7.16.4"
+    "@vue/compiler-core" "3.2.41"
+    "@vue/shared" "3.2.41"
+    estree-walker "^2.0.2"
+    magic-string "^0.25.7"
+
+"@vue/reactivity@3.2.41":
+  version "3.2.41"
+  resolved "https://registry.npmmirror.com/@vue/reactivity/-/reactivity-3.2.41.tgz#0ad3bdf76d76822da1502dc9f394dafd02642963"
+  integrity sha512-9JvCnlj8uc5xRiQGZ28MKGjuCoPhhTwcoAdv3o31+cfGgonwdPNuvqAXLhlzu4zwqavFEG5tvaoINQEfxz+l6g==
+  dependencies:
+    "@vue/shared" "3.2.41"
+
+"@vue/reactivity@^3.2.40":
   version "3.2.40"
   resolved "https://registry.npmmirror.com/@vue/reactivity/-/reactivity-3.2.40.tgz#ae65496f5b364e4e481c426f391568ed7d133cca"
   integrity sha512-N9qgGLlZmtUBMHF9xDT4EkD9RdXde1Xbveb+niWMXuHVWQP5BzgRmE3SFyUBBcyayG4y1lhoz+lphGRRxxK4RA==
   dependencies:
     "@vue/shared" "3.2.40"
 
-"@vue/runtime-core@3.2.40":
-  version "3.2.40"
-  resolved "https://registry.npmmirror.com/@vue/runtime-core/-/runtime-core-3.2.40.tgz#e814358bf1b0ff6d4a6b4f8f62d9f341964fb275"
-  integrity sha512-U1+rWf0H8xK8aBUZhnrN97yoZfHbjgw/bGUzfgKPJl69/mXDuSg8CbdBYBn6VVQdR947vWneQBFzdhasyzMUKg==
+"@vue/runtime-core@3.2.41":
+  version "3.2.41"
+  resolved "https://registry.npmmirror.com/@vue/runtime-core/-/runtime-core-3.2.41.tgz#775bfc00b3fadbaddab77138f23322aee3517a76"
+  integrity sha512-0LBBRwqnI0p4FgIkO9q2aJBBTKDSjzhnxrxHYengkAF6dMOjeAIZFDADAlcf2h3GDALWnblbeprYYpItiulSVQ==
   dependencies:
-    "@vue/reactivity" "3.2.40"
-    "@vue/shared" "3.2.40"
+    "@vue/reactivity" "3.2.41"
+    "@vue/shared" "3.2.41"
 
-"@vue/runtime-dom@3.2.40":
-  version "3.2.40"
-  resolved "https://registry.npmmirror.com/@vue/runtime-dom/-/runtime-dom-3.2.40.tgz#975119feac5ab703aa9bbbf37c9cc966602c8eab"
-  integrity sha512-AO2HMQ+0s2+MCec8hXAhxMgWhFhOPJ/CyRXnmTJ6XIOnJFLrH5Iq3TNwvVcODGR295jy77I6dWPj+wvFoSYaww==
+"@vue/runtime-dom@3.2.41":
+  version "3.2.41"
+  resolved "https://registry.npmmirror.com/@vue/runtime-dom/-/runtime-dom-3.2.41.tgz#cdf86be7410f7b15c29632a96ce879e5b4c9ab92"
+  integrity sha512-U7zYuR1NVIP8BL6jmOqmapRAHovEFp7CSw4pR2FacqewXNGqZaRfHoNLQsqQvVQ8yuZNZtxSZy0FFyC70YXPpA==
   dependencies:
-    "@vue/runtime-core" "3.2.40"
-    "@vue/shared" "3.2.40"
+    "@vue/runtime-core" "3.2.41"
+    "@vue/shared" "3.2.41"
     csstype "^2.6.8"
 
-"@vue/server-renderer@3.2.40":
-  version "3.2.40"
-  resolved "https://registry.npmmirror.com/@vue/server-renderer/-/server-renderer-3.2.40.tgz#55eaac31f7105c3907e1895129bf4efb6b0ce393"
-  integrity sha512-gtUcpRwrXOJPJ4qyBpU3EyxQa4EkV8I4f8VrDePcGCPe4O/hd0BPS7v9OgjIQob6Ap8VDz9G+mGTKazE45/95w==
+"@vue/server-renderer@3.2.41":
+  version "3.2.41"
+  resolved "https://registry.npmmirror.com/@vue/server-renderer/-/server-renderer-3.2.41.tgz#ca64552c05878f94e8d191ac439141c06c0fb2ad"
+  integrity sha512-7YHLkfJdTlsZTV0ae5sPwl9Gn/EGr2hrlbcS/8naXm2CDpnKUwC68i1wGlrYAfIgYWL7vUZwk2GkYLQH5CvFig==
   dependencies:
-    "@vue/compiler-ssr" "3.2.40"
-    "@vue/shared" "3.2.40"
+    "@vue/compiler-ssr" "3.2.41"
+    "@vue/shared" "3.2.41"
 
 "@vue/shared@3.2.40", "@vue/shared@^3.2.40":
   version "3.2.40"
   resolved "https://registry.npmmirror.com/@vue/shared/-/shared-3.2.40.tgz#e57799da2a930b975321981fcee3d1e90ed257ae"
   integrity sha512-0PLQ6RUtZM0vO3teRfzGi4ltLUO5aO+kLgwh4Um3THSR03rpQWLTuRCkuO5A41ITzwdWeKdPHtSARuPkoo5pCQ==
+
+"@vue/shared@3.2.41":
+  version "3.2.41"
+  resolved "https://registry.npmmirror.com/@vue/shared/-/shared-3.2.41.tgz#fbc95422df654ea64e8428eced96ba6ad555d2bb"
+  integrity sha512-W9mfWLHmJhkfAmV+7gDjcHeAWALQtgGT3JErxULl0oz6R6+3ug91I7IErs93eCFhPCZPHBs4QJS7YWEV7A3sxw==
 
 "@vueup/vue-quill@^1.0.0-beta.10":
   version "1.0.0-beta.10"
@@ -894,6 +985,13 @@ fastq@^1.6.0:
   dependencies:
     reusify "^1.0.4"
 
+fault@^2.0.0:
+  version "2.0.1"
+  resolved "https://registry.npmmirror.com/fault/-/fault-2.0.1.tgz#d47ca9f37ca26e4bd38374a7c500b5a384755b6c"
+  integrity sha512-WtySTkS4OKev5JtpHXnib4Gxiurzh5NCGvWrFaZ34m6JehfTUhKZvn9njTfw48t6JumVQOmrKqpmGcdwxnhqBQ==
+  dependencies:
+    format "^0.2.0"
+
 fill-range@^7.0.1:
   version "7.0.1"
   resolved "https://registry.npmmirror.com/fill-range/-/fill-range-7.0.1.tgz#1919a6a7c75fe38b2c7c77e5198535da9acdda40"
@@ -914,6 +1012,11 @@ form-data@^4.0.0:
     asynckit "^0.4.0"
     combined-stream "^1.0.8"
     mime-types "^2.1.12"
+
+format@^0.2.0:
+  version "0.2.2"
+  resolved "https://registry.npmmirror.com/format/-/format-0.2.2.tgz#d6170107e9efdc4ed30c9dc39016df942b5cb58b"
+  integrity sha512-wzsgA6WOq+09wrU1tsJ09udeR/YZRaeArL9e1wPbFg3GG2yDnC2ldKpxs4xunpFF9DgqCqOIra3bc1HWrJ37Ww==
 
 fsevents@~2.3.2:
   version "2.3.2"
@@ -995,7 +1098,7 @@ highlight.js@^11.5.0:
   resolved "https://registry.npmmirror.com/highlight.js/-/highlight.js-11.5.1.tgz"
   integrity sha512-LKzHqnxr4CrD2YsNoIf/o5nJ09j4yi/GcH5BnYz9UnVpZdS4ucMgvP61TDty5xJcFGRjnH4DpujkS9bHT3hq0Q==
 
-highlight.js@^11.6.0:
+highlight.js@^11.6.0, highlight.js@~11.6.0:
   version "11.6.0"
   resolved "https://registry.npmmirror.com/highlight.js/-/highlight.js-11.6.0.tgz#a50e9da05763f1bb0c1322c8f4f755242cff3f5a"
   integrity sha512-ig1eqDzJaB0pqEvlPVIpSSyMaO92bH1N2rJpLMN/nX396wTpDA4Eq0uK+7I/2XG17pFaaKE0kjV/XPeGt7Evjw==
@@ -1137,6 +1240,15 @@ lodash@^4.17.21:
   version "4.17.21"
   resolved "https://registry.npmmirror.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
+
+lowlight@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.npmmirror.com/lowlight/-/lowlight-2.7.0.tgz#2d3f267aa3006bb20473db5363f9941ffd7bab11"
+  integrity sha512-RRdrHalFfjpxL91ITTX7KhJYH3QmX5bW9Uie2D2E5GPIR3XBYDYhScBjE291ewFZkStz/k2PN9KC+8deNLiI3Q==
+  dependencies:
+    "@types/hast" "^2.0.0"
+    fault "^2.0.0"
+    highlight.js "~11.6.0"
 
 magic-string@^0.25.7:
   version "0.25.9"
@@ -1889,16 +2001,16 @@ vue-tsc@^1.0.7:
     "@volar/vue-language-core" "1.0.7"
     "@volar/vue-typescript" "1.0.7"
 
-vue@^3.2.40:
-  version "3.2.40"
-  resolved "https://registry.npmmirror.com/vue/-/vue-3.2.40.tgz#23f387f6f9b3a0767938db6751e4fb5900f0ee34"
-  integrity sha512-1mGHulzUbl2Nk3pfvI5aXYYyJUs1nm4kyvuz38u4xlQkLUn1i2R7nDbI4TufECmY8v1qNBHYy62bCaM+3cHP2A==
+vue@^3.2.41:
+  version "3.2.41"
+  resolved "https://registry.npmmirror.com/vue/-/vue-3.2.41.tgz#ed452b8a0f7f2b962f055c8955139c28b1c06806"
+  integrity sha512-uuuvnrDXEeZ9VUPljgHkqB5IaVO8SxhPpqF2eWOukVrBnRBx2THPSGQBnVRt0GrIG1gvCmFXMGbd7FqcT1ixNQ==
   dependencies:
-    "@vue/compiler-dom" "3.2.40"
-    "@vue/compiler-sfc" "3.2.40"
-    "@vue/runtime-dom" "3.2.40"
-    "@vue/server-renderer" "3.2.40"
-    "@vue/shared" "3.2.40"
+    "@vue/compiler-dom" "3.2.41"
+    "@vue/compiler-sfc" "3.2.41"
+    "@vue/runtime-dom" "3.2.41"
+    "@vue/server-renderer" "3.2.41"
+    "@vue/shared" "3.2.41"
 
 vueuc@^0.4.47:
   version "0.4.47"

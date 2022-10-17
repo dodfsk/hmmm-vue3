@@ -9,26 +9,27 @@
 				</template>
                 <template #header-extra>
 					<n-button-group>
-						<n-button type="primary" round @click="handleEdit"> 编 辑 </n-button>
-						<n-button type="error" round @click="handleDel"> 删 除 </n-button>
+						<n-button type="primary" dashed round @click="handleEdit"> 编 辑 </n-button>
+						<n-button type="error" dashed round @click="handleDel"> 删 除 </n-button>
 					</n-button-group>
 				</template>
 
 
 				<n-skeleton v-if="loading" :sharp="false" />
 				<div class="edit-box" v-else>
-					<!-- <div class="html-box" v-html="content"></div> -->
-					<quill-editor-deck
+					<!-- <div class="html-box ProseMirror" v-html="content"></div> -->
+					<!-- <quill-editor-deck
 						ref="quillEditorRef"
 						theme="bubble"
 						readOnly="true"
 						v-model:content="content"
 						@ready="quillReady"
-					/>
-					<!-- <tip-tap-editor
+					/> -->
+					<tip-tap-editor
+                        theme="headless"
                         v-model="content"
                     >
-                    </tip-tap-editor> -->
+                    </tip-tap-editor>
 				</div>
 
 				<!-- :readOnly="true" -->
@@ -62,15 +63,15 @@
 				<n-skeleton v-if="loading" :sharp="false" />
 				<div class="edit-box" v-else>
 					<!-- <div class="html-box" v-html="content"></div> -->
-					<quill-editor-deck
+					<!-- <quill-editor-deck
 						ref="quillEditorRef"
 						theme="bubble"
 						readOnly="true"
 						v-model:content="item.content"
 						@ready="quillReady"
-					/>
+					/> -->
 					<!-- <tip-tap-editor
-                        v-model="content"
+                        v-model="item.content"
                     >
                     </tip-tap-editor> -->
 				</div>
@@ -186,6 +187,7 @@ watch(
 
 <style lang="less" scoped>
 @import '@/views/root.less';
+
 .container {
 	width: 100%;
 	height: 100%;
@@ -225,7 +227,7 @@ watch(
     margin-bottom: 10px;
 	// .area_header{}
     :deep(.n-card-header) {
-        border: 2px solid #666;
+        // border: 2px solid #666;
         
         min-height: 50px;
     }
@@ -237,13 +239,19 @@ watch(
 		// height:100%;
 		// border-radius: 7px 0 0 7px;
 	}
-	.edit-box {
+    .edit-box {
 		min-height: 500px;
-		height: 80%;
-		border: 2px solid #666;
-		border-top: none;
+		height: 100%;
+		// border: 2px solid #666;
+		// border-top: none;
+		border-top: 1px solid #666;
+            padding: 0.75rem;
 		// .html-box {
-			// text-align: left;
+        //     padding: 1rem 0.75rem;
+        //     flex: 1 1 auto;
+        //     overflow-x: hidden;
+        //     overflow-y: auto;
+        //     -webkit-overflow-scrolling: touch;
 		// }
 	}
 }

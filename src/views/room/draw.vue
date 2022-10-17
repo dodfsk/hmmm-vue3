@@ -29,8 +29,10 @@
 					v-model:content="content"
 					@ready="quillReady"
 				/>
-				<tip-tap-editor v-else v-model="content"> 
-                
+				<tip-tap-editor 
+                    v-else v-model="content"
+                    ref="tipTapRef"
+                > 
                 </tip-tap-editor>
 			</div>
 			<template #footer>
@@ -47,7 +49,7 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
 import QuillEditorDeck, { DefineExpose } from '@/components/rich-editor/quillEditor.vue';
-import tipTapEditor from '@/components/rich-editor/tipTapEditor.vue';
+import tipTapEditor,{DefineExpose as De} from '@/components/rich-editor/tipTapEditor.vue';
 import { onMounted, provide, reactive, ref, toRefs, watch } from 'vue';
 import { Room } from '@/types/room';
 import { useRoomStore } from '@/store/room';
@@ -58,6 +60,7 @@ const roomStore = useRoomStore();
 console.log('route.params.id', route.params.id);
 
 const quillEditorRef = ref<DefineExpose | undefined>();
+const tipTapRef=ref<De|undefined>()
 let quill: DefineExpose['quill'] | undefined;
 let editSwitch = ref<boolean>(true);
 const animationFlag=ref(false)
@@ -107,7 +110,7 @@ const handleSwitch = () => {
 };
 
 const handlePublish = async () => {
-    if(editSwitch.value){
+    if(!editSwitch.value){
         roomState.content=quill?.getHTML()//重新获取HTML
     }
 	if (roomState.content) {
@@ -115,7 +118,7 @@ const handlePublish = async () => {
 		// 	title: roomState.title,
 		// 	content: roomState.content,
 		// };
-		// console.log('room', room);
+		console.log('roomState.content', roomState.content);
 		const res = await roomStore.ROOM_SET(roomState);
 		const { code, data = {} } = res.data;
 		if (code == 200) {
@@ -143,6 +146,7 @@ const getRoomDetail = async (id: string) => {
 		// roomState.hid=data.hid
 		Object.assign(roomState, data);
 		quill?.setHTML(roomState.content);
+        tipTapRef.value?.editorRef.editor.commands.setContent(roomState.content)
 		// loading.value=false
 	}
 };

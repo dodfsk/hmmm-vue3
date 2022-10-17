@@ -162,7 +162,7 @@ export class ImgClipper {
         this.selection.setAttribute("id","clipper-selection")
         // this.selection.setAttribute("style","-webkit-touch-callout:none")//关闭长按动作
         // this.selection.setAttribute("style","backdrop-filter:brightness(2)")//滤镜模式
-        this.selection.style.outline='rgba(0, 0, 0, 0.65) solid 1px'//外边框模式
+        this.selection.style.outline='1px solid rgba(0, 0, 0, 0.65)'//外边框模式
         this.selection.style.outlineWidth='3000px'
         this.selection.style.border='1px dashed rgba(238, 238, 238, 1)'
         this.selection.style.boxSizing="border-box"
