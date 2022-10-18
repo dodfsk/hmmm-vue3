@@ -3,30 +3,34 @@
         as="span"
         class="img-container" 
         :class="{
-            'ProseMirror-selectednode': (props.selected && props.editor.isEditable)||eventRecord.allowScale,
+            'ProseMirror-selectednode': props.editor.isEditable&&(props.selected || eventRecord.allowScale),
             inline: options.inline,
         }" 
     >
 		<img 
             ref="imgRef"
             class="img-content"
-            v-bind="attrs"
             draggable="true"
             data-drag-handle
+            :src="attrs.src"
+            :style="{
+                width:attrs.width+'px',
+                height:attrs.height+'px',
+            }"
         />
-        <!-- :src="attrs.src"
-        :style="{width:attrs.width+'px',height:attrs.height+'px'}" -->
+            <!-- v-bind="attrs" -->
         <span 
             class="img-resizer"  
             ref="resizeRef" 
             v-show="isLoaded"
         ></span>
+        <!-- @pointerdown="pointerDown" -->
 
 	</node-view-wrapper>
 </template>
 
 <script lang="ts" setup>
-import { computed,onMounted, reactive, ref } from 'vue';
+import { computed,onMounted, reactive, ref,watch } from 'vue';
 import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3';
 
 const props=defineProps(nodeViewProps)
@@ -35,9 +39,12 @@ const resizeRef=ref<HTMLDivElement>()
 const attrs = computed(() => props.node.attrs);
 const options = computed(() => props.extension.options);
 const isLoaded = ref<boolean>(false);
-const imgRatio=ref<number>()
 console.log('props.node.attrs',props.node.attrs);
-
+const imgState=reactive({
+    width:0,
+    height:0,
+    ratio:0,
+})//原始图片信息
 const eventRecord=reactive({
     x:0,
     y:0,
@@ -45,8 +52,30 @@ const eventRecord=reactive({
     height:0,
     fixed:0,
     allowScale:false,
-})
+})//事件数值记录
+const pointerDown=(e:PointerEvent)=>{
+    console.log(imgRef.value)
+    
+    e.preventDefault()
+    e.stopPropagation()
+    eventRecord.x= e.clientX
+    eventRecord.y = e.clientY
+    eventRecord.width = imgRef.value!.getBoundingClientRect().width
+    eventRecord.height = imgRef.value!.getBoundingClientRect().height
+    eventRecord.allowScale=true
+    props.updateAttributes({ 
+        scalePercent:0,
+    })
+    window.onpointermove=(e)=>scaleEvent(e)
+    window.onpointerup=(e)=>pointerUp(e)
+}
+const pointerUp=(e:PointerEvent)=>{
+    e.preventDefault()
+    e.stopPropagation()
+    eventRecord.allowScale = false  //设为true表示可以移动
+    window.onpointermove=null
 
+}
 const scaleEvent=(e:PointerEvent)=>{
     // console.log(e)
     e.preventDefault();
@@ -61,67 +90,78 @@ const scaleEvent=(e:PointerEvent)=>{
         const newH=eventRecord.fixed?(newW/eventRecord.fixed):(eventRecord.height + y)
         // const newH=eventRecord.height + y 
         // const maxW=resizeRef.value!.parentElement!.parentElement!.clientWidth
-
-        // console.log(newW,newH)
         props.updateAttributes({ 
             width:newW,
             height:newH,
-        })
+        })//更新宽高
     }
 }
 const fixEvent=(e:KeyboardEvent)=>{
     e.preventDefault()
     e.stopPropagation()
     if(e.altKey){
-        if(eventRecord.fixed!==imgRatio.value){
-            eventRecord.fixed=imgRatio.value?imgRatio.value:0
+        if(eventRecord.fixed!==imgState.ratio){
+            eventRecord.fixed=imgState.ratio
         }
+    }
+    window.onkeyup=(e)=>{
+        e.preventDefault()
+        e.stopPropagation()
+        eventRecord.fixed=0
+        window.onkeydown=null
+    }
+}
+// 图片最大宽度为编辑器宽度-待修改
+const maxSize=()=>{
+    const maxW = props.editor.view.dom.clientWidth
+    if (imgState.width > maxW) {
+        props.updateAttributes({ 
+            width: maxW,
+            height:maxW/imgState.ratio,
+        })
     }
 }
 onMounted(()=>{
     // When the image has loaded
     imgRef.value!.onload = (e:any) => {
         isLoaded.value = true
-        // 保存图片的原始比例
-        imgRatio.value = imgRef.value!.naturalWidth / imgRef.value!.naturalHeight;
-        // 图片最大 100%
-        const maxW = props.editor.view.dom.clientWidth
-        const imgW = imgRef.value!.naturalWidth
-        //   const imgW = e.target?.clientWidth
-        if (imgW > maxW) {
-            props.updateAttributes({ width: maxW })
-        }
+        // 保存图片的原始信息(宽,高,尺寸比例)
+        imgState.width=imgRef.value!.naturalWidth
+        imgState.height=imgRef.value!.naturalHeight
+        imgState.ratio = imgRef.value!.naturalWidth / imgRef.value!.naturalHeight;
+        
 
         //设置缩放按钮事件
-        if(resizeRef.value&&imgRef.value)
-        resizeRef.value.onpointerdown=(e)=>{
-            e.preventDefault();
-            e.stopPropagation();
-            eventRecord.x= e.clientX 
-            eventRecord.y = e.clientY 
-            eventRecord.width = imgRef.value!.getBoundingClientRect().width
-            eventRecord.height = imgRef.value!.getBoundingClientRect().height
-            eventRecord.allowScale=true
-            window.onpointermove=(e)=>scaleEvent(e)
-            
-        }
-        window.onpointerup=(e)=>{
-            e.preventDefault()
-            e.stopPropagation()
-            eventRecord.allowScale = false  //设为true表示可以移动
-            window.onpointermove=null
-            // window.onpointerup=null
-        }
-        window.onkeyup=(e)=>{
-            e.preventDefault()
-            e.stopPropagation()
-            eventRecord.fixed=0
-            window.onkeydown=null
+        if(resizeRef.value&&imgRef.value){
+            resizeRef.value.onpointerdown=(e)=>pointerDown(e)
         }
 
     };
-
 })
+
+watch(
+    () => props.selected,
+    ()=>{
+        if(resizeRef.value){
+            resizeRef.value!.onpointermove=null
+            resizeRef.value!.onpointerup=null
+        }
+    }
+)
+watch(
+    () => props.node.attrs.scalePercent,
+    ()=>{
+        //如果缩放比例不为0,修改图片宽高为原始尺寸x缩放比例
+        if(props.node.attrs.scalePercent){
+            props.updateAttributes({ 
+                width: attrs.value.scalePercent*imgState.width, 
+                height: attrs.value.scalePercent*imgState.height, 
+            })
+        }
+    }
+)
+
+
 </script>
 
 <style lang="less">
@@ -133,7 +173,7 @@ onMounted(()=>{
     }
 }
 .img-content{
-    box-sizing: content-box;
+    box-sizing: border-box;
 }
 .img-resizer{
     background-color: #18a058;
@@ -150,7 +190,7 @@ onMounted(()=>{
     cursor: nwse-resize;
 }
 
-.ProseMirror-selectednode {
+.img-container.ProseMirror-selectednode {
     // z-index: 999;
     .img-resizer {
       display: block;

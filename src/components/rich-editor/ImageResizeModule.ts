@@ -26,11 +26,21 @@ const ImageResizeModule = Image.extend({
                     };
                 },
             },
+            scalePercent:{
+                default: 0,
+            }
 		};
 	},
     addNodeView() {
         return VueNodeViewRenderer(ImageResizeComponent)
 	},
+    // addCommands() {
+    //     return {
+    //         changeImage: (options:any) => ({ commands }) => {
+    //                 return commands.updateAttributes('image', options)
+    //         },
+    //     }
+    // },
 	// renderHTML(props) {
 	// 	const { HTMLAttributes,node } = props;
     //     HTMLAttributes.width=node.attrs.width

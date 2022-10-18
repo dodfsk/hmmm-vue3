@@ -19,6 +19,7 @@ declare module '@vue/runtime-core' {
     ImgPlaceholder: typeof import('./src/components/rich-editor/tiptap-extension-image-upload/src/imgPlaceholder.vue')['default']
     NAvatar: typeof import('naive-ui')['NAvatar']
     NavTop: typeof import('./src/components/nav/NavTop.vue')['default']
+    NBotton: typeof import('naive-ui')['NBotton']
     NButton: typeof import('naive-ui')['NButton']
     NButtonGroup: typeof import('naive-ui')['NButtonGroup']
     NCard: typeof import('naive-ui')['NCard']

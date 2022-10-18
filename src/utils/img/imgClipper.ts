@@ -181,7 +181,7 @@ export class ImgClipper {
     
 
         this.selection.onpointerdown=(e)=>{
-            console.log(e);   
+            // console.log(e);   
             e.preventDefault();
             e.stopPropagation();
             // console.log(e.clientX,e.clientY,this.selection.offsetLeft,this.selection.offsetTop);
@@ -204,17 +204,17 @@ export class ImgClipper {
             this.selection.style.bottom=''
 
             this.eventRecord.allowDrap = true; //设为true表示可以移动
-            console.log(this.eventRecord);
+            // console.log(this.eventRecord);
             window.onpointermove=(e)=>this.dragEvent(e)
+            window.onpointerup=(e)=>{
+                e.preventDefault()
+                e.stopPropagation()
+                this.eventRecord.allowDrap = false  //设为true表示可以移动
+                window.onpointermove=()=>null
+                // window.onpointerup=()=>null
+            }
         }
-        window.onpointerup=(e)=>{
-            console.log(e)
-            e.preventDefault()
-            e.stopPropagation()
-            this.eventRecord.allowDrap = false  //设为true表示可以移动
-            window.onpointermove=()=>null
-            // window.onpointerup=()=>null
-        }
+        
         // this.selection.addEventListener('mousedown',this.mouseDown)
         // this.selection.addEventListener('mouseup',this.mouseUp)
 
@@ -314,7 +314,7 @@ export class ImgClipper {
                         this.selection.style.bottom=''
                     break;
                 }
-                console.log(this.eventRecord);
+                // console.log(this.eventRecord);
                 window.onpointermove=(e)=>this.scaleEvent(e,direction)
             }
             window.onpointerup=(e)=>{
@@ -334,7 +334,7 @@ export class ImgClipper {
     dragEvent(e : PointerEvent) {
         e.preventDefault();
         e.stopPropagation();
-        console.log(this.container.offsetWidth,this.container.offsetHeight);
+        // console.log(this.container.offsetWidth,this.container.offsetHeight);
         
         if(this.eventRecord.allowDrap){
             //选择框位置=移动事件鼠标位置-按下事件鼠标位置
@@ -441,7 +441,7 @@ export class ImgClipper {
 
         const ratio=this.imgOriginal.width/this.original.offsetWidth//渲染图像与原始图像的比例
         const pixelRatio=window.devicePixelRatio
-        console.log('ratio,pixelRatio',ratio,pixelRatio);
+        // console.log('ratio,pixelRatio',ratio,pixelRatio);
         
         this.selectionP={
             x:((this.selection.offsetLeft)-(this.original.offsetLeft)),

@@ -7,7 +7,7 @@
 				@input="(e:any)=>editor?.chain().focus().setColor(e.target.value).run()"
 				:value="editor.getAttributes('textStyle').color || '#000000'"
 			/>
-            <template v-for="(item,index) in TipTapMenuBar">
+            <template v-for="(item,index) in TipTapMenuBar" :key="item.key">
                 <button
                     class="menu-item"
                     v-if="item.type!=='divider'"
@@ -15,7 +15,6 @@
                     :class="item.class && item.class"
                     :disabled="item.disabled && item.disabled"
                     :title="item.title"
-                    :key="item.key"
                 >
                     <n-icon size="18" :component="item.svg" v-if="item.svg" />
                     <div v-else>
@@ -31,7 +30,27 @@
             1
             </button> -->
 		</div>
+        <bubble-menu
+            class="bubble-menu"
+            :tippy-options="{ animation: true,duration:100 }"
+            :editor="editor"
+            :keepInBounds="true"
+            v-if="editor&& theme != 'headless'"
+            v-show="editor.isActive('image')"
+        >  
+            <template v-for="(item,index) in BubbleMenuBar" :key="item.key">
+                <button
+                    class="bubble-item"
+                    @click="item.click"
+                    :title="item.title"
+                >
+                    <n-icon size="22" :component="item.svg" v-if="item.svg" />
+                </button>
 
+            </template>
+
+        </bubble-menu>
+        
 		<div class="editor__content">
 			<EditorContent ref="editorRef" v-bind="$attrs" :editor="editor">
 				<!-- <template #[slotName]="slotProps" v-for="(slot, slotName) in $slots" >
@@ -39,6 +58,8 @@
                 </template> -->
 			</EditorContent>
 		</div>
+
+
 	</div>
 </template>
 
@@ -48,7 +69,6 @@ import {
 	onBeforeUnmount,
 	onMounted,
 	reactive,
-	Ref,
 	ref,
 	ShallowRef,
 	useAttrs,
@@ -66,10 +86,8 @@ import Highlight from '@tiptap/extension-highlight';
 import { Color } from '@tiptap/extension-color';
 // import Image from '@tiptap/extension-image'
 import Image from './ImageResizeModule';
+import CodeBlockLowlight from './CodeBlockModule'
 
-import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
-import CodeBlockComponent from './CodeBlockComponent.vue';
-import { lowlight } from 'lowlight/lib/common';
 import 'highlight.js/styles/vs2015.css';
 
 import {
@@ -94,6 +112,9 @@ import {
 	AlignRight,
 	ArrowBackUp,
 	ArrowForwardUp,
+    Multiplier05X,
+    Multiplier1X,
+    Edit
 } from '@vicons/tabler';
 
 export type DefineExpose = {
@@ -116,7 +137,6 @@ const emits = defineEmits<Emits>();
 
 const { theme, modelValue } = props;
 
-console.log(lowlight.listLanguages());
 
 const BulletListConfig = BulletList.extend({
 	addKeyboardShortcuts() {
@@ -135,18 +155,14 @@ const BulletListConfig = BulletList.extend({
 		};
 	},
 });
-const CodeBlockLowlightConfig = CodeBlockLowlight.extend({
-	addNodeView() {
-		return VueNodeViewRenderer(CodeBlockComponent);
-	},
-}).configure({ lowlight, defaultLanguage: 'typescript' });
+
 
 const editor: ShallowRef<Editor | undefined> = useEditor({
 	content: modelValue,
 	extensions: [
 		StarterKit.configure({ codeBlock: false }),
 		BulletListConfig,
-		CodeBlockLowlightConfig,
+		CodeBlockLowlight,
 		Color,
 		TextStyle,
 		TextAlign.configure({
@@ -163,6 +179,10 @@ const editor: ShallowRef<Editor | undefined> = useEditor({
 			inline: true,
 			allowBase64: true,
 		}),
+        // BubbleMenu.configure({
+        //     pluginKey: 'bubbleMenuOne',
+        //     element: document.querySelector('.menu-one'),
+        // })
 	],
 	onUpdate: ({ editor }) => {
 		// HTML
@@ -357,7 +377,26 @@ const TipTapMenuBar = computed(() => [
 		svg: ArrowForwardUp,
 	},
 ]);
-
+const BubbleMenuBar = computed(() => [
+{
+		title: '50%',
+        key:'0.5',
+		click: () => editor.value?.chain().focus().updateAttributes('image', {scalePercent:0.5}).run(),
+		svg: Multiplier05X,
+	},
+	{
+		title: '100%',
+        key:'1.0',
+		click: () => editor.value?.chain().focus().updateAttributes('image',{ scalePercent: 1.0}).run(),
+		svg: Multiplier1X,
+	},
+	{
+		title: '编辑图片',
+        key:'imgEdit',
+		click: () => editor.value?.chain().focus().setTextAlign('right').run(),
+		svg: Edit,
+	},
+])
 // const handleResize=()=>{
 //     editor.value?.chain().focus().toggleResizable().run()
 
@@ -497,9 +536,12 @@ defineExpose({
 
 	img {
 		max-width: 100%;
-        margin: 0 2px;
-		// height: auto;
+        // margin: 0 2px;
+		// max-height: 100%;
 	}
+    .img-container{
+        margin: 0 2px;
+    }
 
 	blockquote {
 		padding-left: 1rem;
@@ -511,6 +553,7 @@ defineExpose({
 		border-top: 2px solid rgba(#0d0d0d, 0.3);
 		margin: 0.3rem 0;
 	}
+
 }
 </style>
 
@@ -549,7 +592,6 @@ defineExpose({
 		font-size: inherit;
 		font-family: inherit;
 		color: #000;
-		margin: 0.1rem;
 		border: 1px solid black;
 		border-radius: 0.3rem;
 		padding: 0.1rem 0.4rem;
@@ -564,7 +606,7 @@ defineExpose({
 		background-color: transparent;
 		border-radius: 0.4rem;
 		padding: 0.25rem;
-		margin-right: 0.25rem;
+		margin: 0.1rem 0.15rem;
 	}
 	.menu-item svg {
 		width: 100%;
@@ -608,5 +650,57 @@ defineExpose({
 	overflow-x: hidden;
 	overflow-y: auto;
 	-webkit-overflow-scrolling: touch;
+}
+.bubble-menu {
+    display: flex;
+    background-color: #fff;
+    padding: 0 0.2rem;
+    border: 3px solid #0d0d0d;
+	border-radius: 0.75rem;
+    // button {
+    //     border: none;
+    //     background: none;
+    //     color: #fff;
+    //     font-size: 0.85rem;
+    //     font-weight: 500;
+    //     padding: 0 0.2rem;
+    //     opacity: 0.6;
+    //     &:hover,
+    //     &.is-active {
+    //         opacity: 1;
+    //     }
+    //     &.is-active {
+    //         text-decoration: underline;
+    //     }
+    // }
+    .bubble-item {
+		width: 1.75rem;
+		height: 1.75rem;
+		color: #0d0d0d;
+		border: none;
+		background-color: transparent;
+		border-radius: 0.4rem;
+		padding: 0.25rem;
+		margin: 0.1rem 0.15rem;
+	}
+	.bubble-item svg {
+		width: 100%;
+		height: 100%;
+		fill: currentColor;
+	}
+	.bubble-item:hover {
+		background: black;
+		color: #fff;
+	}
+	.bubble-item[disabled] {
+		opacity: 0.3;
+		color: #000;
+		background: none;
+		cursor: not-allowed;
+	}
+	.is-active {
+		background: black;
+		color: #fff;
+	}
 }
 </style>

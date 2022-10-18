@@ -13,7 +13,7 @@
 
         <div class="content">
 
-            <n-space vertical>
+            <n-space align="center" vertical>
                 
                 <n-avatar
                     :size="120"

@@ -11,7 +11,7 @@
           {{ language }}
         </option>
       </select>
-      <pre><code><node-view-content /></code></pre>
+      <pre><code :language="props.node.attrs.language"><node-view-content /></code></pre>
     </node-view-wrapper>
   </template>
   
@@ -30,6 +30,7 @@ const selectedLanguage=computed({
     }
 })
 const languages=ref(props.extension.options.lowlight.listLanguages())//踩坑,原因不明的全部列出
+console.log(props.node.attrs);
 
 </script>
 
@@ -37,12 +38,18 @@ const languages=ref(props.extension.options.lowlight.listLanguages())//踩坑,�
   <style lang="less">
   .code-block {
     position: relative;
-  
+
     select {
+    //   display: none;
       position: absolute;
       top: 0.3rem;
       right: 0.5rem;
       border-radius: 0.2rem;
+    }
+  }
+  .code-block:hover{
+    select{
+        display: block;
     }
   }
   </style>
