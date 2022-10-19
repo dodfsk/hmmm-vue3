@@ -4,8 +4,7 @@ import ImageResizeComponent from './ImageResizeComponent.vue';
 
 
 const ImageResizeModule = Image.extend({
-	name: 'image',
-	// name: 'image-resize-module',
+	name: 'image',//module name
     
 	addAttributes() {
 		return {

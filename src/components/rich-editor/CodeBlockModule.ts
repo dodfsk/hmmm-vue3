@@ -14,13 +14,29 @@ const CodeBlockLowlightModule = CodeBlockLowlight.extend({
                 renderHTML: (attributes) =>{ 
                     return {
                         language:attributes.language
-                    } 
+                    }
                 }
             }
         }
     },
 	addNodeView() {
 		return VueNodeViewRenderer(CodeBlockComponent);
+	},
+    //添加快捷键tab为4空格
+    addKeyboardShortcuts() {
+		return {
+			Tab: () => {
+				this.editor
+					.chain()
+					.sinkListItem('listItem')
+					.command(({ tr }) => {
+						tr.insertText('    '); //tab返回4空格
+						return true;
+					})
+					.run();
+				return true; // <- make sure to return true to prevent the tab from blurring.
+			},
+		};
 	},
 }).configure({ 
     lowlight, 

@@ -106,9 +106,9 @@ const menuOptions: MenuOption[] = [
 				{
 					to: {
 						name: 'home',
-						params: {
-							lang: 'zh-CN',
-						},
+						// params: {
+						// 	lang: 'zh-CN',
+						// },
 					},
 					// replace:true,
                     style:"width:100px"
@@ -129,9 +129,6 @@ const menuOptions: MenuOption[] = [
 					to: {
 						// name: "room",
 						path: '/room',
-						params: {
-							lang: 'zh-CN',
-						},
 					},
 					// replace:true,
 				},
@@ -147,9 +144,6 @@ const menuOptions: MenuOption[] = [
 				{
 					to: {
 						path:'/user',
-						params: {
-							lang: 'zh-CN',
-						},
 					},
 					// replace:true,
 				},
@@ -217,9 +211,9 @@ const handleUser = () => {
 const handleLogOut = () => {
 	userPopover.value.setShow(false); //手动关闭popover
 	userStore.logOut();
-	router.push({
-		path: '/user/login',
-	});
+	// router.push({
+	// 	path: '/user/login',
+	// });
 };
 
 // const pushRoom=()=>{
@@ -255,7 +249,7 @@ const handleLogOut = () => {
 	// position:sticky;
 	// position:-webkit-sticky;
 	overflow:auto;
-	// overflow:overlay;
+	overflow:overlay;
 	// top: 42;
 	// left: 0;
 	// right:0;
@@ -346,7 +340,10 @@ const handleLogOut = () => {
     }
     :deep(.n-menu-item-content--header){
         display: none !important;
-}
+    }
+    .nav {
+        height:56px;
+    }
 }
 
 .n-button{

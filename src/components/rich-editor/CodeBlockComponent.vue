@@ -17,7 +17,7 @@
   
 
 <script lang="ts" setup>
-import { computed,onMounted, ref } from 'vue';
+import { computed,ref } from 'vue';
 import { NodeViewContent, nodeViewProps, NodeViewWrapper } from '@tiptap/vue-3'
   
 const props=defineProps(nodeViewProps)

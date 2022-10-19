@@ -215,6 +215,7 @@ watch(
 }
 .edit_box {
 	height: 550px;
+    // min-width:800px;
 	// border: 1px solid #888;
 	// border-radius: 7px 0 0 7px;
 }

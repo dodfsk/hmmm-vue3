@@ -69,9 +69,9 @@ const menuOptions = [
 				{
 					to: {
 						path: '/user',
-						params: {
-							lang: 'zh-CN',
-						},
+                        // params: {
+                        //         lang: 'zh-CN',
+                        // },
 					},
 				},
 				{ default: () => '首页' }
@@ -86,9 +86,6 @@ const menuOptions = [
 				{
 					to: {
 						path: '/user/profile',
-						params: {
-							lang: 'zh-CN',
-						},
 					},
 				},
 				{ default: () => '我的资料' }
@@ -103,9 +100,6 @@ const menuOptions = [
 				{
 					to: {
 						path: '/user/face',
-						params: {
-							lang: 'zh-CN',
-						},
 					},
 				},
 				{ default: () => '我的头像' }
@@ -120,9 +114,6 @@ const menuOptions = [
                     {
                         to: {
                             path: '/user/publish',
-                            params: {
-                                lang: 'zh-CN',
-                            },
                         },
                     },
                     { default: () => '我的发布' }

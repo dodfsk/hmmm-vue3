@@ -2,7 +2,6 @@ import apiUrl from '@/api';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Response } from '@/types/axios';
 import { getToken, TOKEN_PREFIX } from '@/utils/common/auth';
-import { useNotification, useMessage } from 'naive-ui';
 import { defineComponent } from 'vue';
 import { useUserStore } from '@/store/user';
 
@@ -13,8 +12,6 @@ axios.defaults.withCredentials = false; // 是否携带cookie
 axios.defaults.headers.post['Access-Control-Allow-Origin-Type'] = '*'; // 允许跨域
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
-const Nmessage = useMessage();
-const Nnotification = useNotification();
 
 //创建axios实例
 const instance: AxiosInstance = axios.create({
