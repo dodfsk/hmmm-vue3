@@ -25,11 +25,11 @@
 						v-model:content="content"
 						@ready="quillReady"
 					/> -->
-					<tip-tap-editor
+					<tiptapEditor
                         theme="headless"
                         v-model="content"
                     >
-                    </tip-tap-editor>
+                    </tiptapEditor>
 				</div>
 
 				<!-- :readOnly="true" -->
@@ -95,7 +95,7 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
 import QuillEditorDeck, { DefineExpose } from '@/components/rich-editor/quillEditor.vue';
-import tipTapEditor from '@/components/rich-editor/tipTapEditor.vue';
+import tiptapEditor from '@/components/rich-editor/tiptapEditor.vue';
 import { onBeforeMount, onMounted, provide, reactive, ref, toRefs, watch } from 'vue';
 import { useRoomStore } from '@/store/room';
 import { Room } from '@/types/room';

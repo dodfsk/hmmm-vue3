@@ -46,7 +46,6 @@
 
             <uploadModal
                 ref="uploadModalRef"
-                :src="modelRef.avatar"
             >
             </uploadModal>
             <!-- @after-leave="handleCloseModal" -->

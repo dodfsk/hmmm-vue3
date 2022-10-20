@@ -24,12 +24,17 @@
 						</div>
 						<!-- <div class="content-item-right__article" v-html="item.content"> -->
 						<div class="content-item-right__article">
-                            <quill-editor-deck
+                            <!-- <quill-editor-deck
                                 ref="quillEditorRef"
                                 theme="bubble"
                                 readOnly="true"
                                 v-model:content="item.content"
-                            ></quill-editor-deck>
+                            ></quill-editor-deck> -->
+                            <tiptapEditor
+                                ref="editorRef"
+                                theme="headless"
+                                v-model="item.content"
+                            />
                         </div>
 
 						<div class="content-item-right__footer">
@@ -53,6 +58,7 @@ import { h, ref, Component, reactive, onMounted } from 'vue';
 import { useUserStore } from '@/store/user';
 import { useRoomStore } from '@/store/room';
 import { useRoute, useRouter } from 'vue-router';
+import tiptapEditor from '@/components/rich-editor/tiptapEditor.vue';
 import quillEditorDeck  from '@/components/rich-editor/quillEditor.vue'
 import { format } from 'date-fns'
 import { Room } from '@/types/room';

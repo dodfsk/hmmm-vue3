@@ -2,6 +2,7 @@
 	<div class="editor-container" :class="theme">
 		<div class="editor__header" v-if="editor && theme != 'headless'">
 			<template v-for="(item, index) in TipTapMenuBar" :key="item.key">
+                <!-- 普通按钮 -->
 				<button
 					class="menu-item"
 					v-if="!item.type"
@@ -15,16 +16,61 @@
 						{{ item.title }}
 					</div>
 				</button>
+                <!-- 颜色选择 -->
 				<input
-					v-if="item.type == 'color'"
+					v-if="item.type === 'color'"
 					type="color"
 					id="color"
 					@change="item.cmd"
 					:value="item.value"
 				/>
-                <!-- (e:any)=>editor?.chain().focus().setColor(e.target.value).run()
-                editor?.getAttributes('textStyle').color || '#000000' -->
+                <!-- 分隔竖线 -->
 				<div class="divider" v-if="item.type === 'divider'" :key="`divider${index}`"></div>
+                <!-- 图片上传 -->
+                <n-popover 
+                    v-if="item.type==='image'"
+					trigger="focus"
+                    raw
+                    :show-arrow="false"
+					:footer-style="{ display: 'flex', justifyContent: 'end' }"
+				>
+					<template #trigger>
+						<button
+                            class="menu-item"
+                            v-if="item.type==='image'"
+                            :class="item.class"
+                            :disabled="item.disabled"
+                            :title="item.title"
+                        >
+                            <n-icon size="18" :component="item.svg" v-if="item.svg" />
+                        </button>
+					</template>
+                    <div
+                        :style="{
+                            border:'#000 solid 3px',
+                            borderRadius:'8px',
+                            padding:'4px 10px',
+                            background:'#fff',
+                        }"
+                    >
+                    <n-space vertical>
+
+                        <n-button
+                            text
+                            color="#000"
+                            size="small"
+                            @click="item.cmd"
+                        >图片地址</n-button>
+                        <n-button
+                            text
+                            color="#000"
+                            size="small"
+                            @click="()=>showModal=true"
+                        >本地上传</n-button>
+                    </n-space>
+                    </div>
+                </n-popover>
+
 			</template>
 
 			<!-- <button
@@ -39,7 +85,7 @@
 			:tippy-options="{ animation: true, duration: 100 }"
 			:editor="editor"
 			:keepInBounds="true"
-			v-if="editor && theme != 'headless'"
+			v-if="editor && theme !== 'headless'"
 			v-show="editor.isActive('image')"
 		>
 			<template v-for="(item, index) in BubbleMenuBar" :key="item.key">
@@ -49,8 +95,10 @@
 				<!-- 编辑图片的pop框 -->
 				<n-popover
 					trigger="manual"
-					v-if="item.type == 'pop'"
+					v-if="item.type === 'pop'"
 					:show="showPopover"
+                    raw
+                    :show-arrow="false"
 					@clickoutside="
 						() => {
 							showPopover = false;
@@ -63,52 +111,60 @@
 							<n-icon size="22" :component="item.svg" v-if="item.svg" />
 						</button>
 					</template>
-
-					<n-form size="tiny">
-						<n-form-item label="src">
-							<n-input v-model:value="bubbleState.src" placeholder="请输入图片地址"/>
-						</n-form-item>
-						<n-form-item label="alt">
-							<n-input v-model:value="bubbleState.alt" placeholder="请输入图片描述"/>
-						</n-form-item>
-						<n-form-item label="scalePercent">
-							<n-input-number
-								v-model:value="bubbleState.scalePercent"
-                                placeholder="请输入原图百分比"
-                                step="5"
-								clearable
-                                style="width:200px"
-						    >
-                                <template #prefix>%</template>
-                            </n-input-number>
-						</n-form-item>
-						<n-form-item label="width">
-							<n-input-number
-								v-model:value="bubbleState.width"
-								:disabled="bubbleState.scalePercent!==0||bubbleState.scalePercent!==undefined"
-                                placeholder="请输入图片宽度"
-								clearable
-                                style="width:200px"
-							>
+                    <div
+                        :style="{
+                            border:'#000 solid 3px',
+                            borderRadius:'8px',
+                            padding:'6px 8px',
+                            background:'#fff',
+                        }"
+                    >
+                        <n-space vertical align="end">
+                        <n-form size="tiny">
+                            <n-form-item label="src">
+                                <n-input  v-model:value="bubbleState.src" placeholder="请输入图片地址"/>
+                            </n-form-item>
+                            <n-form-item label="alt">
+                                <n-input v-model:value="bubbleState.alt" placeholder="请输入图片描述"/>
+                            </n-form-item>
+                            <n-form-item label="scalePercent">
+                                <n-input-number
+                                    v-model:value="bubbleState.scalePercent"
+                                    placeholder="原图百分比默认0"
+                                    step="5"
+                                    clearable
+                                    style="width:200px"
+                                >
+                                    <template #prefix>%</template>
+                                </n-input-number>
+                            </n-form-item>
+                            <n-form-item label="width">
+                                <n-input-number
+                                    v-model:value="bubbleState.width"
+                                    :disabled="bubbleState.scalePercent!==null&&bubbleState.scalePercent!==0"
+                                    placeholder="图片宽度auto"
+                                    clearable
+                                    style="width:200px"
+                                >
+                                    <template #prefix>px</template>
+                                </n-input-number>
+                            </n-form-item>
+                            <n-form-item label="height">
+                                <n-input-number
+                                    v-model:value="bubbleState.height"
+                                    :disabled="bubbleState.scalePercent!==null&&bubbleState.scalePercent!==0"
+                                    placeholder="图片高度auto"
+                                    clearable
+                                    style="width:200px"
+                                >
                                 <template #prefix>px</template>
-                            </n-input-number>
-						</n-form-item>
-						<n-form-item label="height">
-							<n-input-number
-								v-model:value="bubbleState.height"
-								:disabled="bubbleState.scalePercent!==0||bubbleState.scalePercent!==undefined"
-                                placeholder="请输入图片高度"
-								clearable
-                                style="width:200px"
-							>
-                            <template #prefix>px</template>
-                            </n-input-number>
-						</n-form-item>
-					</n-form>
+                                </n-input-number>
+                            </n-form-item>
+                        </n-form>
+                            <n-button size="tiny" type="info" @click="item.cmd"> 确定 </n-button>
+                        </n-space>
+                    </div>
 
-					<template #footer>
-						<n-button size="tiny" type="info" @click="item.cmd"> 确定 </n-button>
-					</template>
 				</n-popover>
 			</template>
 		</bubble-menu>
@@ -120,6 +176,14 @@
                 </template> -->
 			</EditorContent>
 		</div>
+
+        <UploadModal
+            v-model:show="showModal"
+            ref="uploadModalRef"
+            @handleUploadDone="insertImage"
+
+        ></UploadModal>
+
 	</div>
 </template>
 
@@ -138,6 +202,8 @@ import { Color } from '@tiptap/extension-color';
 // import Image from '@tiptap/extension-image'
 import Image from './ImageResizeModule';
 import CodeBlockLowlight from './CodeBlockModule';
+import uploadModal,{ PreSignInfo }  from './UploadModal.vue'
+
 
 import 'highlight.js/styles/vs2015.css';
 
@@ -167,6 +233,7 @@ import {
 	Multiplier05X,
 	Multiplier1X,
 	Edit,
+BorderRadius,
 } from '@vicons/tabler';
 
 export type DefineExpose = {
@@ -180,6 +247,13 @@ type Emits = {
 	// (e: 'functionName', value: any): void
 	(e: 'update:modelValue', value: string): void;
 };
+type BubbleState={
+    src?: string;
+    alt?: string;
+    scalePercent?: number;
+    width?: number;
+    height?: number;
+}
 
 const props = withDefaults(defineProps<Props>(), {
 	modelValue: '',
@@ -189,14 +263,16 @@ const emits = defineEmits<Emits>();
 
 const { theme, modelValue } = props;
 
-const bubbleState = reactive({
-	src: '',
-	alt: '',
+const bubbleState = reactive<BubbleState>({
 	scalePercent: 0,
 	width: 0,
 	height: 0,
 });
-const showPopover = ref<boolean>(false);
+
+const showPopover = ref<boolean>(false)
+const showModal = ref<boolean>(false)
+const uploadModalRef = ref()
+// const isClipperReady=computed(()=>uploadModalRef.value.isClipperReady.value)
 
 const editor: ShallowRef<Editor | undefined> = useEditor({
 	content: modelValue,
@@ -246,14 +322,14 @@ const editorRef = ref();
 // }
 
 const TipTapMenuBar = computed(() => [
-	{
-		type: 'color',
-		title: '文本颜色',
-		key: 'color',
+    {
+        type: 'color',
+        title: '文本颜色',
+        key: 'color',
         cmd:(e:any)=>{editor.value?.chain().focus().setColor(e.target.value).blur().run()},
         //change事件+blur移除焦点防止文本选中bug
         value:editor.value?.getAttributes('textStyle').color || '#000000'
-	},
+    },
 	{
 		title: '加粗',
 		key: 'bold',
@@ -334,14 +410,21 @@ const TipTapMenuBar = computed(() => [
 	{
 		type: 'divider',
 	},
-	{
+	{   
+        type:'image',
 		title: '图片',
 		key: 'Image',
-		cmd: () => {
-			const url = window.prompt('URL');
-			if (url) {
-				editor.value?.chain().focus().setImage({ src: url }).run();
-			}
+		cmd: (upload:boolean) => {
+            if(!upload){
+                const url = window.prompt('URL');
+                if (url) {
+                    editor.value?.chain().focus().setImage({ src: url }).run();
+			    }
+            }
+            if(upload){
+
+            }
+			
 		},
 		svg: Photo,
 	},
@@ -471,13 +554,24 @@ const BubbleMenuBar = computed(() => [
 		click: () => {
 			showPopover.value = true;
 			const imgState = editor.value!.getAttributes('image');
-            imgState.scalePercent*=100
+            // if(imgState.src.indexOf('data:image')>-1){
+            //     imgState.src=undefined;
+            //     console.log(imgState.src);
+            // }
+            if(imgState.scalePercent){
+                imgState.scalePercent*=100
+            }else{
+                imgState.scalePercent=0
+            }
+            
 			Object.assign(bubbleState, imgState);
 		},
 		cmd: () => {
-            bubbleState.scalePercent/=100
+            if(bubbleState.scalePercent){
+                bubbleState.scalePercent/=100
+            }
 			editor.value
-				?.chain()
+			    ?.chain()
 				.focus()
 				.updateAttributes('image', { ...bubbleState })
 				.run();
@@ -498,8 +592,19 @@ const BubbleMenuBar = computed(() => [
 //     return editor.value?.state?.selection?.node?.attrs?.isDraggable;
 // })
 
+
+const insertImage=(data:PreSignInfo)=>{
+    editor.value?.chain().focus().setImage({ src: data.url!,alt:data.fileName }).run();
+    showModal.value=false
+}
+
+
+
+
+
+
 onMounted(() => {
-	if (theme == 'headless') {
+	if (theme === 'headless') {
 		editor.value?.setEditable(false);
 	}
 });
@@ -662,7 +767,7 @@ defineExpose({
 	border: none;
 	.editor__content {
 		overflow-x: hidden;
-		overflow-y: auto;
+		overflow-y: hidden;
 	}
 }
 

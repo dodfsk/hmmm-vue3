@@ -44,21 +44,21 @@ export type DefineExpose = {
         getAlter:Function,
         getResult:Function,
 };
-type Props = {
-	src?: string;
-};
+// type Props = {
+// 	src?: string;
+// };
 type Emits = {
 	(e: 'update:content', value: string): void;
 };
 
-const props = defineProps<Props>();
+// const props = defineProps<Props>();
 const emits = defineEmits<Emits>();
 // let result:object={}
 // let imgResize:any
-const image = new Image();
-// image.src = 'http://192.168.2.103:9000/picture/hmlc/test.png';
-image.src = props.src!;
-image.alt = 'Picture';
+// const image = new Image();
+// // image.src = 'http://192.168.2.103:9000/picture/hmlc/test.png';
+// image.src = props.src!;
+// image.alt = 'Picture';
 
 let clipper=ref<any>()
 let isClipperReady=ref<boolean>(false)
@@ -86,8 +86,8 @@ const putFile=async ({file}: {
     //实例化图片裁剪组件
     clipper.value=new ImgClipper(file.file!,{
         container:'#clipper-container',
-        cWidth:'800px',
-        cHeight:'400px',
+        cWidth:800,
+        cHeight:400,
         fixed:1,
         iWidth:300,
         iHeight:300,

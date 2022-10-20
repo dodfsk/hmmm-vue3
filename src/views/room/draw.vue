@@ -29,11 +29,10 @@
 					v-model:content="content"
 					@ready="quillReady"
 				/>
-				<tip-tap-editor 
+				<tiptapEditor 
                     v-else v-model="content"
                     ref="tipTapRef"
-                > 
-                </tip-tap-editor>
+                /> 
 			</div>
 			<template #footer>
 				<n-space justify="end" class="footer">
@@ -49,7 +48,7 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
 import QuillEditorDeck, { DefineExpose } from '@/components/rich-editor/quillEditor.vue';
-import tipTapEditor,{DefineExpose as De} from '@/components/rich-editor/tipTapEditor.vue';
+import tiptapEditor,{DefineExpose as De} from '@/components/rich-editor/tiptapEditor.vue';
 import { onMounted, provide, reactive, ref, toRefs, watch } from 'vue';
 import { Room } from '@/types/room';
 import { useRoomStore } from '@/store/room';

@@ -16,3 +16,4 @@ export  const OssReplace=(data:string)=>{
     // console.log(oss,imgSrc);
     return data.replace(regex,oss)
 }
+

@@ -1,8 +1,8 @@
 
 type Options={
     container:string,//容器#id
-    cWidth:string,//容器宽
-    cHeight:string,//容器高
+    cWidth:number,//容器宽
+    cHeight:number,//容器高
     //----------//
     fixed?:number,//固定尺寸,例1920/1080
     iWidth?:number,//最终输出图像的宽
@@ -84,8 +84,8 @@ export class ImgClipper {
         this.container=document.querySelector(options.container) as HTMLElement
         this.container.style.maxWidth='100%'
         this.container.style.maxHeight='100%'
-        this.container.style.width=options.cWidth
-        this.container.style.height=options.cHeight
+        this.container.style.width=options.cWidth+'px'
+        this.container.style.height=options.cHeight+'px'
         this.container.style.position='relative'
         this.container.style.backgroundImage='repeating-conic-gradient(#CCC 0deg, #CCC 25%, #FFF 0deg, #FFF 50%)'
         this.container.style.backgroundSize='1rem 1rem';
@@ -173,8 +173,8 @@ export class ImgClipper {
         this.selection.style.zIndex='999'
         this.selection.style.touchAction='none'//当触控事件发生在元素上时,不进行任何操作
         
-        this.selection.style.left=(this.container.offsetWidth-this.selection.offsetWidth) / 2 + 'px'
-        this.selection.style.top=(this.container.offsetHeight-this.selection.offsetHeight) / 2 + 'px'
+        this.selection.style.left=(this.options.cWidth-100) / 2 + 'px'
+        this.selection.style.top=(this.options.cHeight-100) / 2 + 'px'
 
         // this.selection.style.maxWidth=this.options.iWidth||'100%'
         // this.selection.style.maxHeight=this.options.iHeight||'100%'

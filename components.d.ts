@@ -29,6 +29,7 @@ declare module '@vue/runtime-core' {
     NForm: typeof import('naive-ui')['NForm']
     NFormItem: typeof import('naive-ui')['NFormItem']
     NIcon: typeof import('naive-ui')['NIcon']
+    NImage: typeof import('naive-ui')['NImage']
     NInput: typeof import('naive-ui')['NInput']
     NInputGroup: typeof import('naive-ui')['NInputGroup']
     NInputNumber: typeof import('naive-ui')['NInputNumber']
@@ -51,6 +52,8 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Tiptap: typeof import('./src/components/rich-editor/tiptap-media-resize-main/src/components/Tiptap.vue')['default']
+    TiptapEditor: typeof import('./src/components/rich-editor/tiptapEditor.vue')['default']
     TipTapEditor: typeof import('./src/components/rich-editor/tipTapEditor.vue')['default']
+    UploadModal: typeof import('./src/components/rich-editor/UploadModal.vue')['default']
   }
 }

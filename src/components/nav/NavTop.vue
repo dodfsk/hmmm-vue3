@@ -243,6 +243,7 @@ const handleLogOut = () => {
 	width: 100%;
 	height:45px;
 	padding: 0 20px;
+    z-index:999;
 	// background-color: rgba(255, 255, 255, 0.7);
 	// box-shadow: 0 0 5px rgba(51, 51, 51, 0.721);
 	// position: fixed;

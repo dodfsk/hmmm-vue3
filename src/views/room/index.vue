@@ -94,11 +94,16 @@
         <template #header-extra>
         
         </template>
-        <QuillEditorDeck
+        <!-- <QuillEditorDeck
             theme="bubble"
             readOnly="true"
             :scrollingContainer="true"
             v-model:content="windowContent"
+        /> -->
+        <tiptapEditor
+            ref="editorRef"
+            theme="headless"
+            v-model="windowContent"
         />
         <template #footer>
         点赞---点踩    
@@ -112,6 +117,7 @@
 import { onMounted, reactive, ref, watch } from 'vue'
 import {useRouter,useRoute, onBeforeRouteUpdate, onBeforeRouteLeave} from 'vue-router'
 import { Search,ArrowUp } from "@vicons/ionicons5";
+import tiptapEditor from '@/components/rich-editor/tiptapEditor.vue';
 import  QuillEditorDeck  from '@/components/rich-editor/quillEditor.vue' 
 import { useRoomStore } from '@/store/room';
 import { Room } from '@/types/room';
