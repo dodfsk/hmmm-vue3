@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { upload,download, getUploadUrl,putObecjt } from "@/api/minio"
+import { upload,download,remove, getUploadUrl,putObecjt } from "@/api/minio"
 import { Names } from "@/store/store-name";
 import { reactive,computed,onMounted } from 'vue'
 
@@ -11,13 +11,13 @@ export const useMinioStore = defineStore(Names.MINIO, ()=>{
         const { code,data={}  } = res.data;
         return res
     }
-
+    //预签名直传url
     const MINIO_GET_URL=async(param?:object)=> {
         const res = await getUploadUrl(param)
         const { code,data={}  } = res.data;
         return res
     }
-
+    //根据预签名url使用Put方法
     const MINIO_PUT=async(param?:object)=> {
         const res = await putObecjt(param)
         const { code,data={}  } = res.data;
@@ -29,7 +29,11 @@ export const useMinioStore = defineStore(Names.MINIO, ()=>{
         const { code,data={}  } = res.data;
         return res
     }
-
+    const MINIO_DEL=async(param?:object)=> {
+        const res = await remove(param)
+        const { code,data={}  } = res.data;
+        return res
+    }
 
 
     return  {
@@ -37,6 +41,7 @@ export const useMinioStore = defineStore(Names.MINIO, ()=>{
         MINIO_GET_URL,
         MINIO_PUT,
         MINIO_GET,
+        MINIO_DEL,
     }
   },
 //   {

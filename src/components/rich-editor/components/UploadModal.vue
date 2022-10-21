@@ -72,8 +72,8 @@ export type DefineExpose = {
     getOriginalFile:Function,
 };
 export type PreSignInfo={
-    url?:string,
-    fileName?:string
+    url:string,
+    fileName:string
 }
 
 // type Props = {
@@ -101,7 +101,10 @@ let result:Result={
     file:null,
 }
 const originalFile=ref<UploadFileInfo>()
-const preSignInfo:PreSignInfo={}
+const preSignInfo:PreSignInfo={
+    url:'',
+    fileName:''
+}
 
 // nextTick(()=>{
 //         handleCenter()

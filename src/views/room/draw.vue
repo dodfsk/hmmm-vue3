@@ -150,13 +150,6 @@ const getRoomDetail = async (id: string) => {
 	}
 };
 
-// watch(
-// 	() => roomState.content,
-// 	() => {
-// 		console.log('content', roomState.content);
-// 	}
-// 	// { immediate:true,deep:true}
-// );
 
 watch(
 	() => route.query.id,
@@ -166,7 +159,16 @@ watch(
 		}
 	},
 	{ immediate: true }
-);
+)
+
+//调试用watch
+// watch(
+// 	() => roomState.content,
+// 	() => {
+// 		console.log('content', roomState.content);
+// 	}
+// 	// { immediate:true,deep:true}
+// );
 </script>
 
 <style lang="less" scoped>

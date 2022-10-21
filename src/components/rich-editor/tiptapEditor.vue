@@ -80,37 +80,54 @@
             1
             </button> -->
 		</div>
-		<bubble-menu
-			class="bubble-menu"
-			:tippy-options="{ animation: true, duration: 100 }"
-			:editor="editor"
-			:keepInBounds="true"
-			v-if="editor && theme !== 'headless'"
-			v-show="editor.isActive('image')"
-		>
-			<template v-for="(item, index) in BubbleMenuBar" :key="item.key">
-				<button class="bubble-item" v-if="!item.type" @click="item.cmd" :title="item.title">
-					<n-icon size="22" :component="item.svg" v-if="item.svg" />
-				</button>
-				<!-- 编辑图片的pop框 -->
-				<n-popover
-					trigger="manual"
-					v-if="item.type === 'pop'"
-					:show="showPopover"
+
+		<div class="editor__content">
+			<EditorContent ref="editorRef" v-bind="$attrs" :editor="editor">
+				<!-- <template #[slotName]="slotProps" v-for="(slot, slotName) in $slots" >
+                    <slot :name="slotName" v-bind="slotProps"></slot>
+                </template> -->
+			</EditorContent>
+		</div>
+
+        <div class="editor__footer" v-if="showFooter">
+            <UploadFileCard
+                v-for="item in uploadFileList"
+                v-bind="item"
+                @handleFileDel="removeImage"
+            ></UploadFileCard>
+        </div>
+
+        <BubbleMenu
+            class="bubble-menu"
+            :tippy-options="{ animation: true, duration: 100 }"
+            :editor="editor"
+            :keepInBounds="true"
+            v-if="editor && theme !== 'headless'"
+            v-show="editor.isActive('image')"
+        >
+            <template v-for="(item, index) in BubbleMenuBar" :key="item.key">
+                <button class="bubble-item" v-if="!item.type" @click="item.cmd" :title="item.title">
+                    <n-icon size="22" :component="item.svg" v-if="item.svg" />
+                </button>
+                <!-- 编辑图片的pop框 -->
+                <n-popover
+                    trigger="manual"
+                    v-if="item.type === 'pop'"
+                    :show="showPopover"
                     raw
                     :show-arrow="false"
-					@clickoutside="
-						() => {
-							showPopover = false;
-						}
-					"
-					:footer-style="{ display: 'flex', justifyContent: 'end' }"
-				>
-					<template #trigger>
-						<button class="bubble-item" :title="item.title" @click="item.click">
-							<n-icon size="22" :component="item.svg" v-if="item.svg" />
-						</button>
-					</template>
+                    @clickoutside="
+                        () => {
+                            showPopover = false;
+                        }
+                    "
+                    :footer-style="{ display: 'flex', justifyContent: 'end' }"
+                >
+                    <template #trigger>
+                        <button class="bubble-item" :title="item.title" @click="item.click">
+                            <n-icon size="22" :component="item.svg" v-if="item.svg" />
+                        </button>
+                    </template>
                     <div
                         :style="{
                             border:'#000 solid 3px',
@@ -165,23 +182,14 @@
                         </n-space>
                     </div>
 
-				</n-popover>
-			</template>
-		</bubble-menu>
-
-		<div class="editor__content">
-			<EditorContent ref="editorRef" v-bind="$attrs" :editor="editor">
-				<!-- <template #[slotName]="slotProps" v-for="(slot, slotName) in $slots" >
-                    <slot :name="slotName" v-bind="slotProps"></slot>
-                </template> -->
-			</EditorContent>
-		</div>
+                </n-popover>
+            </template>
+        </BubbleMenu>
 
         <UploadModal
             v-model:show="showModal"
             ref="uploadModalRef"
             @handleUploadDone="insertImage"
-
         ></UploadModal>
 
 	</div>
@@ -190,7 +198,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, reactive, ref, ShallowRef, useAttrs, watch } from 'vue';
 
-import { useEditor, EditorContent, Editor, BubbleMenu, VueNodeViewRenderer } from '@tiptap/vue-3';
+import { useEditor, EditorContent, Editor, BubbleMenu } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link'
 import TextStyle from '@tiptap/extension-text-style';
@@ -200,9 +208,10 @@ import TaskList from '@tiptap/extension-task-list';
 import Highlight from '@tiptap/extension-highlight';
 import { Color } from '@tiptap/extension-color';
 // import Image from '@tiptap/extension-image'
-import Image from './ImageResizeModule';
-import CodeBlockLowlight from './CodeBlockModule';
-import uploadModal,{ PreSignInfo }  from './UploadModal.vue'
+import Image from './components/ImageResizeModule';
+import CodeBlockLowlight from './components/CodeBlockModule';
+import UploadModal,{ PreSignInfo }  from './components/UploadModal.vue'
+import UploadFileCard  from './components/UploadFileCard.vue'
 
 
 import 'highlight.js/styles/vs2015.css';
@@ -233,7 +242,7 @@ import {
 	Multiplier05X,
 	Multiplier1X,
 	Edit,
-BorderRadius,
+    BorderRadius,
 } from '@vicons/tabler';
 
 export type DefineExpose = {
@@ -263,16 +272,17 @@ const emits = defineEmits<Emits>();
 
 const { theme, modelValue } = props;
 
+const showPopover = ref<boolean>(false)
 const bubbleState = reactive<BubbleState>({
 	scalePercent: 0,
 	width: 0,
 	height: 0,
 });
 
-const showPopover = ref<boolean>(false)
 const showModal = ref<boolean>(false)
 const uploadModalRef = ref()
-// const isClipperReady=computed(()=>uploadModalRef.value.isClipperReady.value)
+const uploadFileList=ref<PreSignInfo[]>([])
+const showFooter=computed(()=>uploadFileList.value.length>0)
 
 const editor: ShallowRef<Editor | undefined> = useEditor({
 	content: modelValue,
@@ -310,16 +320,6 @@ const editor: ShallowRef<Editor | undefined> = useEditor({
 	},
 });
 const editorRef = ref();
-
-// const editorOption= {
-//     modules: {
-//         syntax: {
-//             highlight: (text:string) => {
-//                 return hljs.highlightAuto(text).value // 这里就是代码高亮需要配置的地方
-//             }
-//         }
-//     }
-// }
 
 const TipTapMenuBar = computed(() => [
     {
@@ -414,17 +414,11 @@ const TipTapMenuBar = computed(() => [
         type:'image',
 		title: '图片',
 		key: 'Image',
-		cmd: (upload:boolean) => {
-            if(!upload){
+		cmd: () => {
                 const url = window.prompt('URL');
                 if (url) {
                     editor.value?.chain().focus().setImage({ src: url }).run();
 			    }
-            }
-            if(upload){
-
-            }
-			
 		},
 		svg: Photo,
 	},
@@ -580,25 +574,41 @@ const BubbleMenuBar = computed(() => [
 		svg: Edit,
 	},
 ]);
-// const handleResize=()=>{
-//     editor.value?.chain().focus().toggleResizable().run()
-
-// }
-// const showButton=computed(()=>{
-//         return editor.value?.state?.selection?.node?.type?.name === 'ResizableImage';
-//     }
-// )
-// const isDraggable=computed(()=>{
-//     return editor.value?.state?.selection?.node?.attrs?.isDraggable;
-// })
-
 
 const insertImage=(data:PreSignInfo)=>{
+    const indexF=uploadFileList.value.findIndex((item)=>item.fileName===data.fileName)
+    console.log(indexF,data);
+    if(indexF===-1){
+        const pushData={
+            url:data.url,
+            fileName:data.fileName
+        }
+        uploadFileList.value.push(pushData)
+        console.log(uploadFileList.value);
+    }
     editor.value?.chain().focus().setImage({ src: data.url!,alt:data.fileName }).run();
     showModal.value=false
+    
 }
-
-
+const removeImage=(data:PreSignInfo)=>{
+    const indexF=uploadFileList.value.findIndex((item)=>item.fileName===data.fileName)
+    console.log(indexF,data.fileName);
+    if(indexF>-1){
+        uploadFileList.value.splice(indexF,1)
+        console.log(uploadFileList.value);
+    }
+    
+    //↓此处正则替换删除所有对应的img图片标签
+    const regStr=`<img [^>]*src=['"]${data.url}['"][^>]*>`
+    // const regStr=`<img [^>]*src=['"]([^'"]+)[^>]*>`
+    const imgReg=new RegExp(regStr,'g')
+    
+    const content=editor.value!.getHTML().replace(imgReg,(match, capture)=>{
+        console.log('match, capture',match, capture);
+        return ''
+    })
+    editor.value!.commands.setContent(content)
+}
 
 
 
@@ -607,10 +617,15 @@ onMounted(() => {
 	if (theme === 'headless') {
 		editor.value?.setEditable(false);
 	}
+    // document.addEventListener("paste", (e:any)=>{
+    //     if(e.clipboardData.items.type.match(/^image\//i))
+    //     editor.value?.chain().focus().setImage({ src: '',alt:'' }).run();
+    // });
 });
 
 onBeforeUnmount(() => {
 	editor.value?.destroy();
+    // document.removeEventListener("paste", handlectrlvEvent);
 });
 
 defineExpose({
@@ -747,7 +762,9 @@ defineExpose({
 
 <style lang="less" scoped>
 @import '@/utils/less/scrollbar.less';
-@class: .editor__content;
+@content: .editor__content;
+@footer:.editor__footer;
+@class:@content@footer;
 .scrollbar-to(@class);
 
 //↓scoped class
@@ -840,6 +857,20 @@ defineExpose({
 	flex: 1 1 auto;
 	overflow: auto;
 	-webkit-overflow-scrolling: touch;
+}
+.editor__footer {
+    width:100%;
+    white-space: nowrap;
+    overflow-y: hidden;
+    overflow-x: auto ;
+    overflow-x: overlay ;
+	// flex: 0 0 auto;
+	// flex-wrap: wrap;
+    min-height:40px;
+    height:40px;
+	padding: 5px;
+	border-top: 3px solid #0d0d0d;
+    z-index:99999;
 }
 .bubble-menu {
 	display: flex;

@@ -3,7 +3,7 @@ import axios from 'axios'
 
 export  const upload=async (data = {})=>{
     return await request({
-        url: '/upload',
+        url: '/assest/upload',
         method: 'post',
         data
     })
@@ -11,7 +11,7 @@ export  const upload=async (data = {})=>{
 
 export  const getUploadUrl=async (data = {})=>{
     return await request({
-        url: '/upload/getUrl',
+        url: '/assest/upload/getUrl',
         method: 'post',
         data
     })
@@ -36,4 +36,13 @@ export  const download=async (data = {})=>{
         data
     })
 }
+
+export  const remove=async (data = {})=>{
+    return await request({
+        url: '/assest/delete',
+        method: 'delete',
+        data
+    })
+}
+
 
