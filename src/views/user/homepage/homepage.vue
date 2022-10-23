@@ -3,7 +3,7 @@
 		homepage 主页
 		<n-input v-model:value="a"> </n-input>
 
-		<!-- <img src="http://192.168.2.103:13573/api/assest/picture/hmlc/qemu-kvm.png"
+		<!-- <img src="http://192.168.2.103:13573/api/assets/picture/hmlc/qemu-kvm.png"
     /> -->
 
 		<n-upload
@@ -122,8 +122,8 @@ const getFile=()=>{
     file = (document.querySelector('#file') as HTMLInputElement).files?.item(0)!;
     clipper=new ImgClipper(file,{
         container:'#clipper-container',
-        cWidth:'800px',
-        cHeight:'400px',
+        cWidth:800,
+        cHeight:400,
         fixed:1920/1080,
         iWidth:1280,
         iHeight:720,

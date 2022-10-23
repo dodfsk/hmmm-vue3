@@ -131,7 +131,7 @@ const quillReady = () => {
 
 const handleEdit = () => {
 	router.push({
-		path: `/room/draw`,
+		path: `/draw`,
 		query: { id: route.params.id },
 	});
 };
@@ -206,7 +206,7 @@ watch(
 	    // width: 1200px;
 	// width: 100%;
         margin: 0 auto;
-        padding:20px;
+        padding:5px 20px;
         display: flex;
         // justify-content:  center;
         // flex-wrap: wrap;
@@ -221,8 +221,8 @@ watch(
 
 .content-left,.comment-left{
     max-width:900px;
-    width:60vw;
-    min-width:450px;
+    width:100%;
+    min-width:700px;
 	height: 100%;
     margin-bottom: 10px;
 	// .area_header{}
@@ -256,10 +256,11 @@ watch(
 	}
 }
 .content-right,.comment-right {
-	width: 200px;
-	// min-width: 100px;
+	width: 300px;
+	// min-width: 200px;
+	min-width: 300px;
 	height: 300px;
-	margin-left: 12px;
+	margin-left: 5px;
 	min-height: 200px;
 	// border: 2px solid #666;
 	// position: fixed;

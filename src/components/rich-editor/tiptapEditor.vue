@@ -91,7 +91,7 @@
 
         <div class="editor__footer" v-if="showFooter">
             <UploadFileCard
-                v-for="item in uploadFileList"
+                v-for="item in assets"
                 v-bind="item"
                 @handleFileDel="removeImage"
             ></UploadFileCard>
@@ -196,7 +196,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, reactive, ref, ShallowRef, useAttrs, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, reactive, ref, ShallowRef, toRefs, useAttrs, watch } from 'vue';
+import { PreSignInfo } from '@/types/room';
 
 import { useEditor, EditorContent, Editor, BubbleMenu } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
@@ -210,7 +211,7 @@ import { Color } from '@tiptap/extension-color';
 // import Image from '@tiptap/extension-image'
 import Image from './components/ImageResizeModule';
 import CodeBlockLowlight from './components/CodeBlockModule';
-import UploadModal,{ PreSignInfo }  from './components/UploadModal.vue'
+import UploadModal from './components/UploadModal.vue'
 import UploadFileCard  from './components/UploadFileCard.vue'
 
 
@@ -251,10 +252,12 @@ export type DefineExpose = {
 type Props = {
 	theme?: string;
 	modelValue?: string;
+    assets?:PreSignInfo[];
 };
 type Emits = {
 	// (e: 'functionName', value: any): void
 	(e: 'update:modelValue', value: string): void;
+	(e: 'update:assets', value: PreSignInfo[]): void;
 };
 type BubbleState={
     src?: string;
@@ -270,7 +273,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emits = defineEmits<Emits>();
 // const emit = defineEmits(['update:modelValue'])
 
-const { theme, modelValue } = props;
+const { theme, modelValue,assets } = toRefs(props);
 
 const showPopover = ref<boolean>(false)
 const bubbleState = reactive<BubbleState>({
@@ -281,11 +284,15 @@ const bubbleState = reactive<BubbleState>({
 
 const showModal = ref<boolean>(false)
 const uploadModalRef = ref()
-const uploadFileList=ref<PreSignInfo[]>([])
-const showFooter=computed(()=>uploadFileList.value.length>0)
+const showFooter=computed(()=>{
+    if(props.theme==='headless'){
+        return false
+    }
+    return props.assets!.length>0
+})
 
 const editor: ShallowRef<Editor | undefined> = useEditor({
-	content: modelValue,
+	content: props.modelValue,
 	extensions: [
 		StarterKit.configure({ codeBlock: false }),
 		CodeBlockLowlight,
@@ -312,8 +319,12 @@ const editor: ShallowRef<Editor | undefined> = useEditor({
 	],
 	onUpdate: ({ editor }) => {
 		// HTML
-		emits('update:modelValue', editor.getHTML()); //双向绑定
-		// console.log(editor.getHTML());
+        if(props.theme!=='headless'){
+            emits('update:modelValue', editor.getHTML()); //双向绑定
+            if(props.assets!.length>0){
+                emits('update:assets', props.assets!); //双向绑定
+            }
+        }
 
 		// JSON
 		// emits('update:modelValue', editor.getJSON())
@@ -576,26 +587,26 @@ const BubbleMenuBar = computed(() => [
 ]);
 
 const insertImage=(data:PreSignInfo)=>{
-    const indexF=uploadFileList.value.findIndex((item)=>item.fileName===data.fileName)
+    const indexF=props.assets!.findIndex((item)=>item.fileName===data.fileName)
     console.log(indexF,data);
     if(indexF===-1){
         const pushData={
             url:data.url,
             fileName:data.fileName
         }
-        uploadFileList.value.push(pushData)
-        console.log(uploadFileList.value);
+        props.assets!.push(pushData)
+        console.log(props.assets);
     }
     editor.value?.chain().focus().setImage({ src: data.url!,alt:data.fileName }).run();
     showModal.value=false
     
 }
 const removeImage=(data:PreSignInfo)=>{
-    const indexF=uploadFileList.value.findIndex((item)=>item.fileName===data.fileName)
+    const indexF=props.assets!.findIndex((item)=>item.fileName===data.fileName)
     console.log(indexF,data.fileName);
     if(indexF>-1){
-        uploadFileList.value.splice(indexF,1)
-        console.log(uploadFileList.value);
+        props.assets!.splice(indexF,1)
+        console.log(props.assets);
     }
     
     //↓此处正则替换删除所有对应的img图片标签
@@ -607,14 +618,15 @@ const removeImage=(data:PreSignInfo)=>{
         console.log('match, capture',match, capture);
         return ''
     })
-    editor.value!.commands.setContent(content)
+    editor.value!.commands.setContent(content)//修改编辑器视图
+    emits('update:modelValue', content); //双向绑定修改数据
 }
 
 
 
 
 onMounted(() => {
-	if (theme === 'headless') {
+	if (props.theme === 'headless') {
 		editor.value?.setEditable(false);
 	}
     // document.addEventListener("paste", (e:any)=>{
@@ -627,6 +639,7 @@ onBeforeUnmount(() => {
 	editor.value?.destroy();
     // document.removeEventListener("paste", handlectrlvEvent);
 });
+
 
 defineExpose({
 	editorRef,
@@ -870,7 +883,6 @@ defineExpose({
     height:40px;
 	padding: 5px;
 	border-top: 3px solid #0d0d0d;
-    z-index:99999;
 }
 .bubble-menu {
 	display: flex;

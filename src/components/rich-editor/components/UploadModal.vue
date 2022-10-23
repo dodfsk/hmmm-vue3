@@ -65,16 +65,13 @@ import { ArchiveOutline } from '@vicons/ionicons5'
 import { UploadFileInfo } from 'naive-ui';
 import { useUserStore } from '@/store/user';
 import { useMinioStore } from '@/store/minio';
+import { PreSignInfo } from '@/types/room';
 
 export type DefineExpose = {
 // cropper: InstanceType<typeof Cropper>;
     isClipperReady:Ref<boolean>,
     getOriginalFile:Function,
 };
-export type PreSignInfo={
-    url:string,
-    fileName:string
-}
 
 // type Props = {
 // 	showModal?: string;

@@ -16,29 +16,23 @@
                     </n-input-group>
 
                     <n-button-group>
-                            <n-button type="primary"  @click="handleAnimation">添加描述</n-button>
-                            <n-button type="info"  @click="handleCover"> 上传封面</n-button>
+                            <n-button color="black"  @click="handleAnimation">添加描述</n-button>
+                            <n-button color="#666"  @click="handleCover"> 上传封面</n-button>
                     </n-button-group>
                 </div>
             </template>
 
 			<div class="edit_box">
-				<quill-editor-deck
-					v-if="!editSwitch"
-					ref="quillEditorRef"
-					v-model:content="content"
-					@ready="quillReady"
-				/>
 				<tiptapEditor 
-                    v-else v-model="content"
+                    v-model="content"
+                    v-model:assets="assets"
                     ref="tipTapRef"
                 /> 
 			</div>
 			<template #footer>
-				<n-space justify="end" class="footer">
-					<n-button @click="handleSwitch"> 切 换 </n-button>
-
-					<n-button type="primary" @click="handlePublish"> 发 布 </n-button>
+				<n-space justify="space-between" class="footer">
+                        <n-button type="info" @click="handleSave">保存</n-button>
+                        <n-button type="primary" @click="handlePublish"> 发 布 </n-button>
 				</n-space>
 			</template>
 		</n-card>
@@ -60,7 +54,7 @@ console.log('route.params.id', route.params.id);
 
 const quillEditorRef = ref<DefineExpose | undefined>();
 const tipTapRef=ref<De|undefined>()
-let quill: DefineExpose['quill'] | undefined;
+// let quill: DefineExpose['quill'] | undefined;
 let editSwitch = ref<boolean>(true);
 const animationFlag=ref(false)
 
@@ -69,12 +63,14 @@ let roomState = reactive<Room>({
 	title: '',
     description:'',
 	content: '',
+    assets:[],
 });
-const { title,description, content } = toRefs(roomState);
+
+const { title,description,content,assets } = toRefs(roomState);
 
 onMounted(() => {
-	quill = quillEditorRef.value?.quill;
-	console.log('quill', quill);
+	// quill = quillEditorRef.value?.quill;
+	// console.log('quill', quill);
 	// console.log('quillEditorRef.value...', quillEditorRef.value);
 	// console.log('a=>',quillEditorInstance?.setHTML(
 	//     String(route.params.id)
@@ -101,17 +97,35 @@ onMounted(() => {
 // const contentChange = () => {
 // 	console.log(content.value);
 // };
-const quillReady = () => {
-	console.log('quill-editor is ready');
-};
-const handleSwitch = () => {
-	editSwitch.value = !editSwitch.value;
-};
+// const quillReady = () => {
+// 	console.log('quill-editor is ready');
+// };
+// const handleSwitch = () => {
+// 	editSwitch.value = !editSwitch.value;
+// };
+
+const handleSave=async ()=>{
+    // if(!editSwitch.value){
+    //     roomState.content=quill?.getHTML()//重新获取HTML
+    // }
+    console.log('roomState.assets',roomState);
+	if (roomState.content) {
+		// const room: Room = {
+		// 	title: roomState.title,
+		// 	content: roomState.content,
+		// };
+		console.log('roomState.content', roomState.content);
+		const res = await roomStore.ROOM_SET(roomState);
+		const { code, data = {} } = res.data;
+		if (code == 200) {
+			window.$message.success('保存成功')
+		}
+	}
+}
 
 const handlePublish = async () => {
-    if(!editSwitch.value){
-        roomState.content=quill?.getHTML()//重新获取HTML
-    }
+    console.log('roomState.assets',roomState);
+
 	if (roomState.content) {
 		// const room: Room = {
 		// 	title: roomState.title,
@@ -144,8 +158,8 @@ const getRoomDetail = async (id: string) => {
 		// roomState.content=data.content
 		// roomState.hid=data.hid
 		Object.assign(roomState, data);
-		quill?.setHTML(roomState.content);
-        tipTapRef.value?.editorRef.editor.commands.setContent(roomState.content)
+		// quill?.setHTML(roomState.content);
+        tipTapRef.value!.editorRef.editor.commands.setContent(roomState.content)
 		// loading.value=false
 	}
 };

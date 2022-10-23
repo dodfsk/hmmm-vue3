@@ -38,8 +38,8 @@ const routes: Array<RouteRecordRaw> = [
 		component: () => import('@/views/room/hv.vue'),
 	},
 	{
-		path: '/room/draw',
-		name: 'room_draw',
+		path: '/draw',
+		name: 'draw',
 		meta: {
 			key: 'room',
 		},
@@ -133,9 +133,9 @@ const router = createRouter({
 //NProgress关闭圆形微调器
 NProgress.configure({ showSpinner: false });
 //路由前置守卫
-router.beforeEach(async (_to, _from, next) => {
+router.beforeEach(async (to, from, next) => {
 	// console.log('_to, _from, next',_to, _from, next);
-    if(_to.meta.key=='user'){
+    if(to.meta.key=='user'){
     const userStore=useUserStore()
         if(userStore.userInfo.username==null){
             //未登录状态禁止访问user模块
@@ -144,7 +144,12 @@ router.beforeEach(async (_to, _from, next) => {
             })
         }
     }
-	if (JSON.stringify(_to.query) == '{}' && JSON.stringify(_from.query) == '{}') {
+    // if(_to.meta.key=='user'){
+    
+    // }
+
+
+	if (JSON.stringify(to.query) == '{}' && JSON.stringify(from.query) == '{}') {
 		//路由修改query时候不做处理
 		NProgress.start(); //开启进度条
 	}

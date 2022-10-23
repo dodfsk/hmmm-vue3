@@ -145,7 +145,7 @@ let coinList=ref<CoinList>({})
 
 const roomDraw=()=>{
     router.push({
-        path:`/room/draw`,
+        path:`/draw`,
     });
 }
 const roomEnter=(hid?:string)=>{
@@ -221,8 +221,8 @@ const windowStyle={
 @import '@/views/root.less';
 
 .container{
-    width:calc(100vw - 8%);
-    // min-width:600px;
+    width:100%;
+    max-width:1500px;
     height: 100%;
     // background-color: #ccc;
     margin:0 auto;

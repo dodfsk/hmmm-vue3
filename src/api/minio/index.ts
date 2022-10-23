@@ -3,7 +3,7 @@ import axios from 'axios'
 
 export  const upload=async (data = {})=>{
     return await request({
-        url: '/assest/upload',
+        url: '/assets/upload',
         method: 'post',
         data
     })
@@ -11,7 +11,7 @@ export  const upload=async (data = {})=>{
 
 export  const getUploadUrl=async (data = {})=>{
     return await request({
-        url: '/assest/upload/getUrl',
+        url: '/assets/upload/getUrl',
         method: 'post',
         data
     })
@@ -31,7 +31,7 @@ export  const putObecjt=async (params:any)=>{
 export  const download=async (data = {})=>{
     return await request({
         responseType: 'stream',//设置axios返回buffer数据流
-        url: '/assest/download',
+        url: '/assets/download',
         method: 'post',
         data
     })
@@ -39,7 +39,7 @@ export  const download=async (data = {})=>{
 
 export  const remove=async (data = {})=>{
     return await request({
-        url: '/assest/delete',
+        url: '/assets/delete',
         method: 'delete',
         data
     })

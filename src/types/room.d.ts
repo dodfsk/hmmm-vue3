@@ -1,5 +1,10 @@
 import {Comment} from '@/types/comment'
 
+export type PreSignInfo={
+    url:string,
+    fileName:string
+}
+
 export type Room={
     _id?:string,
     hid?: string,
@@ -7,7 +12,7 @@ export type Room={
     content?:string|Delta,
     description?:string,
     cover?:string,
-    assest?:string,
+    assets?:Array<PreSignInfo>,
     from?: string,
     isPublic?:boolean;
     createdAt?: Date,

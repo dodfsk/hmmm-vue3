@@ -51,7 +51,7 @@
 
 			<n-popover placement="bottom" trigger="hover" :disabled="!userStore?.userInfo?.username" ref="userPopover">
 				<template #trigger>
-					<n-button color="#8a2be2" v-if="userStore?.userInfo?.username">
+					<n-button color="#E23838" v-if="userStore?.userInfo?.username">
 						<!-- <template #icon>
 							<n-icon :component="Person">
 								<cash-icon />
@@ -68,15 +68,15 @@
 						{{ `${userStore?.userInfo?.username}` }}
 					</n-button>
 
-                    <n-button color="#8a2be2" v-else @click="handleUnlogin">
+                    <n-button color="#F43838" v-else @click="handleUnlogin">
 						{{ `未登录` }}
 					</n-button>
 				</template>
 
 				<n-space vertical>
-					<n-button @click="handleUser"> 个人中心 </n-button>
+					<n-button  @click="handleUser"> 个人中心 </n-button>
 
-					<n-button type="error"  @click="handleLogOut"> 登出 </n-button>
+					<n-button color="#000"  @click="handleLogOut"> 登出 </n-button>
 				</n-space>
 			</n-popover>
 
@@ -185,7 +185,7 @@ const roomDraw = () => {
 	roomPopover.value.setShow(false); //手动关闭popover
 	if (userStore.userInfo.username != null) {
         router.push({
-            path: `/room/draw`,
+            path: `/draw`,
         });
     }else{
         router.push({
