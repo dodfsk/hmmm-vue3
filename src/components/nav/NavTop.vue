@@ -296,6 +296,7 @@ const handleLogOut = () => {
 			// max-width: 100px;
             min-width:120px;
             // width:50%;
+            user-select: none;
 
             .n-input__suffix{
                 .n-button{
@@ -328,6 +329,7 @@ const handleLogOut = () => {
 
 :deep(.n-menu-item-content){
     padding:0 15px !important;
+    user-select: none;
 }
 :deep(.n-menu-item-content__icon){
         display: none !important;

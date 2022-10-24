@@ -41,7 +41,7 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/draw',
 		name: 'draw',
 		meta: {
-			key: 'room',
+			key: 'draw',
 		},
 		component: () => import('@/views/room/draw.vue'),
 	},

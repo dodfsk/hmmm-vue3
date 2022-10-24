@@ -53,21 +53,21 @@
                             background:'#fff',
                         }"
                     >
-                    <n-space vertical>
+                    <n-button-group vertical size="small">
 
                         <n-button
-                            text
                             color="#000"
+                            quaternary
                             size="small"
                             @click="item.cmd"
                         >图片地址</n-button>
                         <n-button
-                            text
                             color="#000"
+                            quaternary
                             size="small"
                             @click="()=>showModal=true"
                         >本地上传</n-button>
-                    </n-space>
+                    </n-button-group>
                     </div>
                 </n-popover>
 
@@ -82,7 +82,7 @@
 		</div>
 
 		<div class="editor__content">
-			<EditorContent ref="editorRef" v-bind="$attrs" :editor="editor">
+			<EditorContent ref="editorRef" v-bind="$attrs" :editor="editor" style="height:100%">
 				<!-- <template #[slotName]="slotProps" v-for="(slot, slotName) in $slots" >
                     <slot :name="slotName" v-bind="slotProps"></slot>
                 </template> -->
@@ -118,7 +118,7 @@
                     :show-arrow="false"
                     @clickoutside="
                         () => {
-                            showPopover = false;
+                            showPopover = false
                         }
                     "
                     :footer-style="{ display: 'flex', justifyContent: 'end' }"
@@ -139,7 +139,7 @@
                         <n-space vertical align="end">
                         <n-form size="tiny">
                             <n-form-item label="src">
-                                <n-input  v-model:value="bubbleState.src" placeholder="请输入图片地址"/>
+                                <n-input  v-model:value="bubbleState.src" placeholder="请输入图片地址" :disabled="bubbleState.isBase64"/>
                             </n-form-item>
                             <n-form-item label="alt">
                                 <n-input v-model:value="bubbleState.alt" placeholder="请输入图片描述"/>
@@ -147,19 +147,19 @@
                             <n-form-item label="scalePercent">
                                 <n-input-number
                                     v-model:value="bubbleState.scalePercent"
-                                    placeholder="原图百分比默认0"
+                                    placeholder="原图百分比"
                                     step="5"
                                     clearable
                                     style="width:200px"
                                 >
-                                    <template #prefix>%</template>
+                                    <template #prefix>%&nbsp</template>
                                 </n-input-number>
                             </n-form-item>
                             <n-form-item label="width">
                                 <n-input-number
                                     v-model:value="bubbleState.width"
                                     :disabled="bubbleState.scalePercent!==null&&bubbleState.scalePercent!==0"
-                                    placeholder="图片宽度auto"
+                                    placeholder="宽 度 auto"
                                     clearable
                                     style="width:200px"
                                 >
@@ -170,7 +170,7 @@
                                 <n-input-number
                                     v-model:value="bubbleState.height"
                                     :disabled="bubbleState.scalePercent!==null&&bubbleState.scalePercent!==0"
-                                    placeholder="图片高度auto"
+                                    placeholder="高 度 auto"
                                     clearable
                                     style="width:200px"
                                 >
@@ -196,26 +196,26 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, reactive, ref, ShallowRef, toRefs, useAttrs, watch } from 'vue';
-import { PreSignInfo } from '@/types/room';
+import { computed, onBeforeUnmount, onMounted, reactive, ref, ShallowRef, toRefs, useAttrs, watch } from 'vue'
+import { PreSignInfo } from '@/types/room'
 
-import { useEditor, EditorContent, Editor, BubbleMenu } from '@tiptap/vue-3';
-import StarterKit from '@tiptap/starter-kit';
+import { useEditor, EditorContent, Editor, BubbleMenu } from '@tiptap/vue-3'
+import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
-import TextStyle from '@tiptap/extension-text-style';
-import TextAlign from '@tiptap/extension-text-align';
-import TaskItem from '@tiptap/extension-task-item';
-import TaskList from '@tiptap/extension-task-list';
-import Highlight from '@tiptap/extension-highlight';
-import { Color } from '@tiptap/extension-color';
+import TextStyle from '@tiptap/extension-text-style'
+import TextAlign from '@tiptap/extension-text-align'
+import TaskItem from '@tiptap/extension-task-item'
+import TaskList from '@tiptap/extension-task-list'
+import Highlight from '@tiptap/extension-highlight'
+import { Color } from '@tiptap/extension-color'
 // import Image from '@tiptap/extension-image'
-import Image from './components/ImageResizeModule';
-import CodeBlockLowlight from './components/CodeBlockModule';
+import Image from './components/ImageResizeModule'
+import CodeBlockLowlight from './components/CodeBlockModule'
 import UploadModal from './components/UploadModal.vue'
 import UploadFileCard  from './components/UploadFileCard.vue'
 
 
-import 'highlight.js/styles/vs2015.css';
+import 'highlight.js/styles/vs2015.css'
 
 import {
 	Bold,
@@ -244,43 +244,45 @@ import {
 	Multiplier1X,
 	Edit,
     BorderRadius,
-} from '@vicons/tabler';
+} from '@vicons/tabler'
 
 export type DefineExpose = {
 	editorRef: InstanceType<typeof EditorContent>
-};
+}
 type Props = {
-	theme?: string;
-	modelValue?: string;
-    assets?:PreSignInfo[];
-};
+	theme?: string
+	modelValue?: string
+    assets?:PreSignInfo[]
+}
 type Emits = {
 	// (e: 'functionName', value: any): void
-	(e: 'update:modelValue', value: string): void;
-	(e: 'update:assets', value: PreSignInfo[]): void;
-};
+	(e: 'update:modelValue', value: string): void
+	(e: 'update:assets', value: PreSignInfo[]): void
+}
 type BubbleState={
-    src?: string;
-    alt?: string;
-    scalePercent?: number;
-    width?: number;
-    height?: number;
+    src?: string
+    alt?: string
+    scalePercent?: number | null
+    width?: number | null
+    height?: number | null
+    isBase64:boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
 	modelValue: '',
-});
-const emits = defineEmits<Emits>();
+})
+const emits = defineEmits<Emits>()
 // const emit = defineEmits(['update:modelValue'])
 
-const { theme, modelValue,assets } = toRefs(props);
+const { theme, modelValue,assets } = toRefs(props)
 
 const showPopover = ref<boolean>(false)
 const bubbleState = reactive<BubbleState>({
-	scalePercent: 0,
-	width: 0,
-	height: 0,
-});
+	scalePercent: null,
+	width: null,
+	height: null,
+    isBase64:false,
+})
 
 const showModal = ref<boolean>(false)
 const uploadModalRef = ref()
@@ -320,17 +322,17 @@ const editor: ShallowRef<Editor | undefined> = useEditor({
 	onUpdate: ({ editor }) => {
 		// HTML
         if(props.theme!=='headless'){
-            emits('update:modelValue', editor.getHTML()); //双向绑定
+            emits('update:modelValue', editor.getHTML()) //双向绑定
             if(props.assets!.length>0){
-                emits('update:assets', props.assets!); //双向绑定
+                emits('update:assets', props.assets!) //双向绑定
             }
         }
 
 		// JSON
 		// emits('update:modelValue', editor.getJSON())
 	},
-});
-const editorRef = ref();
+})
+const editorRef = ref()
 
 const TipTapMenuBar = computed(() => [
     {
@@ -426,9 +428,9 @@ const TipTapMenuBar = computed(() => [
 		title: '图片',
 		key: 'Image',
 		cmd: () => {
-                const url = window.prompt('URL');
+                const url = window.prompt('URL')
                 if (url) {
-                    editor.value?.chain().focus().setImage({ src: url }).run();
+                    editor.value?.chain().focus().setImage({ src: url }).run()
 			    }
 		},
 		svg: Photo,
@@ -538,7 +540,7 @@ const TipTapMenuBar = computed(() => [
 		disabled: !editor.value?.can().chain().focus().redo().run(),
 		svg: ArrowForwardUp,
 	},
-]);
+])
 const BubbleMenuBar = computed(() => [
 	{
 		title: '50%',
@@ -556,57 +558,67 @@ const BubbleMenuBar = computed(() => [
 		type: 'pop',
 		title: '编辑图片',
 		key: 'imgEdit',
+		disabled: bubbleState.isBase64,
 		click: () => {
-			showPopover.value = true;
-			const imgState = editor.value!.getAttributes('image');
-            // if(imgState.src.indexOf('data:image')>-1){
-            //     imgState.src=undefined;
-            //     console.log(imgState.src);
-            // }
+			showPopover.value = true
+            bubbleState.isBase64=false
+            
+			const imgState = editor.value!.getAttributes('image')
+            //将0.x化为百分比做显示
             if(imgState.scalePercent){
                 imgState.scalePercent*=100
-            }else{
-                imgState.scalePercent=0
             }
-            
-			Object.assign(bubbleState, imgState);
+            //对base64格式地址做处理
+            if(imgState.src&&imgState.src.indexOf('data:image')>-1){
+                imgState.src='粘贴或拖拽插入的base64格式图片'
+                bubbleState.isBase64=true
+            }
+            //将图片信息传递给form表单
+			Object.assign(bubbleState, imgState)
 		},
 		cmd: () => {
+            //将百分比转换为0.x更新图片
             if(bubbleState.scalePercent){
                 bubbleState.scalePercent/=100
             }
+            //如果是base64图片,则删除src属性,避免更新
+            if(bubbleState.isBase64){
+                delete bubbleState.src
+            }
+            console.log(bubbleState)
+            
 			editor.value
 			    ?.chain()
 				.focus()
 				.updateAttributes('image', { ...bubbleState })
-				.run();
-			showPopover.value = false;
+				.run()
+			showPopover.value = false
 		},
 		svg: Edit,
 	},
-]);
+])
 
 const insertImage=(data:PreSignInfo)=>{
     const indexF=props.assets!.findIndex((item)=>item.fileName===data.fileName)
-    console.log(indexF,data);
+    console.log(indexF,data)
     if(indexF===-1){
         const pushData={
             url:data.url,
             fileName:data.fileName
         }
         props.assets!.push(pushData)
-        console.log(props.assets);
+        console.log(props.assets)
     }
-    editor.value?.chain().focus().setImage({ src: data.url!,alt:data.fileName }).run();
+    editor.value?.chain().focus().setImage({ src: data.url!,alt:data.fileName }).run()
     showModal.value=false
     
 }
 const removeImage=(data:PreSignInfo)=>{
     const indexF=props.assets!.findIndex((item)=>item.fileName===data.fileName)
-    console.log(indexF,data.fileName);
+    console.log(indexF,data.fileName)
     if(indexF>-1){
         props.assets!.splice(indexF,1)
-        console.log(props.assets);
+        console.log(props.assets)
     }
     
     //↓此处正则替换删除所有对应的img图片标签
@@ -615,11 +627,11 @@ const removeImage=(data:PreSignInfo)=>{
     const imgReg=new RegExp(regStr,'g')
     
     const content=editor.value!.getHTML().replace(imgReg,(match, capture)=>{
-        console.log('match, capture',match, capture);
+        console.log('match, capture',match, capture)
         return ''
     })
     editor.value!.commands.setContent(content)//修改编辑器视图
-    emits('update:modelValue', content); //双向绑定修改数据
+    emits('update:modelValue', content) //双向绑定修改数据
 }
 
 
@@ -627,30 +639,29 @@ const removeImage=(data:PreSignInfo)=>{
 
 onMounted(() => {
 	if (props.theme === 'headless') {
-		editor.value?.setEditable(false);
+		editor.value?.setEditable(false)
 	}
     // document.addEventListener("paste", (e:any)=>{
     //     if(e.clipboardData.items.type.match(/^image\//i))
-    //     editor.value?.chain().focus().setImage({ src: '',alt:'' }).run();
-    // });
-});
+    //     editor.value?.chain().focus().setImage({ src: '',alt:'' }).run()
+    // })
+})
 
 onBeforeUnmount(() => {
-	editor.value?.destroy();
-    // document.removeEventListener("paste", handlectrlvEvent);
-});
+	editor.value?.destroy()
+    // document.removeEventListener("paste", handlectrlvEvent)
+})
 
 
 defineExpose({
 	editorRef,
-});
+})
 </script>
 
 <style lang="less">
 .ProseMirror {
 	// min-width:600px;
-	// min-height: 300px;
-	// max-height: 550px;
+    min-height:100%;
 	word-wrap: break-word;
 	white-space: pre-wrap;
 	white-space: break-spaces;
@@ -662,9 +673,6 @@ defineExpose({
 }
 .ProseMirror-focused:focus {
 	outline: none;
-}
-.scrollable {
-	cursor: default;
 }
 
 .ProseMirror {
@@ -712,12 +720,10 @@ defineExpose({
 	h6 {
 		line-height: 1.1;
 	}
-
 	//   code {
 	// background-color: rgba(#616161, 0.1);
 	// color: #616161;
 	//   }
-
 	pre {
 		// background: #0D0D0D;
 		// color: #FFF;
@@ -743,33 +749,34 @@ defineExpose({
 		border-radius: 0.25em;
 		box-decoration-break: clone;
 	}
-
-	img {
-		width: 100%;
-		// margin: 0 2px;
-		height: auto;
-	}
-	.img-container {
-		margin: 0 2px;
-	}
-
 	blockquote {
 		padding-left: 1rem;
 		border-left: 2px solid rgba(#0d0d0d, 0.1);
 	}
-
 	hr {
 		border: none;
 		border-top: 2px solid rgba(#0d0d0d, 0.3);
 		margin: 0.3rem 0;
 	}
+	img {
+		width: 100%;
+		height: auto;
+		// margin: 0 2px;
+	}
+	.img-container {
+		margin: 0 2px;
+	}
+
+    .ProseMirror-separator {
+        visibility:hidden;//此class的dom导致无法选择行末尾的内联节点,因此隐藏元素只保留交互
+    }
 }
 // .headless {
-//     .ProseMirror {
-//         img{
-//             width:100%
-//         }
-//     }
+    // .ProseMirror {
+    //     img{
+    //         width:100%
+    //     }
+    // }
 // }
 </style>
 
@@ -779,8 +786,8 @@ defineExpose({
 @footer:.editor__footer;
 @class:@content@footer;
 .scrollbar-to(@class);
-
 //↓scoped class
+
 .editor-container {
 	width: 100%;
 	height: 100%;
@@ -798,6 +805,7 @@ defineExpose({
 	.editor__content {
 		overflow-x: hidden;
 		overflow-y: hidden;
+        // max-width:700px;
 	}
 }
 

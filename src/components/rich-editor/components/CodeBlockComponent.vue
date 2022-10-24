@@ -45,6 +45,7 @@ console.log(props.node.attrs);
       top: 0.3rem;
       right: 0.5rem;
       border-radius: 0.2rem;
+      user-select: none;
     }
   }
   .code-block:hover{

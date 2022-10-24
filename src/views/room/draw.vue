@@ -30,7 +30,7 @@
                 /> 
 			</div>
 			<template #footer>
-				<n-space justify="space-between" class="footer">
+				<n-space justify="end" class="footer">
                         <n-button type="info" @click="handleSave">保存</n-button>
                         <n-button type="primary" @click="handlePublish"> 发 布 </n-button>
 				</n-space>
@@ -41,8 +41,8 @@
 
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
-import QuillEditorDeck, { DefineExpose } from '@/components/rich-editor/quillEditor.vue';
-import tiptapEditor,{DefineExpose as De} from '@/components/rich-editor/tiptapEditor.vue';
+// import QuillEditorDeck, { DefineExpose } from '@/components/rich-editor/quillEditor.vue';
+import tiptapEditor,{ DefineExpose } from '@/components/rich-editor/tiptapEditor.vue';
 import { onMounted, provide, reactive, ref, toRefs, watch } from 'vue';
 import { Room } from '@/types/room';
 import { useRoomStore } from '@/store/room';
@@ -52,10 +52,10 @@ const router = useRouter();
 const roomStore = useRoomStore();
 console.log('route.params.id', route.params.id);
 
-const quillEditorRef = ref<DefineExpose | undefined>();
-const tipTapRef=ref<De|undefined>()
+// const quillEditorRef = ref<DefineExpose | undefined>();
+const tipTapRef=ref<DefineExpose|undefined>()
 // let quill: DefineExpose['quill'] | undefined;
-let editSwitch = ref<boolean>(true);
+// let editSwitch = ref<boolean>(true);
 const animationFlag=ref(false)
 
 let roomState = reactive<Room>({

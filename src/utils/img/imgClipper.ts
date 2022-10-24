@@ -316,13 +316,13 @@ export class ImgClipper {
                 }
                 // console.log(this.eventRecord);
                 window.onpointermove=(e)=>this.scaleEvent(e,direction)
-            }
-            window.onpointerup=(e)=>{
-                e.preventDefault()
-                e.stopPropagation()
-                this.eventRecord.allowScale = false //设为true表示可以缩放
-                window.onpointermove=()=>null
-                // window.onpointerup=()=>null
+                window.onpointerup=(e)=>{
+                    e.preventDefault()
+                    e.stopPropagation()
+                    this.eventRecord.allowScale = false //设为true表示可以缩放
+                    window.onpointermove=()=>null
+                    window.onpointerup=()=>null
+                }
             }
             this.selection.appendChild(span)
         }
