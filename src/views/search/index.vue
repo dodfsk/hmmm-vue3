@@ -4,6 +4,7 @@
         <n-space>
             <n-input
                 placeholder="请输入查询条件"
+                clearable
                 v-model:value="searchValue"
                 @keyup.enter="handleSearch"
             >
@@ -75,12 +76,12 @@
         <template #header-extra>
         
         </template>
-        <QuillEditorDeck
-            theme="bubble"
-            readOnly="true"
-            :scrollingContainer="true"
-            v-model:content="windowContent"
-        />
+
+        <tiptapEditor
+                ref="editorRef"
+                theme="headless"
+                v-model="windowContent"
+            />
         <template #footer>
         点赞---点踩    
         </template>
@@ -93,7 +94,7 @@
 import { onMounted, reactive, ref, watch } from 'vue'
 import {useRouter,useRoute, onBeforeRouteUpdate, onBeforeRouteLeave} from 'vue-router'
 import { Search,ArrowUp } from "@vicons/ionicons5";
-import  QuillEditorDeck  from '@/components/rich-editor/quillEditor.vue' 
+import tiptapEditor from '@/components/rich-editor/tiptapEditor.vue';
 import { useRoomStore } from '@/store/room';
 import { Room } from '@/types/room';
 import { api } from '@/api/common/coin';

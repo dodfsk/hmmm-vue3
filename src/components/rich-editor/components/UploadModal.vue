@@ -14,8 +14,8 @@
         <div id="clipper-container"
             v-show="isClipperReady"
         ></div>
-        <n-space justify="center" align="center" v-if="isImgReady" style="min-height:200px">
-            <n-image :src="imgSrc" />
+        <n-space justify="center" align="center" v-if="isImgReady" style="width:700px;min-height:200px">
+            <img :src="imgSrc" style="max-width:700px"/>
         </n-space>
 
         <n-upload

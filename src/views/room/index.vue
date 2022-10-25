@@ -94,12 +94,7 @@
         <template #header-extra>
         
         </template>
-        <!-- <QuillEditorDeck
-            theme="bubble"
-            readOnly="true"
-            :scrollingContainer="true"
-            v-model:content="windowContent"
-        /> -->
+
         <tiptapEditor
             ref="editorRef"
             theme="headless"
@@ -118,7 +113,6 @@ import { onMounted, reactive, ref, watch } from 'vue'
 import {useRouter,useRoute, onBeforeRouteUpdate, onBeforeRouteLeave} from 'vue-router'
 import { Search,ArrowUp } from "@vicons/ionicons5";
 import tiptapEditor from '@/components/rich-editor/tiptapEditor.vue';
-import  QuillEditorDeck  from '@/components/rich-editor/quillEditor.vue' 
 import { useRoomStore } from '@/store/room';
 import { Room } from '@/types/room';
 import { api } from '@/api/common/coin';
@@ -213,7 +207,7 @@ onMounted(() => {
 
 //定义modal的style
 const windowStyle={
-    width:'700px',
+    width:'800px',
 }
 </script>
 

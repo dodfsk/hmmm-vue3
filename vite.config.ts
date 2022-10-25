@@ -25,9 +25,6 @@ export default defineConfig({
 		Components({
 			resolvers: [NaiveUiResolver()], // unplugin-auto-import自动引入
 		}),
-        injectPlugin({
-            'window.Quill': ['@vueup/vue-quill', 'Quill']
-        })
 	],
 	resolve: {
 		alias: {

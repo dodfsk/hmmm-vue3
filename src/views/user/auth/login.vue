@@ -32,27 +32,27 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, toRefs, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { reactive, toRefs, ref } from 'vue'
+import { useRouter } from 'vue-router'
 // import { login } from "@/api/user/demo"
-import { useUserStore } from '@/store/user';
-import _ from 'lodash-es';
-import { FormItemRule, FormRules, FormInst } from 'naive-ui';
+import { useUserStore } from '@/store/user'
+import { debounce } from 'lodash-es'
+import { FormItemRule, FormRules, FormInst } from 'naive-ui'
 
-const router = useRouter();
-const { USER_LOGIN } = useUserStore();
+const router = useRouter()
+const { USER_LOGIN } = useUserStore()
 
-const formRef = ref<FormInst | null>(null);
+const formRef = ref<FormInst | null>(null)
 
 interface loginType {
-	username: string | null;
-	password: string | null;
+	username?: string
+	password?: string
 }
 
 const userState = reactive<loginType>({
-	username: null,
-	password: null,
-});
+	username: undefined,
+	password: undefined,
+})
 // let { username, password } = toRefs(userState);
 
 const rules: FormRules = {
@@ -71,21 +71,21 @@ const rules: FormRules = {
 			//blur
 		},
 	],
-};
+}
 
 const validateAction = () => {
 	formRef.value?.validate((errors) => {
 		if (!errors) {
-			handleLogin();
+			handleLogin()
 		}
-	});
-};
+	})
+}
 
-const handleLogin = _.throttle(
+const handleLogin = debounce(
 	async () => {
 		// const res=await login(userState)
-		const res = await USER_LOGIN(userState);
-		const { code, message, meta } = res.data;
+		const res = await USER_LOGIN(userState)
+		const { code, message, meta } = res.data
 		if (code == 200) {
 			// window.$notification.success({
 			//     title:'success',
@@ -95,21 +95,21 @@ const handleLogin = _.throttle(
 			// })
 			router.push({
 				path: '/user',
-			});
+			})
 		}
 	},
 	800,
 	{
-		// leading:true,
+		leading: true,
 		trailing: false,
 	}
-);
+)
 
 const handleReg = () => {
 	router.push({
 		path: '/user/register',
-	});
-};
+	})
+}
 </script>
 
 <style lang="less" scoped>

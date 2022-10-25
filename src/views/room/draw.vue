@@ -5,17 +5,22 @@
 				<div style="text-align: left">#绘制房间</div>
                 <div class="content-header">
                     <n-input-group class="input-group">
-                            <n-input placeholder="标题" v-model:value="title"  class="title" autofocus/>
+                            <n-input placeholder="标题" v-model:value="title"  class="title" autofocus
+                            style="outline:3px solid #000"
+                            />
                             <n-input 
                             placeholder="描述" 
                             v-model:value="description" 
                             :class="animationFlag?'description-enabled':'description'" 
+                            style="outline:3px solid #000;border-radius: 0;"
                             />
                             <!-- @animationend="animationFlag=false" -->
                             
                     </n-input-group>
 
-                    <n-button-group>
+                    <n-button-group
+                        style="outline:3px solid #000;border-radius: 0 5px 5px 0;"
+                    >
                             <n-button color="black"  @click="handleAnimation">添加描述</n-button>
                             <n-button color="#666"  @click="handleCover"> 上传封面</n-button>
                     </n-button-group>
@@ -40,10 +45,10 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute, useRouter } from 'vue-router';
-// import QuillEditorDeck, { DefineExpose } from '@/components/rich-editor/quillEditor.vue';
-import tiptapEditor,{ DefineExpose } from '@/components/rich-editor/tiptapEditor.vue';
 import { onMounted, provide, reactive, ref, toRefs, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import tiptapEditor,{ DefineExpose } from '@/components/rich-editor/tiptapEditor.vue';
+import { throttle,debounce } from 'lodash-es'
 import { Room } from '@/types/room';
 import { useRoomStore } from '@/store/room';
 
@@ -52,10 +57,8 @@ const router = useRouter();
 const roomStore = useRoomStore();
 console.log('route.params.id', route.params.id);
 
-// const quillEditorRef = ref<DefineExpose | undefined>();
 const tipTapRef=ref<DefineExpose|undefined>()
-// let quill: DefineExpose['quill'] | undefined;
-// let editSwitch = ref<boolean>(true);
+
 const animationFlag=ref(false)
 
 let roomState = reactive<Room>({
@@ -69,45 +72,10 @@ let roomState = reactive<Room>({
 const { title,description,content,assets } = toRefs(roomState);
 
 onMounted(() => {
-	// quill = quillEditorRef.value?.quill;
-	// console.log('quill', quill);
-	// console.log('quillEditorRef.value...', quillEditorRef.value);
-	// console.log('a=>',quillEditorInstance?.setHTML(
-	//     String(route.params.id)
-	// ));
-    // let options=document.querySelectorAll('.ql-header.ql-picker')
-    // let options=document.querySelectorAll('.ql-picker-options')
-    // let toolbar=document.querySelector('.ql-toolbar.ql-snow')
-    // let div = document.createElement('div')
-    // // div.style.overflowY="visible"
-    // // div.style.overflowX="auto"
-    // // format?.parentNode?.insertBefore(div, format)
-    // setTimeout(()=>
-    // options.forEach((item,index)=>{
-    //         console.log(item);
-    //         console.log(toolbar);
-
-    //         if(toolbar){
-    //             toolbar.setAttribute('style','overflow-x:clip')
-    //         }
-    // })
-    // ,2000)
 
 });
-// const contentChange = () => {
-// 	console.log(content.value);
-// };
-// const quillReady = () => {
-// 	console.log('quill-editor is ready');
-// };
-// const handleSwitch = () => {
-// 	editSwitch.value = !editSwitch.value;
-// };
 
-const handleSave=async ()=>{
-    // if(!editSwitch.value){
-    //     roomState.content=quill?.getHTML()//重新获取HTML
-    // }
+const handleSave=debounce(async ()=>{
     console.log('roomState.assets',roomState);
 	if (roomState.content) {
 		// const room: Room = {
@@ -121,11 +89,13 @@ const handleSave=async ()=>{
 			window.$message.success('保存成功')
 		}
 	}
-}
+},800,{
+  leading: true,
+  trailing: false
+})
 
-const handlePublish = async () => {
+const handlePublish = debounce(async () => {
     console.log('roomState.assets',roomState);
-
 	if (roomState.content) {
 		// const room: Room = {
 		// 	title: roomState.title,
@@ -140,7 +110,10 @@ const handlePublish = async () => {
 			});
 		}
 	}
-};
+},800,{
+  leading: true,
+  trailing: false
+})
 const handleAnimation=()=>{
     animationFlag.value=!animationFlag.value
 }
@@ -158,7 +131,6 @@ const getRoomDetail = async (id: string) => {
 		// roomState.content=data.content
 		// roomState.hid=data.hid
 		Object.assign(roomState, data);
-		// quill?.setHTML(roomState.content);
         tipTapRef.value!.editorRef.editor.commands.setContent(roomState.content)
 		// loading.value=false
 	}
@@ -227,6 +199,7 @@ watch(
 }
 .input-group{
     justify-content: space-between;
+    padding:0 0 0 3px;
 }
 .edit_box {
 	height: 550px;

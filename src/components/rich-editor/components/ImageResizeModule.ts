@@ -39,6 +39,7 @@ const ImageResizeModule = Image.extend({
 	addProseMirrorPlugins() {
 		return [
 			new Plugin({
+	            key: new PluginKey('eventHandler'),
 				props: {
 					handleDOMEvents: {
                         //拖拽事件
@@ -129,54 +130,7 @@ const ImageResizeModule = Image.extend({
 		]
 	},
 })
-	// addProseMirrorPlugins() {
-	//     return [
-	//       new Plugin({
-	//         key: new PluginKey('eventHandler'),
-	//         props: {
-	//             handleDOMEvents: {
-	//                 drop(view, event) {
-	//                   event.preventDefault()
-	//                   const coordinates = view.posAtCoords({ left: event.clientX, top: event.clientY })
-	//                   const content = event.dataTransfer!.getData('text/plain')
-	//                   const transaction = view.state.tr.insertText(content, coordinates!.pos)
-	//                   view.dispatch(transaction)
-	//                 }
-	//               },
-	//           handleClick(view, pos, event) { /* … */ },
-	//           handleDoubleClick(view, pos, event) { /* … */ },
-	//           handlePaste(view, event, slice) {
 
-	//            },
-	//         //   handleDrop (view, event) {
-	//         //     event.preventDefault()
-	//         //             event.stopImmediatePropagation()
-	//         //         if (event.dataTransfer?.files?.length !== 1) {
-	//         //             return
-	//         //         }
-
-	//         //         const images = Array.from(event.dataTransfer.files).filter(file => (/image/i).test(file.type))
-	//         //         if (images.length === 1) {
-
-	//         //             const { schema } = view.state
-	//         //             const coordinates = view.posAtCoords({ left: event.clientX, top: event.clientY })
-	//         //             const reader = new FileReader()
-	//         //             reader.onload = (readerEvent) => {
-	//         //                 const node = schema.nodes.image.create({
-	//         //                     src: readerEvent.target?.result,
-	//         //                     alt: images[0].name
-	//         //                 })
-	//         //                 const transaction = view.state.tr.insert(coordinates!.pos, node)
-	//         //                 view.dispatch(transaction)
-	//         //             }
-	//         //             reader.readAsDataURL(images[0])
-	//         //         }
-	//         //     },
-
-	//         },
-	//       }),
-	//     ]
-	//   },
 
 // addCommands() {
 //     return {

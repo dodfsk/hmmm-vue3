@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
+import { createRouter, createWebHistory, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import { useUserStore } from '@/store/user';
@@ -112,6 +112,7 @@ const routes: Array<RouteRecordRaw> = [
 //   );
 
 const router = createRouter({
+	// history: createWebHistory(), //history模式
 	history: createWebHashHistory(), //hash模式
 	routes,
 	scrollBehavior: (_to, _from, savePosition) => {

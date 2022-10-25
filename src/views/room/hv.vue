@@ -18,13 +18,7 @@
 				<n-skeleton v-if="loading" :sharp="false" />
 				<div class="edit-box" v-else>
 					<!-- <div class="html-box ProseMirror" v-html="content"></div> -->
-					<!-- <quill-editor-deck
-						ref="quillEditorRef"
-						theme="bubble"
-						readOnly="true"
-						v-model:content="content"
-						@ready="quillReady"
-					/> -->
+
 					<tiptapEditor
                         theme="headless"
                         v-model="content"
@@ -63,13 +57,6 @@
 				<n-skeleton v-if="loading" :sharp="false" />
 				<div class="edit-box" v-else>
 					<!-- <div class="html-box" v-html="content"></div> -->
-					<!-- <quill-editor-deck
-						ref="quillEditorRef"
-						theme="bubble"
-						readOnly="true"
-						v-model:content="item.content"
-						@ready="quillReady"
-					/> -->
 					<!-- <tip-tap-editor
                         v-model="item.content"
                     >
@@ -94,21 +81,15 @@
 
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
-import QuillEditorDeck, { DefineExpose } from '@/components/rich-editor/quillEditor.vue';
 import tiptapEditor from '@/components/rich-editor/tiptapEditor.vue';
 import { onBeforeMount, onMounted, provide, reactive, ref, toRefs, watch } from 'vue';
 import { useRoomStore } from '@/store/room';
 import { Room } from '@/types/room';
-// import 'quill/dist/quill.core.css'
-// import 'quill/dist/quill.snow.css'
-// import 'quill/dist/quill.bubble.css'
 
 const route = useRoute();
 const router = useRouter();
 const roomStore = useRoomStore();
 console.log('route.params.id', route.params.id);
-// let quillEditorRef = ref();
-const quillEditorRef = ref<DefineExpose | undefined>();
 
 const loading = ref(true);
 let roomState = reactive<Room>({
@@ -119,15 +100,6 @@ let roomState = reactive<Room>({
     comment:undefined
 });
 const { title, content,from,comment } = toRefs(roomState);
-
-const quillReady = () => {
-	console.log('quill-editor is ready');
-	setTimeout(() => {
-		let resizer = document.querySelector('#editor-resizer');
-		console.log('ifram', resizer);
-		resizer?.remove();
-	}, 2000);
-};
 
 const handleEdit = () => {
 	router.push({
@@ -153,24 +125,12 @@ const getRoomDetail = async (id: string) => {
 		// console.log(roomState);
 		// title.value=data.title
 		// content.value=data.content
-		// console.log('content----------',content.value);
-		// console.log('ins----------',quillEditorRef.value?.quill?.getHTML());
 		Object.assign(roomState, data);
 		loading.value = false;
-		// quillEditorRef.value?.quill?.setContents(content.value)
 	}
 };
 
 onMounted(() => {
-	// console.log('quillEditorRef', quillEditorRef);
-	const quill = quillEditorRef.value?.quill;
-	// console.log('ins----------',quill?.getContents());
-
-	// console.log('quillEditorRef.value...', quillEditorRef.value);
-	// console.log('a=>',quillEditorInstance?.setHTML(
-	//     // String(route.params.id)
-	//     '<h1><span class="ql-size-huge">他妈的我真是服了</span><strong class="ql-size-huge"><em><s><u>你这个老六</u></s></em></strong></h1>'
-	// ));
 
 });
 
@@ -220,9 +180,10 @@ watch(
 }
 
 .content-left,.comment-left{
-    max-width:900px;
-    width:100%;
-    min-width:700px;
+    width:900px;
+    // max-width:900px;
+    // width:100%;
+    // min-width:700px;
 	height: 100%;
     margin-bottom: 10px;
 	// .area_header{}

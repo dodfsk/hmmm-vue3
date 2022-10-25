@@ -452,7 +452,7 @@ const TipTapMenuBar = computed(() => [
                     return
                 }
                 // update link
-                editor.value?.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+                editor.value?.chain().focus().extendMarkRange('link').setLink({ href: url }).blur().run()
             }
             else{
                 editor.value?.chain().focus().extendMarkRange('link').unsetLink().blur().run()
@@ -518,7 +518,7 @@ const TipTapMenuBar = computed(() => [
 	{
 		title: '清除格式',
 		key: 'clearFormats',
-		cmd: () => editor.value?.chain().focus().clearNodes().unsetAllMarks().run(),
+		cmd: () => editor.value?.chain().focus().clearNodes().unsetAllMarks().blur().run(),
 		svg: ClearFormatting,
 	},
 	{

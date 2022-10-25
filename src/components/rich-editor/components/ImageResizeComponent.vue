@@ -190,19 +190,7 @@ watch(
 
 // onMounted(()=>{
 //     // When the image has loaded
-//     imgRef.value!.onload = (e:any) => {
-//         imgState.isLoaded = true
-//         // 保存图片的原始信息(宽,高,尺寸比例)
-//         imgState.width=imgRef.value!.naturalWidth
-//         imgState.height=imgRef.value!.naturalHeight
-//         imgState.ratio = imgRef.value!.naturalWidth / imgRef.value!.naturalHeight;
-
-//         //设置缩放按钮事件
-//         if(resizeRef.value&&imgRef.value){
-//             resizeRef.value.onpointerdown=(e)=>pointerDown(e)
-//         }
-
-//     };
+//     imgRef.value!.onload = (e:any) => imgOnload(e)
 // })
 </script>
 

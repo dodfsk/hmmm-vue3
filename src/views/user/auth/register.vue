@@ -56,39 +56,39 @@
 </template>
 
 <script setup lang="ts">
-import _ from 'lodash-es';
-import { reactive, toRefs, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { GlassesOutline, Glasses } from '@vicons/ionicons5';
+import { reactive, toRefs, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { debounce } from 'lodash-es'
+import { GlassesOutline, Glasses } from '@vicons/ionicons5'
 // import { register } from "@/api/user/demo"
-import { useUserStore } from '@/store/user';
-import { FormItemRule, FormRules, FormInst } from 'naive-ui';
-import { User } from '@/types/user';
+import { useUserStore } from '@/store/user'
+import { FormItemRule, FormRules, FormInst } from 'naive-ui'
+import { User } from '@/types/user'
 
-const router = useRouter();
-const { USER_REG } = useUserStore();
+const router = useRouter()
+const { USER_REG } = useUserStore()
 
 type registerType = {
-	username?: string ;
-	password?: string ;
-	reenteredPassword?: string;
-};
+	username?: string
+	password?: string
+	reenteredPassword?: string
+}
 
 const userState = reactive<registerType>({
 	username: undefined,
 	password: undefined,
 	reenteredPassword: undefined,
-});
+})
 
 // let { name, password } = toRefs(userState);
 
-const formRef = ref<FormInst | null>(null);
+const formRef = ref<FormInst | null>(null)
 
 function validatePasswordStartWith(rule: FormItemRule, value: string): boolean {
-	return !!userState.password && userState.password.startsWith(value) && userState.password.length >= value.length;
+	return !!userState.password && userState.password.startsWith(value) && userState.password.length >= value.length
 }
 function validatePasswordSame(rule: FormItemRule, value: string): boolean {
-	return value === userState.password;
+	return value === userState.password
 }
 const rules: FormRules = {
 	//   age: [
@@ -138,23 +138,23 @@ const rules: FormRules = {
 			trigger: ['blur', 'password-input'],
 		},
 	],
-};
+}
 
 const validateAction = () => {
 	formRef.value?.validate((errors) => {
 		if (!errors) {
-			handleRegister();
+			handleRegister()
 		}
-	});
-};
+	})
+}
 
-const handleRegister = _.throttle(
+const handleRegister = debounce(
 	async () => {
-		const params:User={}
-        params.username=userState.username
-        params.password=userState.password
-		const res = await USER_REG(params);
-		const { code, message } = res.data;
+		const params: User = {}
+		params.username = userState.username
+		params.password = userState.password
+		const res = await USER_REG(params)
+		const { code, message } = res.data
 
 		if (code == 200) {
 			// window.$notification.success({
@@ -165,20 +165,20 @@ const handleRegister = _.throttle(
 			// });
 			router.push({
 				path: '/user/info',
-			});
+			})
 		}
 	},
 	800,
 	{
-		// leading:true,
+		leading: true,
 		trailing: false,
 	}
-);
+)
 const handleBack = () => {
 	router.push({
 		path: '/user/login',
-	});
-};
+	})
+}
 </script>
 
 <style lang="less" scoped>

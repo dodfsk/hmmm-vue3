@@ -30,6 +30,7 @@
 				v-model:value="searchValue"
 				placeholder="输入搜索"
 				@keyup.enter="handleSearch"
+                clearable
 			>
 				<template #suffix>
 					<n-button quaternary circle size='tiny' @click="handleSearch">
