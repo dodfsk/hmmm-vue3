@@ -146,14 +146,11 @@ watch(
 </script>
 
 <style lang="less" scoped>
-@import '@/views/root.less';
+// @import '@/views/root.less';
 
 .container {
 	width: 100%;
 	height: 100%;
-	// min-height: 100%;
-	// background-color: #ccc;
-	// margin: 0 auto;
 	display: flex;
 	flex-direction: column;
 	// justify-content:space-evenly;
@@ -164,7 +161,7 @@ watch(
         // margin:0 auto;
 	    // width: 100%;
 	    // width: 1200px;
-	// width: 100%;
+	    // width: 100%;
         margin: 0 auto;
         padding:5px 20px;
         display: flex;

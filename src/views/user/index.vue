@@ -1,32 +1,32 @@
 <template>
-	<n-layout class="container">
-		<n-layout has-sider>
-			<n-layout-sider
-				bordered
-				show-trigger
-				collapse-mode="width"
-				:collapsed-width="64"
-				:width="220"
-				:native-scrollbar="false"
-				:inverted="inverted"
-				style="max-height: 100vh"
-			>
-				<n-menu
-					:inverted="inverted"
-					:collapsed-width="64"
-					:collapsed-icon-size="22"
-					:options="menuOptions"
-					:value="route.name"
-				/>
-			</n-layout-sider>
+        <div class="user-container">
+            <n-layout has-sider class="user-layout">
+                <n-layout-sider
+                    class="user-sider"
+                    bordered
+                    show-trigger
+                    collapse-mode="width"
+                    :collapsed-width="64"
+                    :width="220"
+                    :native-scrollbar="false"
+                    :inverted="inverted"
+                >
+                    <n-menu
+                        :inverted="inverted"
+                        :collapsed-width="64"
+                        :collapsed-icon-size="22"
+                        :options="menuOptions"
+                        :value="route.name"
+                    />
+                </n-layout-sider>
 
-			<n-layout-content
-            class="content"
-            >
-					<router-view />
-			</n-layout-content>
-		</n-layout>
-	</n-layout>
+                <n-layout-content
+                    class="user-content"
+                >
+                        <router-view />
+                </n-layout-content>
+            </n-layout>
+        </div>
 </template>
 
 <script lang="ts" setup>
@@ -41,7 +41,7 @@ import {
 	SettingsOutline,
 	WineOutline as WineIcon,
 } from '@vicons/ionicons5';
-import { demoPiniaOptions, demoPiniaComposition } from '@/store/demo';
+
 import { useUserStore } from '@/store/user';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 
@@ -49,14 +49,6 @@ const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
 const inverted = ref(true);
-
-// let hmlc_info = ref();
-// const getUserHmlc = async () => {
-// 	const res = await userStore.USER_GET('hmlc');
-// 	const { code, message, meta, data = {} } = res.data;
-// 	hmlc_info.value = data;
-// 	console.log(hmlc_info);
-// };
 
 function renderIcon(icon: Component) {
 	return () => h(NIcon, null, { default: () => h(icon) });
@@ -175,16 +167,29 @@ const menuOptions = [
 </script>
 
 <style lang="less" scoped>
-@import '@/views/root.less';
-// .container {
-// 	// height: calc(100vh - 42px);
-//     // height:100%;
-//     overflow-y: hidden;
-// }
-// .content{
-//     // overflow:scroll;
-// 	height: 100%;
-// }
+
+.user-container{
+    height:100%;
+    width:100%;
+    // height: calc(100vh - 50px);
+    // max-width:1500px;
+    // margin: 0 auto;
+    // padding:50px;
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
+}
+
+.user-sider{
+    height:calc(100vh - 50px);
+    // height:100%;
+    // overflow:auto;
+}
+.user-content{
+    max-height:calc(100vh - 50px);
+    // height:100%;
+    // overflow:auto;
+}
 :deep(.n-layout-scroll-container){
     overflow:hidden;
 }

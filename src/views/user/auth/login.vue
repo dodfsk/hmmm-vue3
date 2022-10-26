@@ -113,10 +113,10 @@ const handleReg = () => {
 </script>
 
 <style lang="less" scoped>
-@import '@/views/root.less';
+// @import '@/views/root.less';
 .container {
 	height: 100%;
-	// width:100%;
+	width:100%;
 	text-align: center;
 	display: flex;
 	justify-content: center;

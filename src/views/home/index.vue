@@ -1,5 +1,5 @@
 <template>
-	<div class="container">
+	<div class="hello-container">
 		<n-space vertical size="large">
 
 			<h1  class="hello">Hello World</h1>
@@ -33,11 +33,10 @@ const aref = () => {
 </script>
 
 <style lang="less"  scoped>
-@import '@/views/root.less';
+// @import '@/views/root.less';
 @import '@/utils/less/animation.less';
 
-.container {
-    // min-height: calc(100vh - 42px);
+.hello-container {
 	height: 100%;
     // margin-bottom:auto;
 	display: flex;

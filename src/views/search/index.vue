@@ -205,19 +205,20 @@ const windowStyle={
 @import '@/views/root.less';
 
 .container{
-    width:calc(100vw - 14%);
-    // min-width:600px;
+    width:100%;
     height: 100%;
-    // background-color: #ccc;
     margin:0 auto;
     padding: 10px;
-    // display: flex;
+    display: flex;
+	flex-direction: column;
     // justify-content: center;
-	// align-items: center;
-    // overflow: scroll;
+	align-items: center;
+    overflow: auto;
+    // min-width:600px;
+    // background-color: #ccc;
 }
 .header{
-    width: 100%;
+    width: 80%;
     height: 80px;
     padding: 10px;
     display: flex;
@@ -235,7 +236,7 @@ const windowStyle={
 
 }
 .grid {
-    height:100%;
+    width:80%;
     justify-content: space-evenly;
     display: grid;
     grid-template-columns: repeat(auto-fill, 240px);

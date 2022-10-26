@@ -320,6 +320,7 @@ const editor: ShallowRef<Editor | undefined> = useEditor({
 		}),
 	],
 	onUpdate: ({ editor }) => {
+        //编辑器内容更新时触发emit事件
 		// HTML
         if(props.theme!=='headless'){
             emits('update:modelValue', editor.getHTML()) //双向绑定
@@ -630,12 +631,31 @@ const removeImage=(data:PreSignInfo)=>{
         console.log('match, capture',match, capture)
         return ''
     })
-    editor.value!.commands.setContent(content)//修改编辑器视图
     emits('update:modelValue', content) //双向绑定修改数据
+    // editor.value!.commands.setContent(content)//修改编辑器视图
 }
 
 
 
+watch(//内容-数据 双向绑定
+    ()=>props.modelValue,
+    (newValue,oldValue)=>{
+
+    if(props.theme!=='headless'){
+        // HTML
+        const isSame = editor.value!.getHTML() === newValue
+
+        // JSON
+        // const isSame = JSON.stringify(this.editor.getJSON()) === JSON.stringify(value)
+
+        if (isSame) {
+            return
+        }
+
+        editor.value!.commands.setContent(newValue, false)
+        }
+    }
+)
 
 onMounted(() => {
 	if (props.theme === 'headless') {

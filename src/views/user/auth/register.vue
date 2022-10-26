@@ -182,8 +182,9 @@ const handleBack = () => {
 </script>
 
 <style lang="less" scoped>
-@import '@/views/root.less';
+// @import '@/views/root.less';
 .container {
+	width:100%;
 	height: 100%;
 	text-align: center;
 	display: flex;

@@ -182,6 +182,7 @@ onMounted(() => {
 <style lang="less" scoped>
 // @import '@/views/root.less';
 .container{
+    height:100%;
     padding: 40px;
     background-color:#ccc;
     display:flex;

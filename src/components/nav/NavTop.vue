@@ -2,7 +2,7 @@
 	<div class="nav">
         <div class="nav-left">
             <n-icon :component="SparklesSharp" size="24" color="black" style="margin-top:1px" />
-			<n-menu mode="horizontal" :options="menuOptions" :value="route.meta.key" />
+			<n-menu class="nav-menu" mode="horizontal" :options="menuOptions" :value="route.meta.key" />
         </div>
         <!-- <div class="nav-center">
 			<n-input
@@ -59,13 +59,6 @@
 							</n-icon>
 						</template> -->
 
-                        <n-avatar
-                            :size="28"
-                            :src="userStore.userInfo.avatar?OssReplace(userStore.userInfo.avatar)+`?${new Date().getTime()}`:''"
-                            fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-                            object-fit="cover"
-                            round
-                        />
 						{{ `${userStore?.userInfo?.username}` }}
 					</n-button>
 
@@ -80,6 +73,26 @@
 					<n-button color="#000"  @click="handleLogOut"> 登出 </n-button>
 				</n-space>
 			</n-popover>
+
+            <div
+                class="nav-avatar"
+                style="width:38px;height:38px;padding:0;"
+            >
+                <n-avatar
+                    :size="38"
+                    :src="userStore.userInfo.avatar?OssReplace(userStore.userInfo.avatar)+`?${new Date().getTime()}`:''"
+                    fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+                    object-fit="cover"
+                    style="padding:0;margin:0"
+                    round
+                    @click="()=>{
+                        router.push({
+                            path:'/user/face'
+                        })
+                    }"
+                />
+        </div>
+
 
         </div>
 	</div>
@@ -242,7 +255,7 @@ const handleLogOut = () => {
 
 .nav {
 	width: 100%;
-	height:45px;
+	height:50px;
 	padding: 0 20px;
     z-index:999;
 	// background-color: rgba(255, 255, 255, 0.7);
@@ -260,38 +273,21 @@ const handleLogOut = () => {
 	justify-content: space-between;
 
 	&-left {
-        // width:33%;
 		display: flex;
 		justify-content: left;
+		// align-items: center;
 	}
-	// &-center {
-    //     // width:33%;
-	// 	display: flex;
-	// 	justify-content: center;
-	// 	align-items: center;
-    //     :deep(.n-input-wrapper){
-    //             padding-right: 0;
-    //     }
-	// 	.search {
-	// 		// max-width: 100px;
-    //         min-width:120px;
-    //         width:50%;
+    .nav-menu{
+		align-items: center;
+    }
 
-    //         .n-input__suffix{
-    //             .n-button{
-    //                 width:10px;
-    //              }
-    //         }
-	// 	}
-	// }
 	&-right {
-        // width:33%;
 		display: flex;
 		justify-content: end;
 		align-items: center;
 		gap: 10px;
           :deep(.n-input-wrapper){
-                padding-right: 0;
+                padding-right: 5px;
         }
 		.search {
 			// max-width: 100px;
@@ -301,7 +297,7 @@ const handleLogOut = () => {
 
             .n-input__suffix{
                 .n-button{
-                    min-width:30px;
+                    min-width:20px;
                 }
             }
 		}
@@ -346,7 +342,7 @@ const handleLogOut = () => {
         display: none !important;
     }
     .nav {
-        height:56px;
+        height:50px;
     }
 }
 

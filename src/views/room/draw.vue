@@ -19,7 +19,7 @@
                     </n-input-group>
 
                     <n-button-group
-                        style="outline:3px solid #000;border-radius: 0 5px 5px 0;"
+                        style="outline:3px solid #000;border-radius: 0 5px 5px 0;margin-right:5px;"
                     >
                             <n-button color="black"  @click="handleAnimation">添加描述</n-button>
                             <n-button color="#666"  @click="handleCover"> 上传封面</n-button>
@@ -27,8 +27,10 @@
                 </div>
             </template>
 
-			<div class="edit_box">
-				<tiptapEditor 
+			<div class="content-edit_box">
+				<tiptapEditor
+                    v-if="!route.query.id||content"
+                    :key="String(route.query.id)||'defaultKey'"
                     v-model="content"
                     v-model:assets="assets"
                     ref="tipTapRef"
@@ -61,7 +63,7 @@ const tipTapRef=ref<DefineExpose|undefined>()
 
 const animationFlag=ref(false)
 
-let roomState = reactive<Room>({
+const roomState = reactive<Room>({
 	hid: undefined,
 	title: '',
     description:'',
@@ -127,11 +129,11 @@ const getRoomDetail = async (id: string) => {
 	if (code == 200) {
 		// roomState={...(res?.data)}
 		// console.log(roomState);
-		// roomState.title=data.title
-		// roomState.content=data.content
-		// roomState.hid=data.hid
 		Object.assign(roomState, data);
-        tipTapRef.value!.editorRef.editor.commands.setContent(roomState.content)
+		// roomState.title=data.title
+		// roomState.hid=data.hid
+		// roomState.content=data.content
+        // tipTapRef.value!.editorRef.editor.commands.setContent(roomState.content)
 		// loading.value=false
 	}
 };
@@ -143,6 +145,15 @@ watch(
 		if (route.query.id) {
 			getRoomDetail(route.query.id as string);
 		}
+        else{
+		    Object.assign(roomState, {
+                hid: undefined,
+                title: '',
+                description:'',
+                content: '',
+                assets:[],
+            });
+        }
 	},
 	{ immediate: true }
 )
@@ -158,23 +169,23 @@ watch(
 </script>
 
 <style lang="less" scoped>
-@import '@/views/root.less';
 @import '@/utils/less/animation.less';
 
 .container {
 	width: 100%;
     height: 100%;
-	// min-height: 100%;
-	// background-color: #ccc;
-	margin: 0 auto;
+    padding-top:20px;
 	display: flex;
-	justify-content: center;
+    flex-direction: column;
+	// justify-content: center;
 	align-items: center;
+    overflow: auto;
 }
 .content {
-	width: 90%;
-	height: 90%;
-	min-height: 500px;
+	// width: 90%;
+	// height: 90%;
+	// min-height: 500px;
+	max-width: 1500px;
 }
 .content-header{
     display: flex;
@@ -201,8 +212,8 @@ watch(
     justify-content: space-between;
     padding:0 0 0 3px;
 }
-.edit_box {
-	height: 550px;
+.content-edit_box {
+	height: 600px;
     // min-width:800px;
 	// border: 1px solid #888;
 	// border-radius: 7px 0 0 7px;

@@ -2,17 +2,17 @@
 	<!-- <n-space vertical> -->
 	<!-- <n-space> <n-switch v-model:value="inverted" /> inverted </n-space> -->
 
-	<div class="container">
+	<div class="root__container">
 	<!-- <n-layout class="container"> -->
 		<!-- <n-layout-header :inverted="inverted" class="header"> -->
-			<div class="header">
-			<NavTop />
+			<div class="root__header">
+			    <NavTop />
 			</div>
 		<!-- </n-layout-header> -->
 
 		<!-- <n-layout-content class="content"> -->
-			<div  class="content">
-			<router-view />
+			<div  class="root__content">
+			    <router-view />
 			</div>
 		<!-- </n-layout-content> -->
 
@@ -41,29 +41,31 @@ onMounted(()=>{
 </script>
 
 <style lang="less" scoped>
-// .container {
-// 	// height: 100%;
-// 	// height: 100vh;
-//     overflow: auto;
-// }
+.root__container {
+	height: 100%;
+	// height: 100vh;
+    // overflow: auto;
+}
 // .n-layout-content {
 //     height: 100%;
 // }
-.header {
-	// height: 42px;
-	// height:100%;
+.root__header {
+	// height: 50px;
+    width:100%;
 	position: sticky;
 	position: -webkit-sticky;
+	// position: fixed;
     background-color: rgba(255, 255, 255, 0.7);
 	box-shadow: 0 0 5px rgba(51, 51, 51, 0.721);
 	top: 0px;
 	z-index: 250;
 }
-.content {
-	// position: block;
+.root__content {
+	position: relative;
+	// padding-top: 50px;
 	// min-height: 100%;
-	// min-height: calc(100% - 66px);
-	// height: calc(100vh - 42px);
+	// min-height: calc(100% - 50px);
+	height: calc(100% - 50px);
     // height:100%;
     // height:fit-content;//根据内容自适应尺寸
 	box-sizing: content-box;
@@ -77,10 +79,11 @@ onMounted(()=>{
     // overflow-y: hidden;
 }
 
-.footer {
-	text-align: justify(space-around);
-	// height:24px;
-	background-color: rgba(115, 255, 190, 0.41);
-	box-shadow: 0 0 15px rgba(51, 51, 51, 0.721);
-}
+// .footer {
+// 	text-align: justify(space-around);
+// 	// height:24px;
+// 	background-color: rgba(115, 255, 190, 0.41);
+// 	box-shadow: 0 0 15px rgba(51, 51, 51, 0.721);
+// }
 </style>
+

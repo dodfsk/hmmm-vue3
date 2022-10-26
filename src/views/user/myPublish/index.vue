@@ -114,6 +114,7 @@ onMounted(() => {
 
 <style lang="less" scoped>
 .container {
+    height:100%;
 	background-color: rgba(206, 255, 127, 0.5);
 	padding: 40px;
 	display: flex;

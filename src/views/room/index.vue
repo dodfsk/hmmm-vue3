@@ -1,5 +1,6 @@
 <template>
-<div class="container">
+<div class="room-container">
+
     <div class="header">
         <n-space justify="start" style="width: 100%">
             <!-- <n-button type="primary" @click="roomDraw">
@@ -212,22 +213,22 @@ const windowStyle={
 </script>
 
 <style lang='less' scoped>
-@import '@/views/root.less';
+// @import '@/views/root.less';
 
-.container{
+.room-container{
     width:100%;
-    max-width:1500px;
     height: 100%;
-    // background-color: #ccc;
-    margin:0 auto;
     padding: 10px;
-    // display: flex;
-    // justify-content: center;
-	// align-items: center;
-    // overflow: scroll;
+    display: flex;
+	flex-direction: column;
+	// justify-content:space-evenly;
+	align-items: center;
+    overflow: auto;
+    // background-color: #ccc;
+    // background-color: rgb(233, 233, 233);
 }
 .header{
-    width: 100%;
+    width: 80%;
     padding: 10px;
     display: flex;
     justify-content: center;
@@ -243,7 +244,7 @@ const windowStyle={
 
 }
 .grid {
-    height:100%;
+    width:80%;
     justify-content: space-evenly;
     display: grid;
     grid-template-columns: repeat(auto-fill, 270px);
