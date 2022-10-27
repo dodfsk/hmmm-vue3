@@ -56,7 +56,6 @@ import { useRoute, useRouter } from 'vue-router';
 import tiptapEditor from '@/components/rich-editor/tiptapEditor.vue';
 import { format } from 'date-fns'
 import { Room } from '@/types/room';
-import { ImgReplace } from '@/utils/img/imgReplace';
 
 const route = useRoute();
 const router = useRouter();
@@ -97,13 +96,12 @@ const getPublishList = async () => {
     if(code!==200){
         noPublish.value=true
     }
-    if(data.roomList){
-        data.roomList.forEach((item:Room) => {
-            item.createdAt=new Date(item.createdAt!)
-            item.content=ImgReplace(item.content)//替换img地址
-        });
-        publishList.value=data.roomList
-    }
+    // if(data.roomList){
+    //     data.roomList.forEach((item:Room) => {
+    //         item.createdAt=new Date(item.createdAt!)
+    //     });
+    // }
+    publishList.value=data.roomList
 
 };
 

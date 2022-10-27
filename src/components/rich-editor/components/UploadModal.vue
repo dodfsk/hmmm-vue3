@@ -66,6 +66,7 @@ import { UploadFileInfo } from 'naive-ui';
 import { useUserStore } from '@/store/user';
 import { useMinioStore } from '@/store/minio';
 import { PreSignInfo } from '@/types/room';
+import { fileToBase64 } from '@/utils/img/imgToBase64';
 
 export type DefineExpose = {
 // cropper: InstanceType<typeof Cropper>;
@@ -135,12 +136,15 @@ const putFile=async ({file}: {
         return true
     }else if(mimeType === 'image/gif'){
         isImgReady.value=true
-        const reader = new FileReader();
-            reader.readAsDataURL(originalFile.value.file as any);
-            reader.onload = () => {
-            imgSrc.value = reader.result as string;
-            // 这里的reader.result就是文件的base64了。如果是图片的话，就可以直接放到src中展示了
-        };
+        // const reader = new FileReader();
+        //     reader.readAsDataURL(originalFile.value.file as any);
+        //     reader.onload = () => {
+        //     imgSrc.value = reader.result as string;
+        //     // 这里的reader.result就是文件的base64了。如果是图片的话，就可以直接放到src中展示了
+        // };
+        fileToBase64(originalFile.value.file!,(base64:string)=>{
+            imgSrc.value=base64
+        })
         return true
     }else{
         window.$message.error('只能上传png/jpg格式的图片文件，请重新上传')
@@ -193,11 +197,20 @@ const handleUpload=async (type:string)=>{
     const url=await minioStore.MINIO_GET_URL(params)
     if(url.status===200)preSignInfo.url=url.data.data.url
     //put方法直接上传file至预签名url
+    
+    // if(import.meta.env.PROD){
+        // const regStr=`${import.meta.env.VITE_APP_OSS_LOCAL}`
+        // const regex=new RegExp(regStr,'g')
+        // const oss:string=import.meta.env.VITE_APP_OSS
+        // preSignInfo.url=preSignInfo.url.replace(regex,oss)
+        // console.log('preSignInfo.url',preSignInfo);
+    // }
     const res=await minioStore.MINIO_PUT({
         url:preSignInfo.url,
         data: type==='original'?originalFile.value!.file : result.file,
         headers: {
-            'Content-Type': result.file?.type
+            'Content-Type': result.file?.type,
+            'Access-Control-Allow-Origin':'*', // 允许跨域
         },
     })
     //上传成功回调

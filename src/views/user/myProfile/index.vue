@@ -89,13 +89,11 @@ import { useUserStore } from '@/store/user';
 import {useMinioStore} from '@/store/minio';
 import { RouterLink } from 'vue-router';
 import { User } from '@/types/user';
-import { OssReplace } from '@/utils/img/imgReplace';
 import { fileToBase64 } from '@/utils/img/imgToBase64';
 import { imgCompress } from '@/utils/img/imgCompress';
 
 const inverted = ref(true);
 
-let hmlc_info = ref();
 const userStore = useUserStore();
 
 const loading=ref(true)
@@ -166,13 +164,7 @@ const getUserInfo = async () => {
         return
     }
 	const { code, message, meta, data = {} } = res.data
-	hmlc_info.value = data
-    if(data.birth){
-        data.birth=new Date(data.birth)
-    }
-    if(data.avatar){
-        imgSrc.value=OssReplace(data.avatar)
-    }
+    imgSrc.value=data.avatar
 	Object.assign(modelRef.value, data)
 };
 const handleUpdate=async ()=>{

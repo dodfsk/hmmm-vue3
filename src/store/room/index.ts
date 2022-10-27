@@ -4,8 +4,9 @@ import { getRoom,getRoomList,setRoom,delRoom } from "@/api/room"
 // import { toLogin } from '@/utils/common/auth'
 import { Names } from "@/store/store-name";
 import { reactive,computed,onMounted } from 'vue'
-import { Room } from '@/types/room';
-import { ImgReplace } from '@/utils/img/imgReplace';
+import { PreSignInfo, Room } from '@/types/room';
+import { ImgReplace,ImgToOss,UrlReplace,UrlToOss } from '@/utils/img/imgReplace';
+import { cloneDeep } from 'lodash-es'
 
 export const useRoomStore = defineStore(Names.ROOM, ()=>{
 
@@ -13,18 +14,45 @@ export const useRoomStore = defineStore(Names.ROOM, ()=>{
     const ROOM_LIST=async(query?:object)=> {
         const res = await getRoomList(query)
         const { code,data={}  } = res.data;
+        if (code === 200) {
+            if(data.roomList){
+                data.roomList.forEach((item:Room) => {
+                    item.createdAt=new Date(item.createdAt!)
+                    if(item.content){
+                        item.content=ImgReplace(item.content)//替换img地址
+                    }
+                });
+            }
+        }
         return res
     }
 
     const ROOM_GET=async(id?:string)=> {
         const res = await getRoom(id)
         const { code,data={}  } = res.data;
-        data.content=ImgReplace(data.content)//替换img地址
+        if (code === 200) {
+            if(data.content){
+                data.content=ImgReplace(data.content)//替换img地址
+            }
+            if(data.assets&&data.assets.length>0){
+                data.assets.forEach((item:PreSignInfo)=>{
+                    item.url=UrlReplace(item.url)
+                })
+            }
+        }
         return res
     }
+    
 
     const ROOM_SET=async(params:Room)=> {
-        const res = await setRoom(params)
+        const roomState=cloneDeep(params)
+        roomState.content=ImgToOss(roomState.content)
+        if(roomState.assets&&roomState.assets.length>0){
+            roomState.assets.forEach((item:PreSignInfo)=>{
+                item.url=UrlToOss(item.url)
+            })
+        }
+        const res = await setRoom(roomState)
         const { code,data={} } = res.data;
         // if (code === 200) {
             return res

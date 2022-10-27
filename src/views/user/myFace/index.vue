@@ -60,7 +60,6 @@ import { useMessage } from 'naive-ui';
 import { useUserStore } from '@/store/user';
 import {useMinioStore} from '@/store/minio';
 import { User } from '@/types/user';
-import { OssReplace } from '@/utils/img/imgReplace';
 import { fileToBase64 } from '@/utils/img/imgToBase64';
 import { imgCompress } from '@/utils/img/imgCompress';
 import uploadModal from './uploadModal.vue';
@@ -152,7 +151,7 @@ const handleUpdate=async ()=>{
         data.birth=new Date(data.birth)
     }
     if(data.avatar){
-        data.avatar=OssReplace(data.avatar)+`?${new Date().getTime()}`
+        data.avatar=data.avatar+`?${new Date().getTime()}`
     }
 	Object.assign(modelRef.value, data)
 }
@@ -167,7 +166,7 @@ const getUserInfo = async () => {
         data.birth=new Date(data.birth)
     }
     if(data.avatar){
-        data.avatar=OssReplace(data.avatar)+`?${new Date().getTime()}`
+        data.avatar=data.avatar+`?${new Date().getTime()}`
     }
 	Object.assign(modelRef.value, data)
     imgSrc.value=data.avatar

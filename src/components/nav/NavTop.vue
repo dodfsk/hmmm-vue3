@@ -80,7 +80,9 @@
             >
                 <n-avatar
                     :size="38"
-                    :src="userStore.userInfo.avatar?OssReplace(userStore.userInfo.avatar)+`?${new Date().getTime()}`:''"
+                    :src="userStore.userInfo.avatar?UrlReplace(userStore.userInfo.avatar)
+                    // +`?${new Date().getTime()}`
+                    :''"
                     fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
                     object-fit="cover"
                     style="padding:0;margin:0"
@@ -106,7 +108,7 @@ import type { MenuOption, PopoverProps } from 'naive-ui';
 import { RouterLink } from 'vue-router';
 import {  SparklesSharp, SearchOutline, Person, HomeSharp, Square, Reader } from '@vicons/ionicons5';
 import { useUserStore } from '@/store/user';
-import { OssReplace } from '@/utils/img/imgReplace';
+import { UrlReplace } from '@/utils/img/imgReplace';
 
 const renderIcon = (icon: Component) => {
         return () => h(NIcon, {size:"18",style:'margin-top:2px'}, { default: () => h(icon) });

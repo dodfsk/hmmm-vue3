@@ -124,7 +124,6 @@ const getRoomDetail = async (id: string) => {
 		// roomState={...(res?.data)}
 		// console.log(roomState);
 		// title.value=data.title
-		// content.value=data.content
 		Object.assign(roomState, data);
 		loading.value = false;
 	}

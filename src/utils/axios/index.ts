@@ -9,7 +9,7 @@ import { useUserStore } from '@/store/user';
 axios.defaults.timeout = 15000; // 如果请求超时，请求将被中断
 axios.defaults.withCredentials = false; // 是否携带cookie
 // axios.defaults.headers.common['token'] =  AUTH_TOKEN
-axios.defaults.headers.post['Access-Control-Allow-Origin-Type'] = '*'; // 允许跨域
+axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*'; // 允许跨域
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 

@@ -112,8 +112,8 @@ const routes: Array<RouteRecordRaw> = [
 //   );
 
 const router = createRouter({
-	// history: createWebHistory(), //history模式
-	history: createWebHashHistory(), //hash模式
+	history: createWebHistory(), //history模式
+	// history: createWebHashHistory(), //hash模式
 	routes,
 	scrollBehavior: (_to, _from, savePosition) => {
 		console.log('savePosition', savePosition);
