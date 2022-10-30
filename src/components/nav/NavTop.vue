@@ -1,10 +1,10 @@
 <template>
 	<div class="nav">
-        <div class="nav-left">
-            <n-icon :component="SparklesSharp" size="24" color="black" style="margin-top:1px" />
+		<div class="nav-left">
+			<n-icon :component="SparklesSharp" size="24" color="black" style="margin-top: 1px" />
 			<n-menu class="nav-menu" mode="horizontal" :options="menuOptions" :value="route.meta.key" />
-        </div>
-        <!-- <div class="nav-center">
+		</div>
+		<!-- <div class="nav-center">
 			<n-input
 				class="search"
 				v-model:value="searchValue"
@@ -18,101 +18,109 @@
 				</template>
 			</n-input>
         </div> -->
-        <div class="nav-right">
+		<div class="nav-right">
 			<!-- <div class="circle">
                     <n-icon :component="Person" @click="handleSearch"/>
                     hmlc
                 </div> -->
 			<!-- <n-switch v-model:value="inverted" />   -->
 
-            <n-input
+			<n-input
 				class="search"
 				v-model:value="searchValue"
 				placeholder="输入搜索"
 				@keyup.enter="handleSearch"
-                clearable
+				clearable
 			>
 				<template #suffix>
-					<n-button quaternary circle size='tiny' @click="handleSearch">
+					<n-button quaternary circle size="tiny" @click="handleSearch">
 						<n-icon :component="SearchOutline" />
 					</n-button>
 				</template>
 			</n-input>
 
-
-			<n-popover placement="bottom" trigger="hover" v-if="userStore?.userInfo?.username" ref="roomPopover">
+			<n-popover
+				placement="bottom"
+				trigger="hover"
+				:disabled="!userStore?.userInfo?.username"
+				ref="userPopover"
+				:scrollable="true"
+				content-style="padding: 10px 0"
+			>
 				<template #trigger>
-					<n-button type="info"> 创作中心 </n-button>
+					<div class="nav-avatar" style="width: 38px; height: 38px; padding: 0">
+						<n-avatar
+							:size="38"
+							:src="
+								(userStore.userInfo.avatar ??
+									'https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg') +
+								'?' +
+								time
+								// +`?${new Date().getTime()}`
+							"
+							fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+							object-fit="cover"
+							style="padding: 0; margin: 0; user-select: none"
+							round
+							@click="handleUser('/face')"
+						/>
+					</div>
 				</template>
 
-				<n-space vertical>
-					<n-button type="primary" @click="roomDraw"> 绘制 </n-button>
-				</n-space>
-			</n-popover>
-
-			<n-popover placement="bottom" trigger="hover" :disabled="!userStore?.userInfo?.username" ref="userPopover">
-				<template #trigger>
-					<n-button color="#E23838" v-if="userStore?.userInfo?.username">
-						<!-- <template #icon>
-							<n-icon :component="Person">
-								<cash-icon />
-							</n-icon>
-						</template> -->
-
+				<!-- <n-space vertical> -->
+				<div class="nav-popover-user">
+					<n-button quaternary v-if="userStore?.userInfo?.username" @click="handleUser('/profile')">
 						{{ `${userStore?.userInfo?.username}` }}
 					</n-button>
 
-                    <n-button color="#F43838" v-else @click="handleUnlogin">
-						{{ `未登录` }}
+					<n-button quaternary @click="handleUser()"> 个人空间 </n-button>
+
+					<n-button color="#000" @click="handleLogOut" style="margin-top:10px;"> 
+                        <n-icon :size="20" :component="LogOutOutline" />
+                        <div style="padding-right:8px">登出 </div>
+                    </n-button>
+				</div>
+				<!-- </n-space> -->
+			</n-popover>
+
+			<n-popover
+				placement="bottom"
+				trigger="hover"
+				:disabled="!userStore?.userInfo?.username"
+				ref="creatorPopover"
+				:scrollable="true"
+				content-style="padding: 10px"
+			>
+				<template #trigger>
+					<n-button type="info" @click="handleCreator()">
+						<n-icon size="16" :component="BulbOutline" />
+						创作中心
 					</n-button>
 				</template>
 
-				<n-space vertical>
-					<n-button  @click="handleUser"> 个人中心 </n-button>
+				<div  class="nav-popover-creator">
+					<n-button quaternary @click="handleCreator('/draft')"> 草稿箱</n-button>
+					<n-button quaternary @click="handleCreator('/draw')"> 绘制 </n-button>
 
-					<n-button color="#000"  @click="handleLogOut"> 登出 </n-button>
-				</n-space>
+				</div>
 			</n-popover>
-
-            <div
-                class="nav-avatar"
-                style="width:38px;height:38px;padding:0;"
-            >
-                <n-avatar
-                    :size="38"
-                    :src="userStore.userInfo.avatar?UrlReplace(userStore.userInfo.avatar)
-                    // +`?${new Date().getTime()}`
-                    :''"
-                    fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-                    object-fit="cover"
-                    style="padding:0;margin:0"
-                    round
-                    @click="()=>{
-                        router.push({
-                            path:'/user/face'
-                        })
-                    }"
-                />
-        </div>
-
-
-        </div>
+		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { h, ref, reactive, Component, watch } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
-import { NIcon } from 'naive-ui';
-import type { MenuOption, PopoverProps } from 'naive-ui';
-import { RouterLink } from 'vue-router';
-import {  SparklesSharp, SearchOutline, Person, HomeSharp, Square, Reader } from '@vicons/ionicons5';
-import { useUserStore } from '@/store/user';
-import { UrlReplace } from '@/utils/img/imgReplace';
+import { h, ref, reactive, Component, watch, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { NIcon } from 'naive-ui'
+import type { MenuOption, PopoverProps } from 'naive-ui'
+import { RouterLink } from 'vue-router'
+import { LogOutOutline,BulbOutline, SparklesSharp, SearchOutline, Person, HomeSharp, Square, Reader } from '@vicons/ionicons5'
+import { useUserStore } from '@/store/user'
+import { UrlReplace } from '@/utils/common/ossReplace'
 
 const renderIcon = (icon: Component) => {
-        return () => h(NIcon, {size:"18",style:'margin-top:2px'}, { default: () => h(icon) });
-};
+	return () => h(NIcon, { size: '18', style: 'margin-top:2px' }, { default: () => h(icon) })
+}
 
 const menuOptions: MenuOption[] = [
 	{
@@ -127,7 +135,7 @@ const menuOptions: MenuOption[] = [
 						// },
 					},
 					// replace:true,
-                    style:"width:100px"
+					style: 'width:100px',
 				},
 				{ default: () => 'Home' }
 			),
@@ -153,203 +161,192 @@ const menuOptions: MenuOption[] = [
 		key: 'room',
 		icon: renderIcon(Square),
 	},
-	{
-		label: () =>
-			h(
-				RouterLink,
-				{
-					to: {
-						path:'/user',
-					},
-					// replace:true,
-				},
-				{ default: () => 'User' }
-			),
-		key: 'user',
-		icon: renderIcon(Reader),
-	},
-];
+	// {
+	// 	label: () =>
+	// 		h(
+	// 			RouterLink,
+	// 			{
+	// 				to: {
+	// 					path: '/user',
+	// 				},
+	// 				// replace:true,
+	// 			},
+	// 			{ default: () => 'User' }
+	// 		),
+	// 	key: 'user',
+	// 	icon: renderIcon(Reader),
+	// },
+]
 
-const route = useRoute();
-const router = useRouter();
-const userStore = useUserStore();
-const userPopover = ref();
-const roomPopover = ref();
-const imgSrc=ref<string>('')
+const route = useRoute()
+const router = useRouter()
+const userStore = useUserStore()
+const userPopover = ref()
+const creatorPopover = ref()
+const imgSrc = computed(() => userStore.userInfo.avatar)
+const time = new Date().getTime()
 
-console.log('route', route);
+console.log('route', route)
 
-let searchValue = ref();
+let searchValue = ref()
 
 const handleSearch = () => {
 	router.push({
 		path: '/search',
 		query: { keyword: searchValue.value },
-	});
-};
-
-
-const handleUnlogin=()=>{
-    if (userStore.userInfo.username == null) {
-		router.push({
-			path: '/user/login',
-		});
-    }
+	})
 }
 
-const roomDraw = () => {
-	roomPopover.value.setShow(false); //手动关闭popover
-	if (userStore.userInfo.username != null) {
-        router.push({
-            path: `/draw`,
-        });
-    }else{
-        router.push({
-			path: '/user/login',
-		});
-    }
-};
 
-const handleUser = () => {
-	userPopover.value.setShow(false); //手动关闭popover
-	console.log('userStore.userInfo', userStore.userInfo);
-	if (userStore.userInfo.username != null) {
-		router.push({
-			path: '/user',
-		});
-	} else if (route.path !== '/user/login') {
-		router.push({
-			path: '/user/login',
-		});
-	}
-};
+const handleCreator = (path:string='') => {
+	creatorPopover.value.setShow(false) //手动关闭popover
+    router.push({
+        path: `/creator${path}`,
+    })
+}
+
+const handleUser = (path:string='') => {
+	userPopover.value.setShow(false) //手动关闭popover
+    router.push({
+        path: `/user${path}`,
+    })
+}
 
 const handleLogOut = () => {
-	userPopover.value.setShow(false); //手动关闭popover
-	userStore.logOut();
+	userPopover.value.setShow(false) //手动关闭popover
+	userStore.logOut()
 	// router.push({
 	// 	path: '/user/login',
 	// });
-};
+}
 
 // const pushRoom=()=>{
 //     router.push({
 //         path: "/room",
 //     });
 // }
-
-// watch(
-//     ()=>userStore.userInfo.avatar,
-//     ()=>{
-//     if(userStore.userInfo.avatar!=undefined){
-//         imgSrc.value=OssReplace(userStore.userInfo.avatar)+`?${new Date().getTime()}`
-//         console.log('imgSrc',imgSrc.value);
-        
-//     }
-// })
 </script>
 
 <style lang="less" scoped>
 @import '@/utils/less/scrollbar.less';
-@class:.nav;
+@class: .nav;
 .scrollbar-to(@class);
-
 
 .nav {
 	width: 100%;
-	height:50px;
+	height: 50px;
 	padding: 0 20px;
-    z-index:999;
+	z-index: 999;
 	// background-color: rgba(255, 255, 255, 0.7);
 	// box-shadow: 0 0 5px rgba(51, 51, 51, 0.721);
 	// position: fixed;
 	// position:sticky;
 	// position:-webkit-sticky;
-	overflow:auto;
-	overflow:overlay;
+	overflow: auto;
+	overflow: overlay;
 	// top: 42;
 	// left: 0;
 	// right:0;
 	// margin-bottom: 20px;
 	display: flex;
 	justify-content: space-between;
-
-	&-left {
-		display: flex;
-		justify-content: left;
-		// align-items: center;
-	}
-    .nav-menu{
-		align-items: center;
-    }
-
-	&-right {
-		display: flex;
-		justify-content: end;
-		align-items: center;
-		gap: 10px;
-          :deep(.n-input-wrapper){
-                padding-right: 5px;
-        }
-		.search {
-			// max-width: 100px;
-            min-width:120px;
-            // width:50%;
-            user-select: none;
-
-            .n-input__suffix{
-                .n-button{
-                    min-width:20px;
-                }
-            }
-		}
-
-        // overflow-x: overlay;
-        // overflow: overlay;
-	}
 }
-.circle {
-	margin-right: 50px;
-	padding: 3px;
-	border: 1px solid #000;
-	border-radius: 20px;
+.nav-left {
+	display: flex;
+	justify-content: left;
+	// align-items: center;
 }
-.popover-grid {
-	display: grid;
-	grid-template-columns: auto auto auto auto auto;
-	grid-gap: 12px;
-	justify-content: center;
+.nav-menu {
 	align-items: center;
 }
+
+.nav-right {
+    // width:50%;
+	display: flex;
+	justify-content: end;
+	align-items: center;
+	gap: 20px;
+	:deep(.n-input-wrapper) {
+		padding-right: 5px;
+	}
+	.search {
+		// width: 240px;
+		min-width: 155px;
+        // max-width:300px;
+		// width:50%;
+		user-select: none;
+
+		.n-input__suffix {
+			.n-button {
+				min-width: 20px;
+			}
+		}
+	}
+
+	// overflow-x: overlay;
+	// overflow: overlay;
+}
+
+.nav-popover-user {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	.n-button {
+		width: 120px;
+	}
+}
+.nav-popover-creator {
+	display: flex;
+	// flex-direction: column;
+	// justify-content: center;
+	// align-items: center;
+	.n-button {
+		width: 80px;
+        height:50px;
+	}
+}
+// .circle {
+// 	margin-right: 50px;
+// 	padding: 3px;
+// 	border: 1px solid #000;
+// 	border-radius: 20px;
+// }
+// .popover-grid {
+// 	display: grid;
+// 	grid-template-columns: auto auto auto auto auto;
+// 	grid-gap: 12px;
+// 	justify-content: center;
+// 	align-items: center;
+// }
 
 .large-text {
 	font-size: 24px;
 }
 
-:deep(.n-menu-item-content){
-    padding:0 15px !important;
-    user-select: none;
+:deep(.n-menu-item-content) {
+	padding: 0 15px !important;
+	user-select: none;
 }
-:deep(.n-menu-item-content__icon){
-        display: none !important;
+:deep(.n-menu-item-content__icon) {
+	display: none !important;
 }
-@media screen and (max-width:520px){
-    :deep(.n-menu-item-content){
-        padding:0 10px !important;
-    }
-    :deep(.n-menu-item-content__icon){
-        display:inline !important;
-    }
-    :deep(.n-menu-item-content--header){
-        display: none !important;
-    }
-    .nav {
-        height:50px;
-    }
-}
-
-.n-button{
-    min-width:80px;
+@media screen and (max-width: 520px) {
+	:deep(.n-menu-item-content) {
+		padding: 0 10px !important;
+	}
+	:deep(.n-menu-item-content__icon) {
+		display: inline !important;
+	}
+	:deep(.n-menu-item-content--header) {
+		display: none !important;
+	}
+	.nav {
+		height: 50px;
+	}
 }
 
+// .n-button {
+// 	min-width: 80px;
+// }
 </style>

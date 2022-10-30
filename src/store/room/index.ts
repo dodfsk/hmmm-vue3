@@ -5,7 +5,7 @@ import { getRoom,getRoomList,setRoom,delRoom } from "@/api/room"
 import { Names } from "@/store/store-name";
 import { reactive,computed,onMounted } from 'vue'
 import { PreSignInfo, Room } from '@/types/room';
-import { ImgReplace,ImgToOss,UrlReplace,UrlToOss } from '@/utils/img/imgReplace';
+import { ImgReplace,ImgToOss,UrlReplace,UrlToOss } from '@/utils/common/ossReplace';
 import { cloneDeep } from 'lodash-es'
 
 export const useRoomStore = defineStore(Names.ROOM, ()=>{

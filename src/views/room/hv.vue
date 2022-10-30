@@ -103,7 +103,7 @@ const { title, content,from,comment } = toRefs(roomState);
 
 const handleEdit = () => {
 	router.push({
-		path: `/draw`,
+		path: `/creator/draw`,
 		query: { id: route.params.id },
 	});
 };

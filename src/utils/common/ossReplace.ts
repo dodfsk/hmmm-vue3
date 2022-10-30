@@ -14,7 +14,7 @@ export  const ImgReplace=(data:string)=>{
     const regex= /<img [^>]*src=['"]@oss/g
     //只修改  <img src="oss   前缀为oss地址
     // const a=/[o][s][s]/
-    const oss=import.meta.env.VITE_APP_OSS
+    const oss:string=import.meta.env.VITE_APP_OSS
     const imgSrc="<img src=\""+oss
     // console.log(oss,imgSrc);
     return data.replace(regex,imgSrc)
@@ -35,10 +35,17 @@ export  const UrlToOss=(data:string)=>{
 export  const UrlReplace=(data:string)=>{
     const regex=/@oss/g
     //只修改oss前缀为oss地址
-    // const a=/[o][s][s]/
-    const oss=import.meta.env.VITE_APP_OSS
+    const oss:string=import.meta.env.VITE_APP_OSS
     // console.log(oss,imgSrc);
     return data.replace(regex,oss)
 }
 
+
+export const preSignReplace=(data:string)=>{
+    const regStr=`${import.meta.env.VITE_APP_OSS_LOCAL}`
+    const regex=new RegExp(regStr,'g')
+    const oss:string=import.meta.env.VITE_APP_OSS
+    // 修改oss预签名域名为nginx代理的oss地址
+    return data.replace(regex,oss)
+}
 

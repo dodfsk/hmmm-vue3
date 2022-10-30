@@ -13,8 +13,6 @@
 			class="img-content"
 			draggable="true"
 			data-drag-handle
-            @load="imgOnload"
-			@error="imgError"
 			:src="props.node.attrs.src"
 			:style="{
 				width: props.node.attrs.width ? props.node.attrs.width + 'px' : '',
@@ -75,15 +73,19 @@ const eventRecord = reactive<EventRecord>({
 const imgOnload = (e: Event) => {
 	imgState.isError = false
 	imgState.isLoaded = true
-	// 保存图片的原始信息(宽,高,尺寸比例)
-	imgState.width = imgRef.value!.naturalWidth
-	imgState.height = imgRef.value!.naturalHeight
-	imgState.ratio = imgRef.value!.naturalWidth / imgRef.value!.naturalHeight
 
-	//设置缩放按钮事件
-	if (resizeRef.value && imgRef.value) {
-		resizeRef.value.onpointerdown = (e) => pointerDown(e)
-	}
+    //可编辑状态true=>挂载事件
+    if(props.editor.isEditable){
+        // 保存图片的原始信息(宽,高,尺寸比例)
+        imgState.width = imgRef.value!.naturalWidth
+        imgState.height = imgRef.value!.naturalHeight
+        imgState.ratio = imgRef.value!.naturalWidth / imgRef.value!.naturalHeight
+
+        //设置缩放按钮事件
+        if (resizeRef.value && imgRef.value) {
+            resizeRef.value.onpointerdown = (e) => pointerDown(e)
+        }
+    }
 }
 const imgError = (e: Event) => {
 	imgState.isLoaded = false
@@ -165,6 +167,15 @@ const maxSize = () => {
 		imgRef.value!.style.maxHeight = maxW / imgState.ratio + 'px'
 	}
 }
+
+onMounted(()=>{
+    // When the image has loaded
+    if(imgRef.value){
+        imgRef.value.onload = (e:any) => imgOnload(e)
+        imgRef.value.onerror = (e:any) => imgError(e)
+    }
+})
+
 watch(
 	() => props.selected,
 	() => {
@@ -187,11 +198,6 @@ watch(
 		}
 	}
 )
-
-// onMounted(()=>{
-//     // When the image has loaded
-//     imgRef.value!.onload = (e:any) => imgOnload(e)
-// })
 </script>
 
 <style lang="less">

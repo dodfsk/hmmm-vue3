@@ -198,13 +198,6 @@ const handleUpload=async (type:string)=>{
     if(url.status===200)preSignInfo.url=url.data.data.url
     //put方法直接上传file至预签名url
     
-    // if(import.meta.env.PROD){
-        // const regStr=`${import.meta.env.VITE_APP_OSS_LOCAL}`
-        // const regex=new RegExp(regStr,'g')
-        // const oss:string=import.meta.env.VITE_APP_OSS
-        // preSignInfo.url=preSignInfo.url.replace(regex,oss)
-        // console.log('preSignInfo.url',preSignInfo);
-    // }
     const res=await minioStore.MINIO_PUT({
         url:preSignInfo.url,
         data: type==='original'?originalFile.value!.file : result.file,

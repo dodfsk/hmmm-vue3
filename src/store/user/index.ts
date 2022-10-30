@@ -6,7 +6,7 @@ import { reactive, computed, onMounted } from 'vue';
 import { User } from '@/types/user';
 // import _ from 'lodash-es'
 import { useRouter } from 'vue-router';
-import { UrlReplace } from '@/utils/img/imgReplace';
+import { UrlReplace, UrlToOss } from '@/utils/common/ossReplace';
 
 export const useUserStore = defineStore(
 	Names.USER,
@@ -32,7 +32,8 @@ export const useUserStore = defineStore(
 			const { code, data = {} } = res.data;
 			if (code === 200) {
 				setToken(data.token);
-                const {username,role,phone,email,birth,avatar}=(await USER_GET(params.username!)).data.data
+                let {username,role,phone,email,birth,avatar}=(await USER_GET(params.username!)).data.data
+                // avatar+=`?${new Date().getTime()}`
                 setUserInfo({username,role,phone,email,birth,avatar})
 			}
 			return res;
@@ -47,10 +48,16 @@ export const useUserStore = defineStore(
 			return res;
 		};
 		const USER_SET = async (params: User) => {
+            
 			const res = await setUser(params);
 			const { code } = res.data;
 
 			if (code === 200) {
+                if(params.avatar){
+                    params.avatar=UrlReplace(params.avatar)
+                }
+                console.log(params.avatar);
+                
 				setUserInfo(params);
 			}
 			return res;

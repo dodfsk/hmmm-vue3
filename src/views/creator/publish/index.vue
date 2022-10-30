@@ -1,5 +1,5 @@
 <template>
-	<div class="container">
+	<div class="publish-container">
 		<div class="card">
 			<div class="header">
 				<div class="header-left">
@@ -111,24 +111,27 @@ onMounted(() => {
 </script>
 
 <style lang="less" scoped>
-.container {
+.publish-container {
+    width:100%;
     height:100%;
-	background-color: rgba(206, 255, 127, 0.5);
-	padding: 40px;
+    background-color: #f5f5f5;
+	// background-color: rgba(206, 255, 127, 0.5);
+	// padding: 20px;
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+	// align-items: center;
 	overflow: auto;
 }
 .card {
-	width:80%;
+	width:1200px;
 	// height:max-content;
-	max-width: 1200px;
-	min-width: 500px;
+	// max-width: 1500px;
+	// min-width: 500px;
+    margin:0 auto;
 	padding: 30px;
 	background-color: #fff;
 	border-radius: 3px;
-	box-shadow: 0 0 10px rgba(51, 51, 51, 0.721);
+	// box-shadow: 0 0 10px rgba(51, 51, 51, 0.721);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -150,7 +153,7 @@ onMounted(() => {
 	}
 }
 .card .content {
-	width: 80%;
+	// width: 80%;
 	display: flex;
 	flex-direction: column;
 	align-items: start;

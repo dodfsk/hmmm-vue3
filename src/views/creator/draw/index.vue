@@ -1,5 +1,5 @@
 <template>
-	<div class="container">
+	<div class="draw-container">
 		<n-card class="content">
 			<template #header>
 				<div style="text-align: left">#绘制房间</div>
@@ -74,7 +74,7 @@ const roomState = reactive<Room>({
 const { title,description,content,assets } = toRefs(roomState);
 
 onMounted(() => {
-
+    
 });
 
 const handleSave=debounce(async ()=>{
@@ -171,15 +171,16 @@ watch(
 <style lang="less" scoped>
 @import '@/utils/less/animation.less';
 
-.container {
+.draw-container {
 	width: 100%;
     height: 100%;
-    padding-top:20px;
+    // padding-top:20px;
 	display: flex;
     flex-direction: column;
 	// justify-content: center;
 	align-items: center;
     overflow: auto;
+    background-color: #f5f5f5;
 }
 .content {
 	// width: 90%;

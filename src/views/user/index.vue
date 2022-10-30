@@ -4,10 +4,10 @@
                 <n-layout-sider
                     class="user-sider"
                     bordered
-                    show-trigger
+                    show-trigger="bar"
                     collapse-mode="width"
                     :collapsed-width="64"
-                    :width="220"
+                    :width="200"
                     :native-scrollbar="false"
                     :inverted="inverted"
                 >
@@ -33,8 +33,7 @@
 import { h, ref, Component, reactive } from 'vue';
 import { NIcon } from 'naive-ui';
 import {
-    BookOutline,
-	HomeOutline,
+	EarthOutline,
     IdCardOutline,
     HappyOutline,
 	PersonOutline,
@@ -48,7 +47,7 @@ import { RouterLink, useRoute, useRouter } from 'vue-router';
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
-const inverted = ref(true);
+const inverted = ref(false);
 
 function renderIcon(icon: Component) {
 	return () => h(NIcon, null, { default: () => h(icon) });
@@ -66,10 +65,10 @@ const menuOptions = [
                         // },
 					},
 				},
-				{ default: () => '首页' }
+				{ default: () => '个人空间' }
 			),
-		key: 'user_homepage',
-		icon: renderIcon(HomeOutline),
+		key: 'user-homepage',
+		icon: renderIcon(EarthOutline),
 	},
 	{
 		label: () =>
@@ -82,7 +81,7 @@ const menuOptions = [
 				},
 				{ default: () => '我的资料' }
 			),
-		key: 'user_profile',
+		key: 'user-profile',
 		icon: renderIcon(IdCardOutline),
 	},
     {
@@ -96,70 +95,41 @@ const menuOptions = [
 				},
 				{ default: () => '我的头像' }
 			),
-		key: 'user_face',
+		key: 'user-face',
 		icon: renderIcon(HappyOutline),
 	},
-    {
-            label: () =>
-                h(
-                    RouterLink,
-                    {
-                        to: {
-                            path: '/user/publish',
-                        },
-                    },
-                    { default: () => '我的发布' }
-                ),
-            key: 'user_publish',
-		    icon: renderIcon(BookOutline),
-    },  
-
 	{
-		label: '更多设置',
+		label: '设置',
 		key: 'dance-dance-dance',
 		icon: renderIcon(SettingsOutline),
 		children: [
+            {
+				label: '网站设置',
+				key: 'beverage',
+				icon: renderIcon(WineIcon),
+
+			},
 			{
 				type: 'group',
-				label: '人物',
+				label: '控制台',
 				key: 'people',
 				children: [
 					{
-						label: '叙事者',
+						label: '用户管理',
 						key: 'narrator',
 						icon: renderIcon(PersonOutline),
 					},
 					{
-						label: '羊男',
+						label: '房间管理',
+						key: 'sheep-man',
+						icon: renderIcon(PersonOutline),
+					},
+                    {
+						label: '评论管理',
 						key: 'sheep-man',
 						icon: renderIcon(PersonOutline),
 					},
 				],
-			},
-			{
-				label: '饮品',
-				key: 'beverage',
-				icon: renderIcon(WineIcon),
-				children: [
-					{
-						label: '威士忌',
-						key: 'whisky',
-					},
-				],
-			},
-			{
-				label: '食物',
-				key: 'food',
-				children: [
-					{
-						label: '三明治',
-						key: 'sandwich',
-					},
-				],
-			},
-			{
-				label: '过去增多，未来减少',
-				key: 'the-past-increases-the-future-recedes',
 			},
 		],
 	},

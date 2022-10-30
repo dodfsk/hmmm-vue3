@@ -121,7 +121,7 @@ let coinList=ref<CoinList>({})
 
 const roomDraw=()=>{
     router.push({
-        path:`/draw`,
+        path:`/creator/draw`,
     });
 }
 const roomEnter=(hid?:string)=>{

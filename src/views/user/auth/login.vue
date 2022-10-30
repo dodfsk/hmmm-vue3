@@ -1,8 +1,8 @@
 <template>
-	<div class="container">
+	<div class="login-container">
 		<div class="box">
 			<n-skeleton />
-			<n-card class="n-card-login" title="登录面板">
+			<n-card class="n-card-login" title="登录面板" header-style="text-align:center">
 				<n-form ref="formRef" :model="userState" :rules="rules" :show-require-mark="false">
 					<n-form-item label="账号:" path="username">
 						<n-input
@@ -94,7 +94,7 @@ const handleLogin = debounce(
 			//     duration: 3000,
 			// })
 			router.push({
-				path: '/user',
+				path: '/user/face',
 			})
 		}
 	},
@@ -114,10 +114,10 @@ const handleReg = () => {
 
 <style lang="less" scoped>
 // @import '@/views/root.less';
-.container {
+.login-container {
 	height: 100%;
 	width:100%;
-	text-align: center;
+	// text-align: center;
 	display: flex;
 	justify-content: center;
 	align-items: center;

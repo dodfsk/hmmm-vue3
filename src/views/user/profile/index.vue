@@ -182,7 +182,7 @@ onMounted(() => {
 .container{
     height:100%;
     padding: 40px;
-    background-color:#ccc;
+    background-color: #f5f5f5;
     display:flex;
     flex-direction: column;
     align-items: center;
@@ -196,7 +196,7 @@ onMounted(() => {
     padding: 30px;
     background-color: #fff;
     border-radius: 3px;
-	box-shadow: 0 0 10px rgba(51, 51, 51, 0.721);
+	box-shadow: 0 0 5px rgba(51, 51, 51, 0.721);
     display:flex;
     flex-direction: column;
     align-items: center;

@@ -31,19 +31,11 @@ const routes: Array<RouteRecordRaw> = [
 	},
 	{
 		path: '/room/:id',
-		name: 'room_hv',
+		name: 'room-hv',
 		meta: {
 			key: 'room',
 		},
 		component: () => import('@/views/room/hv.vue'),
-	},
-	{
-		path: '/draw',
-		name: 'draw',
-		meta: {
-			key: 'draw',
-		},
-		component: () => import('@/views/room/draw.vue'),
 	},
 	{
 		path: '/search',
@@ -52,6 +44,36 @@ const routes: Array<RouteRecordRaw> = [
 			key: 'search',
 		},
 		component: () => import('@/views/search/index.vue'),
+	},
+    {
+		path: '/creator',
+		name: 'draw',
+		meta: {
+			key: 'creator',
+		},
+		component: () => import('@/views/creator/index.vue'),
+        children: [
+			{
+				path: '',
+				name: 'creator-homepage',
+				component: () => import('@/views/creator/homepage/index.vue'),
+			},
+            {
+                path: 'draft',
+				name: 'creator-draft',
+                component: () => import('@/views/creator/draft/index.vue'),
+            },
+            {
+                path: 'draw',
+				name: 'creator-draw',
+                component: () => import('@/views/creator/draw/index.vue'),
+            },
+            {
+                path: 'publish',
+                name: 'creator-publish',
+                component: () => import('@/views/creator/publish/index.vue'),
+            },
+        ]
 	},
 	{
 		path: '/user',
@@ -64,27 +86,22 @@ const routes: Array<RouteRecordRaw> = [
 		children: [
 			{
 				path: '',
-				name: 'user_homepage',
-				component: () => import('@/views/user/homepage/homepage.vue'),
+				name: 'user-homepage',
+				component: () => import('@/views/user/homepage/index.vue'),
 			},
 			{
 				path: 'profile',
-				name: 'user_profile',
-				component: () => import('@/views/user/myProfile/index.vue'),
+				name: 'user-profile',
+				component: () => import('@/views/user/profile/index.vue'),
 			},
             {
 				path: 'face',
-				name: 'user_face',
-				component: () => import('@/views/user/myFace/index.vue'),
-			},
-			{
-				path: 'publish',
-				name: 'user_publish',
-				component: () => import('@/views/user/myPublish/index.vue'),
+				name: 'user-face',
+				component: () => import('@/views/user/face/index.vue'),
 			},
 			{
 				path: 'more',
-				name: 'user_more',
+				name: 'user-more',
 				component: () => import('@/views/user/component/more.vue'),
 			},
 		],
@@ -115,12 +132,12 @@ const router = createRouter({
 	history: createWebHistory(), //history模式
 	// history: createWebHashHistory(), //hash模式
 	routes,
-	scrollBehavior: (_to, _from, savePosition) => {
+	scrollBehavior: (to, from, savePosition) => {
 		console.log('savePosition', savePosition);
 		if (savePosition) {
 			return savePosition;
 		} else {
-			if (JSON.stringify(_to.query) == '{}' && JSON.stringify(_from.query) == '{}') {
+			if (JSON.stringify(to.query) == '{}' && JSON.stringify(from.query) == '{}') {
 				//路由修改query时候不做处理
 				return {
 					left: 0,
@@ -135,17 +152,17 @@ const router = createRouter({
 NProgress.configure({ showSpinner: false });
 //路由前置守卫
 router.beforeEach(async (to, from, next) => {
-	// console.log('_to, _from, next',_to, _from, next);
-    if(to.meta.key=='user'){
+	// console.log('-to, -from, next',-to, -from, next);
+    if(to.meta.key=='user'||to.meta.key=='creator'){
     const userStore=useUserStore()
-        if(userStore.userInfo.username==null){
+        if(!userStore.userInfo.username){
             //未登录状态禁止访问user模块
             router.push({
                 path:'/user/login'
             })
         }
     }
-    // if(_to.meta.key=='user'){
+    // if(-to.meta.key=='user'){
     
     // }
 

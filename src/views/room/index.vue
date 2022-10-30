@@ -53,18 +53,14 @@
 
                 <n-button strong secondary @click="handleShowModal(item.hid)">
                     <template #icon>
-                        <n-icon :component="Search">
-                        <cash-icon />
-                        </n-icon>
+                        <n-icon :component="Search" />
                     </template>
                     Window
                 </n-button>
 
                 <n-button type="primary" @click="roomEnter(item.hid)">
                     <template #icon>
-                        <n-icon :component="ArrowUp">
-                        <cash-icon />
-                        </n-icon>
+                        <n-icon :component="ArrowUp" />
                     </template>
                     Door
                 </n-button>
@@ -140,7 +136,7 @@ let coinList=ref<CoinList>({})
 
 const roomDraw=()=>{
     router.push({
-        path:`/draw`,
+        path:`/creator/draw`,
     });
 }
 const roomEnter=(hid?:string)=>{
@@ -157,7 +153,7 @@ const handleShowModal=async (hid?:string)=>{
     router.push({
         query:{...route.query,window:hid}
     })
-    const res=await roomStore.ROOM_GET(hid)
+    const res = await roomStore.ROOM_GET(hid)
     const { code,data={} } = res.data
     windowContent.value=data.content
     showModal.value=true
