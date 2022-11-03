@@ -5,13 +5,13 @@
             class="creator-sider"
             bordered
             show-trigger="bar"
+            default-collapsed
             collapse-mode="width"
             :collapsed-width="64"
             :width="180"
             :native-scrollbar="false"
             :inverted="inverted"
         >   
-
             <n-menu
                 :inverted="inverted"
                 :collapsed-width="64"

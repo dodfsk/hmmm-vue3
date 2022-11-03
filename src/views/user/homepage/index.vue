@@ -1,6 +1,9 @@
 <template>
 	<div class="container">
 		homepage 主页
+        <h1>
+        此处放了很多测试用的demo
+        </h1>
 		<n-input v-model:value="a"> </n-input>
 
 		<!-- <img src="http://192.168.2.103:13573/api/assets/picture/hmlc/qemu-kvm.png"
@@ -15,7 +18,7 @@
 			}"
 			:custom-request="customRequest"
 		>
-			<n-button>上传文件至MINIO</n-button>
+			<n-button disabled>上传文件至MINIO</n-button>
 		</n-upload>
         clipper图片裁剪组件demo
         <input type="file" id="file" @change="getFile"/>
@@ -23,7 +26,7 @@
         <div id="clipper-container">
 
         </div>
-        <n-button @click="getAlter">生成</n-button>
+        <n-button @click="getAlter">裁剪测试</n-button>
 
 	</div>
 </template>

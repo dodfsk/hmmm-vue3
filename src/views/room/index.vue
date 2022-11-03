@@ -277,7 +277,4 @@ const windowStyle={
     width:calc(100vw - 30%);
 }
 
-:deep(#editor-resizer) {
-	display: none;
-} //关闭富文本图片resize模块
 </style>

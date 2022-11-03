@@ -53,9 +53,7 @@
 							:size="38"
 							:src="
 								(userStore.userInfo.avatar ??
-									'https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg') +
-								'?' +
-								time
+									'https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg')
 								// +`?${new Date().getTime()}`
 							"
 							fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
@@ -184,7 +182,6 @@ const userStore = useUserStore()
 const userPopover = ref()
 const creatorPopover = ref()
 const imgSrc = computed(() => userStore.userInfo.avatar)
-const time = new Date().getTime()
 
 console.log('route', route)
 

@@ -144,7 +144,4 @@
     text-align: center;
 }
 
-:deep(#editor-resizer) {
-	display: none;
-} //关闭富文本图片resize模块
 </style>

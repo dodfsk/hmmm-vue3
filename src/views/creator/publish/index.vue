@@ -1,12 +1,11 @@
 <template>
 	<div class="publish-container">
-		<div class="card">
+		<div class="publish-box">
 			<div class="header">
 				<div class="header-left">
 					<h2>我的发布</h2>
 					<hr />
 				</div>
-				<n-button type="primary"> 管 理</n-button>
 			</div>
 			<div class="content">
 				<div class="content-item" v-for="item in publishList">
@@ -40,9 +39,12 @@
 					</div>
 				</div>
 
-                <div v-if="noPublish" style="text-align:center;width:100%">
-                        你还没有发布任何内容哦
-                </div>
+                <n-space v-if="publishList.length===0" justify="center" align="center" style="width:100%;height:180px">
+                    <div>
+
+                        你还没有发布任何内容哦!
+                    </div>
+                </n-space>
 			</div>
 		</div>
 	</div>
@@ -61,7 +63,6 @@ const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
 const roomStore = useRoomStore();
-const noPublish=ref<boolean>(false)
 const publishList= ref<Room[]>([]
     // [
     //     {
@@ -75,26 +76,13 @@ const publishList= ref<Room[]>([]
     //         content: '<pre class="my-custom-class"><code>const a=12345\nconst b=()=&gt;{\n  return a\n}\n123</code></pre>',
     //         updateAt: '2022-09-05T19:39:52.175Z',
     //     },
-    //     {
-    //         content:
-    //             '<pre class="ql-syntax" spellcheck="false"><span class="hljs-keyword">const</span> a=<span class="hljs-number">12345</span>\n<span class="hljs-keyword">const</span> <span class="hljs-title function_">b</span>=()=&gt;{\n  <span class="hljs-keyword">return</span> a\n}\n</pre><p><br></p>',
-    //         createdAt: '2022-08-29T19:22:47.068Z',
-    //         from: 'hmlc',
-    //         hid: 'H3m7G3ygvG',
-    //         title: 'nanoid test',
-    //         updateAt: '2022-08-31T22:39:15.662Z',
-    //         __v: 0,
-    //         _id: '630d1207b0ec829c98a9e6ec',
-    //         message: '查找成功',
-    //     },
     // ]
 );
 
 const getPublishList = async () => {
-	const res = await roomStore.ROOM_LIST({from:userStore.userInfo.username!})
+	const res = await roomStore.ROOM_LIST({from:userStore.userInfo.username!,isPublic:true})
 	const { code, message, meta, data = {} } = res.data
     if(code!==200){
-        noPublish.value=true
     }
     // if(data.roomList){
     //     data.roomList.forEach((item:Room) => {
@@ -122,21 +110,21 @@ onMounted(() => {
 	// align-items: center;
 	overflow: auto;
 }
-.card {
+.publish-box {
 	width:1200px;
-	// height:max-content;
 	// max-width: 1500px;
 	// min-width: 500px;
     margin:0 auto;
 	padding: 30px;
 	background-color: #fff;
 	border-radius: 3px;
-	// box-shadow: 0 0 10px rgba(51, 51, 51, 0.721);
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+	box-shadow: 0 0 3px rgba(51, 51, 51, 0.721);
+    display:relative;
+	// display: flex;
+	// flex-direction: column;
+	// align-items: center;
 }
-.card .header {
+.publish-box .header {
 	width: 80%;
 	// min-width:500px;
 	margin-bottom: 20px;
@@ -152,14 +140,16 @@ onMounted(() => {
 		}
 	}
 }
-.card .content {
+.publish-box .content {
 	// width: 80%;
+    height:100%;
+    flex: auto;
 	display: flex;
 	flex-direction: column;
 	align-items: start;
 	gap: 24px;
 }
-.card .content-item {
+.publish-box .content-item {
 	width: 100%;
 	max-height: 500px;
 	// border: 1px solid #000;
@@ -216,10 +206,6 @@ onMounted(() => {
     text-align: center;
 }
 
-:deep(.ql-editor){
-    overflow: hidden !important;
-}
-:deep(#editor-resizer) {
-	display: none;
-} //关闭富文本图片resize模块
+
+
 </style>

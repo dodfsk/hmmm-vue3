@@ -8,6 +8,7 @@
 						<n-input
 							v-model:value="userState.username"
 							placeholder="你的用户名"
+                            :allow-input="inputRules.username"
 							@keyup.enter="validateAction"
 						/>
 					</n-form-item>
@@ -17,6 +18,7 @@
 							type="password"
 							show-password-on="mousedown"
 							placeholder="密码"
+                            :allow-input="inputRules.password"
 							@keyup.enter="validateAction"
 						/>
 					</n-form-item>
@@ -79,6 +81,10 @@ const validateAction = () => {
 			handleLogin()
 		}
 	})
+}
+const inputRules={
+    username:(value: string) => !value || /^\w+$/.test(value),
+    password:(value: string) => !value || /^[\w!@#$%&*]+$/.test(value), 
 }
 
 const handleLogin = debounce(

@@ -137,10 +137,12 @@ const handleUpdate = async () => {
 	modelRef.value.avatar=`@oss/picture/${modelRef.value.username}/${preSignInfo.fileName}`
 	const res = await userStore.USER_SET(modelRef.value)
 	const { code, message, meta, data = {} } = res.data
+    
 
     userStore.setUserInfo({
         avatar: userStore.userInfo.avatar + `?${new Date().getTime()}`,
     })
+    
 
 	// if(data.avatar){
 	//     data.avatar=data.avatar+`?${new Date().getTime()}`

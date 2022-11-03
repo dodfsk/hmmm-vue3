@@ -48,15 +48,18 @@ export const useUserStore = defineStore(
 			return res;
 		};
 		const USER_SET = async (params: User) => {
-            
-			const res = await setUser(params);
+            if(params.avatar){
+                params.avatar=UrlToOss(params.avatar)
+            }
+            // console.log(params.avatar);
+            const res = await setUser(params);
 			const { code } = res.data;
 
 			if (code === 200) {
                 if(params.avatar){
                     params.avatar=UrlReplace(params.avatar)
                 }
-                console.log(params.avatar);
+                // console.log(params.avatar);
                 
 				setUserInfo(params);
 			}

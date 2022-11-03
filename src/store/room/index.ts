@@ -46,7 +46,9 @@ export const useRoomStore = defineStore(Names.ROOM, ()=>{
 
     const ROOM_SET=async(params:Room)=> {
         const roomState=cloneDeep(params)
-        roomState.content=ImgToOss(roomState.content)
+        if(roomState.content){
+            roomState.content=ImgToOss(roomState.content)
+        }
         if(roomState.assets&&roomState.assets.length>0){
             roomState.assets.forEach((item:PreSignInfo)=>{
                 item.url=UrlToOss(item.url)

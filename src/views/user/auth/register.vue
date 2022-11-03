@@ -7,6 +7,7 @@
 						<n-input
 							v-model:value="userState.username"
 							placeholder="填写你的用户名"
+                            :allow-input="inputRules.username"
 							@keyup.enter="validateAction"
 						/>
 					</n-form-item>
@@ -16,6 +17,7 @@
 							type="password"
 							show-password-on="click"
 							placeholder="请输入密码"
+                            :allow-input="inputRules.password"
 							@keyup.enter="validateAction"
 						>
 							<template #password-visible-icon>
@@ -33,6 +35,7 @@
 							type="password"
 							show-password-on="click"
 							placeholder="请和密码保持一致"
+                            :allow-input="inputRules.password"
 							@keyup.enter="validateAction"
 						>
 							<template #password-visible-icon>
@@ -146,6 +149,11 @@ const validateAction = () => {
 			handleRegister()
 		}
 	})
+}
+
+const inputRules={
+    username:(value: string) => !value || /^\w+$/.test(value),
+    password:(value: string) => !value || /^[\w!@#$%&*]+$/.test(value), 
 }
 
 const handleRegister = debounce(

@@ -84,11 +84,13 @@ import { useRoute, useRouter } from 'vue-router';
 import tiptapEditor from '@/components/rich-editor/tiptapEditor.vue';
 import { onBeforeMount, onMounted, provide, reactive, ref, toRefs, watch } from 'vue';
 import { useRoomStore } from '@/store/room';
+import { useUserStore } from '@/store/user';
 import { Room } from '@/types/room';
 
 const route = useRoute();
 const router = useRouter();
 const roomStore = useRoomStore();
+const userStore = useUserStore();
 console.log('route.params.id', route.params.id);
 
 const loading = ref(true);
@@ -102,6 +104,9 @@ let roomState = reactive<Room>({
 const { title, content,from,comment } = toRefs(roomState);
 
 const handleEdit = () => {
+    if(userStore.userInfo.role!=='root'&&userStore.userInfo.username!==roomState.from){
+        return window.$message.warning('没有权限')
+    }
 	router.push({
 		path: `/creator/draw`,
 		query: { id: route.params.id },
@@ -112,7 +117,7 @@ const handleDel = async () => {
 	const { code } = res.data;
 	if (code == 200) {
 		router.push({
-			path: `/`,
+			path: `/room`,
 		});
 	}
 };
@@ -222,7 +227,7 @@ watch(
 	// border: 2px solid #666;
 	// position: fixed;
     :deep(.n-card-header){
-        background-color:rgba(172, 255, 47, 0.486);
+        background-color:rgba(109, 135, 251, 0.486);
         display: flex;
         justify-content: end;
     }
@@ -234,7 +239,4 @@ watch(
     }
 }
 
-:deep(#editor-resizer) {
-	display: none;
-} //关闭富文本图片resize模块
 </style>

@@ -25,7 +25,6 @@
                 <n-form-item path="username" label="用户名" >
                     <n-input 
                         v-model:value="modelRef.username" 
-                        placeholder=""
                         @keydown.enter.prevent  
                         disabled 
                     />
@@ -49,7 +48,6 @@
                 <n-form-item path="phone" label="手机">
                     <n-input
                         v-model:value="modelRef.phone"
-                        placeholder=""
                         @keydown.enter.prevent
                         style="min-width: 50%"
                         autosize
@@ -58,14 +56,12 @@
                 <n-form-item path="email" label="邮箱">
                     <n-input
                         v-model:value="modelRef.email"
-                        placeholder=""
                         @keydown.enter.prevent
                     />
                 </n-form-item>
                 <n-form-item path="birth" label="生日">
                     <n-date-picker
                         v-model:value="modelRef.birth"
-                        placeholder=""
                         @keydown.enter.prevent
                     />
                 </n-form-item>

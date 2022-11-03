@@ -187,6 +187,7 @@
         </BubbleMenu>
 
         <UploadModal
+            v-if="editor && theme !== 'headless'"
             v-model:show="showModal"
             ref="uploadModalRef"
             @handleUploadDone="insertImage"
@@ -244,6 +245,7 @@ import {
 	Multiplier1X,
 	Edit,
     BorderRadius,
+    Trash,
 } from '@vicons/tabler'
 
 export type DefineExpose = {
@@ -258,6 +260,7 @@ type Emits = {
 	// (e: 'functionName', value: any): void
 	(e: 'update:modelValue', value: string): void
 	(e: 'update:assets', value: PreSignInfo[]): void
+    (e: 'handleSaveAssets'): void
 }
 type BubbleState={
     src?: string
@@ -597,6 +600,12 @@ const BubbleMenuBar = computed(() => [
 		},
 		svg: Edit,
 	},
+    {
+        title:'删除图片',
+        key:'imgDelete',
+        cmd:()=>editor.value?.chain().focus().deleteSelection().run(),
+        svg:Trash,
+    }
 ])
 
 const insertImage=(data:PreSignInfo)=>{
@@ -612,6 +621,7 @@ const insertImage=(data:PreSignInfo)=>{
     }
     editor.value?.chain().focus().setImage({ src: data.url!,alt:data.fileName }).run()
     showModal.value=false
+    emits('handleSaveAssets')//自动更新附件信息
     
 }
 const removeImage=(data:PreSignInfo)=>{
@@ -633,6 +643,7 @@ const removeImage=(data:PreSignInfo)=>{
     })
     emits('update:modelValue', content) //双向绑定修改数据
     // editor.value!.commands.setContent(content)//修改编辑器视图
+    emits('handleSaveAssets')//自动更新附件信息
 }
 
 

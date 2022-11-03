@@ -1,5 +1,5 @@
 <template>
-  <n-config-provider :theme-overrides="themeOverrides">
+  <n-config-provider :theme-overrides="themeOverrides" :locale="zhCN" :date-locale="dateZhCN">
     <!-- <n-loading-bar-provider> -->
       <n-dialog-provider>
         <n-notification-provider>
@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { defineComponent, h } from 'vue'
 import {  useDialog, useMessage, useNotification } from 'naive-ui'
-import { GlobalThemeOverrides } from 'naive-ui'
+import {  zhCN, dateZhCN ,GlobalThemeOverrides } from 'naive-ui'
 
 // import { 
 //     NaivePiniaComposition
