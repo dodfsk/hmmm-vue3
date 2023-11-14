@@ -5,15 +5,15 @@
 	<div class="root__container">
 	<!-- <n-layout class="container"> -->
 		<!-- <n-layout-header :inverted="inverted" class="header"> -->
-			<div class="root__header">
+			<header class="root__header">
 			    <NavTop />
-			</div>
+			</header>
 		<!-- </n-layout-header> -->
 
 		<!-- <n-layout-content class="content"> -->
-			<div  class="root__content">
+			<main  class="root__content">
 			    <router-view />
-			</div>
+			</main>
 		<!-- </n-layout-content> -->
 
 		<!-- <n-layout-footer :inverted="inverted" bordered class="footer"> -->
@@ -50,30 +50,34 @@ onMounted(()=>{
 //     height: 100%;
 // }
 .root__header {
-	// height: 50px;
+	height: 50px;
     width:100%;
-	position: sticky;
-	position: -webkit-sticky;
-	// position: fixed;
-    background-color: rgba(255, 255, 255, 0.7);
-	box-shadow: 0 0 5px rgba(51, 51, 51, 0.721);
+	// position: -webkit-sticky;
+	// position: sticky;
+	position: fixed;
+    // background-color: rgba(255, 255, 255, 0.98);
+	// box-shadow: 0 0 5px rgba(51, 51, 51, 0.721);
 	top: 0px;
 	z-index: 250;
 }
 .root__content {
-	position: relative;
-	// padding-top: 50px;
+    // display: flex;
+    // flex-direction: column;
+	// position: relative;
+    // margin:0 auto;
+	padding-top: 50px;
+    width: auto;
 	// min-height: 100%;
-	// min-height: calc(100% - 50px);
-	height: calc(100% - 50px);
+	min-height: calc(100% - 50px);
+	// height: calc(100% - 50px);
     // height:100%;
     // height:fit-content;//根据内容自适应尺寸
-	box-sizing: content-box;
+	// box-sizing: content-box;
     // align-items:stretch;
     // flex:1;
-	// background: url("@/assets/images/login_bg.jpg") repeat;
+	// background: url("@/assets/image/login_bg.jpg") repeat;
 	// background:#ccdbe8b0;
-    background-color: rgb(233, 233, 233);
+    background-color: rgb(246,247,249);
     // overflow: auto;   
     // overflow-y: auto;
     // overflow-y: hidden;

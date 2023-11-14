@@ -52,12 +52,10 @@
 						<n-avatar
 							:size="38"
 							:src="
-								(userStore.userInfo.avatar ??
-									'https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg')
-								// +`?${new Date().getTime()}`
+								userStore.userInfo?.avatar ??
+								'https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg'
 							"
 							fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-							object-fit="cover"
 							style="padding: 0; margin: 0; user-select: none"
 							round
 							@click="handleUser('/face')"
@@ -73,10 +71,10 @@
 
 					<n-button quaternary @click="handleUser()"> 个人空间 </n-button>
 
-					<n-button color="#000" @click="handleLogOut" style="margin-top:10px;"> 
-                        <n-icon :size="20" :component="LogOutOutline" />
-                        <div style="padding-right:8px">登出 </div>
-                    </n-button>
+					<n-button color="#000" @click="handleLogOut" style="margin-top: 10px">
+						<n-icon :size="20" :component="LogOutOutline" />
+						<div style="padding-right: 8px">登出</div>
+					</n-button>
 				</div>
 				<!-- </n-space> -->
 			</n-popover>
@@ -96,10 +94,12 @@
 					</n-button>
 				</template>
 
-				<div  class="nav-popover-creator">
+				<div class="nav-popover-creator">
+					<n-button quaternary @click="handleCreator('/publish')">
+						<div>发布管理</div>
+					</n-button>
 					<n-button quaternary @click="handleCreator('/draft')"> 草稿箱</n-button>
 					<n-button quaternary @click="handleCreator('/draw')"> 绘制 </n-button>
-
 				</div>
 			</n-popover>
 		</div>
@@ -112,7 +112,19 @@ import { useRouter, useRoute } from 'vue-router'
 import { NIcon } from 'naive-ui'
 import type { MenuOption, PopoverProps } from 'naive-ui'
 import { RouterLink } from 'vue-router'
-import { LogOutOutline,BulbOutline, SparklesSharp, SearchOutline, Person, HomeSharp, Square, Reader } from '@vicons/ionicons5'
+import {
+	LogOutOutline,
+	BulbOutline,
+	SparklesSharp,
+	SearchOutline,
+	Person,
+	HomeSharp,
+	Square,
+	Reader,
+	AlbumsOutline,
+	FileTrayFullOutline,
+	BrushOutline,
+} from '@vicons/ionicons5'
 import { useUserStore } from '@/store/user'
 import { UrlReplace } from '@/utils/common/ossReplace'
 
@@ -181,7 +193,12 @@ const router = useRouter()
 const userStore = useUserStore()
 const userPopover = ref()
 const creatorPopover = ref()
-const imgSrc = computed(() => userStore.userInfo.avatar)
+// const imgSrc = computed(() => {
+//     if(userStore.userInfo)
+//         return userStore.userInfo.avatar
+//     else
+//         return
+// })
 
 console.log('route', route)
 
@@ -194,26 +211,25 @@ const handleSearch = () => {
 	})
 }
 
-
-const handleCreator = (path:string='') => {
+const handleCreator = (path: string = '') => {
 	creatorPopover.value.setShow(false) //手动关闭popover
-    router.push({
-        path: `/creator${path}`,
-    })
+	router.push({
+		path: `/creator${path}`,
+	})
 }
 
-const handleUser = (path:string='') => {
+const handleUser = (path: string = '') => {
 	userPopover.value.setShow(false) //手动关闭popover
-    router.push({
-        path: `/user${path}`,
-    })
+	router.push({
+		path: `/user${path}`,
+	})
 }
 
 const handleLogOut = () => {
 	userPopover.value.setShow(false) //手动关闭popover
 	userStore.logOut()
 	// router.push({
-	// 	path: '/user/login',
+	// 	path: '/auth/login',
 	// });
 }
 
@@ -234,13 +250,15 @@ const handleLogOut = () => {
 	height: 50px;
 	padding: 0 20px;
 	z-index: 999;
-	// background-color: rgba(255, 255, 255, 0.7);
-	// box-shadow: 0 0 5px rgba(51, 51, 51, 0.721);
+	background-color: rgba(255, 255, 255, 0.98);
+	box-shadow: 0 0 5px rgba(51, 51, 51, 0.721);
 	// position: fixed;
 	// position:sticky;
 	// position:-webkit-sticky;
 	overflow: auto;
 	overflow: overlay;
+	overflow-x: overlay;
+	overflow-y: hidden;
 	// top: 42;
 	// left: 0;
 	// right:0;
@@ -258,7 +276,7 @@ const handleLogOut = () => {
 }
 
 .nav-right {
-    // width:50%;
+	// width:50%;
 	display: flex;
 	justify-content: end;
 	align-items: center;
@@ -269,7 +287,7 @@ const handleLogOut = () => {
 	.search {
 		// width: 240px;
 		min-width: 155px;
-        // max-width:300px;
+		// max-width:300px;
 		// width:50%;
 		user-select: none;
 
@@ -300,7 +318,7 @@ const handleLogOut = () => {
 	// align-items: center;
 	.n-button {
 		width: 80px;
-        height:50px;
+		height: 64px;
 	}
 }
 // .circle {
@@ -330,7 +348,7 @@ const handleLogOut = () => {
 }
 @media screen and (max-width: 520px) {
 	:deep(.n-menu-item-content) {
-		padding: 0 10px !important;
+		padding: 0 5px !important;
 	}
 	:deep(.n-menu-item-content__icon) {
 		display: inline !important;
@@ -339,7 +357,7 @@ const handleLogOut = () => {
 		display: none !important;
 	}
 	.nav {
-		height: 50px;
+		height: 56px;
 	}
 }
 

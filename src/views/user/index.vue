@@ -4,6 +4,7 @@
                 <n-layout-sider
                     class="user-sider"
                     bordered
+                    default-collapsed
                     show-trigger="bar"
                     collapse-mode="width"
                     :collapsed-width="64"
@@ -39,6 +40,7 @@ import {
 	PersonOutline,
 	SettingsOutline,
 	WineOutline as WineIcon,
+    ShieldCheckmarkOutline,
 } from '@vicons/ionicons5';
 
 import { useUserStore } from '@/store/user';
@@ -97,6 +99,20 @@ const menuOptions = [
 			),
 		key: 'user-face',
 		icon: renderIcon(HappyOutline),
+	},
+    {
+		label: () =>
+			h(
+				RouterLink,
+				{
+					to: {
+						path: '/user/security',
+					},
+				},
+				{ default: () => '账号安全' }
+			),
+		key: 'user-security',
+		icon: renderIcon(ShieldCheckmarkOutline),
 	},
 	{
 		label: '设置',

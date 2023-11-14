@@ -29,7 +29,7 @@
                 <!-- 图片上传 -->
                 <n-popover 
                     v-if="item.type==='image'"
-					trigger="focus"
+					trigger="hover"
                     raw
                     :show-arrow="false"
 					:footer-style="{ display: 'flex', justifyContent: 'end' }"
@@ -92,7 +92,9 @@
         <div class="editor__footer" v-if="showFooter">
             <UploadFileCard
                 v-for="item in assets"
+                :key="item.fileName"
                 v-bind="item"
+                @handleReInsert="reinsertImage"
                 @handleFileDel="removeImage"
             ></UploadFileCard>
         </div>
@@ -148,6 +150,7 @@
                                 <n-input-number
                                     v-model:value="bubbleState.scalePercent"
                                     placeholder="原图百分比"
+                                    min="0"
                                     step="5"
                                     clearable
                                     style="width:200px"
@@ -645,7 +648,9 @@ const removeImage=(data:PreSignInfo)=>{
     // editor.value!.commands.setContent(content)//修改编辑器视图
     emits('handleSaveAssets')//自动更新附件信息
 }
-
+const reinsertImage=(data:PreSignInfo)=>{
+    editor.value?.chain().focus().setImage({ src: data.url!,alt:data.fileName }).run()
+}
 
 
 watch(//内容-数据 双向绑定
@@ -690,7 +695,15 @@ defineExpose({
 </script>
 
 <style lang="less">
+@import '@/utils/less/scrollbar.less';
 .ProseMirror {
+    .scrollbar-to(pre);
+    pre:hover{
+        &::-webkit-scrollbar-thumb {
+            cursor: pointer;
+            background-color: #666;
+        }
+    }
 	// min-width:600px;
     min-height:100%;
 	word-wrap: break-word;
@@ -751,27 +764,23 @@ defineExpose({
 	h6 {
 		line-height: 1.1;
 	}
-	//   code {
-	// background-color: rgba(#616161, 0.1);
-	// color: #616161;
-	//   }
+
 	pre {
-		// background: #0D0D0D;
-		// color: #FFF;
-		// padding: 5px 10px;
-		// border-radius: 3px;
-		font-family: 'JetBrainsMono', monospace;
 		background-color: #23241f;
 		color: #f8f8f2;
-		padding: 0.25rem 0.5rem;
+		padding: 0.5rem 1rem;
 		border-radius: 0.3rem;
+        overflow-x: auto;
 		// overflow: visible;
-		white-space: pre-wrap;
+        // white-space: pre;
+        word-break: normal;
+        word-wrap: normal;
 		code {
 			color: inherit;
 			padding: 0;
 			background: none;
 			font-size: 0.8rem;
+		    font-family: Consolas,Monaco,Andale Mono,Ubuntu Mono,JetBrainsMono, monospace;   
 		}
 	}
 	mark {
@@ -781,8 +790,10 @@ defineExpose({
 		box-decoration-break: clone;
 	}
 	blockquote {
-		padding-left: 1rem;
-		border-left: 2px solid rgba(#0d0d0d, 0.1);
+		margin: 0.5rem 1rem 1rem;
+		padding: 1rem;
+		border: 2px solid rgba(#0d0d0d, 0.1);
+        background-color: #eee;
 	}
 	hr {
 		border: none;
@@ -851,7 +862,7 @@ defineExpose({
 	button {
 		// font-size: 18px;
 		font-size: inherit;
-		font-family: inherit;
+		// font-family: inherit;
 		color: #000;
 		border: 1px solid black;
 		border-radius: 0.3rem;
@@ -905,7 +916,7 @@ defineExpose({
 	}
 }
 .editor__content {
-	padding: 1rem 0.75rem;
+	padding: 0.5rem 0.75rem;
 	flex: 1 1 auto;
 	overflow: auto;
 	-webkit-overflow-scrolling: touch;
@@ -920,6 +931,7 @@ defineExpose({
 	// flex-wrap: wrap;
     min-height:40px;
     height:40px;
+    height:auto;
 	padding: 5px;
 	border-top: 3px solid #0d0d0d;
 }

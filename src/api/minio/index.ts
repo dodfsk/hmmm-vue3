@@ -1,3 +1,4 @@
+import { MinioParam } from '@/types/minio'
 import request from '@/utils/axios/index'
 import axios from 'axios'
 
@@ -9,7 +10,7 @@ export  const upload=async (data = {})=>{
     })
 }
 
-export  const getUploadUrl=async (data = {})=>{
+export  const getUploadUrl=async (data:MinioParam)=>{
     return await request({
         url: '/assets/upload/getUrl',
         method: 'post',
@@ -18,8 +19,8 @@ export  const getUploadUrl=async (data = {})=>{
 }
 
 export  const putObecjt=async (params:any)=>{
-    const { url,headers,data={} }=params
-    console.log('params',params);
+    const { url,headers,data }=params
+    // console.log('params',params);
     return await axios({
         url,
         headers,

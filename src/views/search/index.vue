@@ -26,7 +26,7 @@
             </template>
 
             <div class="box">
-                {{item.description}}
+                {{item.intro}}
             </div>
 
             <template #action>
@@ -106,7 +106,7 @@ const route=useRoute()
 const roomStore=useRoomStore()
 const showModal=ref(false)
 const windowContent=ref<string>()
-let roomList=ref<Array<Room>>(videoList.data)
+let roomList=ref<any>(videoList.data)
 const searchValue=ref()
 
 type price={
@@ -134,12 +134,12 @@ const roomEnter=(hid?:string)=>{
         // }),
     });
 }
-const handleShowModal=async (hid?:string)=>{
+const handleShowModal=async (hid:string)=>{
     router.push({
         query:{...route.query,window:hid}
     })
     const res=await roomStore.ROOM_GET(hid)
-    const { code,data={} } = res.data
+    const { code,data } = res.data
     windowContent.value=data.content
     showModal.value=true
 }
@@ -164,11 +164,9 @@ const getRoomList=async ()=>{
          query={from:keyword}
     }
     const res=await roomStore.ROOM_LIST(query)
-    const { code,data={} } = res.data
+    const { code,data } = res.data
     if(res.status==200){
         roomList.value=data.roomList
-        console.log('roomList',roomList.value,res.data.roomList);
-        
     }
 }
 

@@ -37,7 +37,7 @@ import {
 	HomeOutline,
     BrushOutline,
     FileTrayFullOutline,
-    GridOutline,
+    AlbumsOutline,
 	SettingsOutline,
     BuildOutline,
 	WineOutline as WineIcon,
@@ -117,7 +117,7 @@ const menuOptions = [
 				{ default: () => '发布管理' }
 			),
 		key: 'creator-publish',
-		icon: renderIcon(GridOutline),
+		icon: renderIcon(AlbumsOutline),
 	},
     {
 		label: '设置',

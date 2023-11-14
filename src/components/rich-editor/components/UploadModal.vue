@@ -2,18 +2,16 @@
     <n-modal
         class="modal-container"
         preset="card"
-        title="Tiptap Oss Uploader"
         size="small"
+        title="Tiptap Oss Uploader"
         style="width:750px;min-height:300px;-webkit-user-drag: none;"
-        :bordered="false"
-        :block-scroll="true"
-        display-directive="if"
         :on-after-leave="()=>{isClipperReady=false,isImgReady=false}"
     >   
 
         <div id="clipper-container"
             v-show="isClipperReady"
         ></div>
+        
         <n-space justify="center" align="center" v-if="isImgReady" style="width:700px;min-height:200px">
             <img :src="imgSrc" style="max-width:700px"/>
         </n-space>
@@ -24,7 +22,7 @@
             directory-dnd
             :default-upload="false"
             :max="1"
-            @before-upload="putFile"
+            @before-upload="putUploadFile"
         >
             <n-upload-dragger
                 style="height:192px"
@@ -47,11 +45,11 @@
         <n-space justify="end">
             <n-button  type="primary"
                 :disabled="!isClipperReady"
-                @click="handleUploadCut" 
+                v-debounce:click="handleUploadCut" 
                 >剪裁上传</n-button>
             <n-button  type="info"   
                 :disabled="!isClipperReady&&!isImgReady"
-                @click="handleUploadOri" 
+                v-debounce:click="handleUploadOri" 
             >原图上传</n-button>
         </n-space>
     </n-modal>
@@ -67,6 +65,8 @@ import { useUserStore } from '@/store/user';
 import { useMinioStore } from '@/store/minio';
 import { PreSignInfo } from '@/types/room';
 import { fileToBase64 } from '@/utils/img/imgToBase64';
+import { useRoute } from 'vue-router';
+import { getToken, TOKEN_PREFIX } from '@/utils/common/auth';
 
 export type DefineExpose = {
 // cropper: InstanceType<typeof Cropper>;
@@ -86,6 +86,7 @@ const emits = defineEmits<Emits>();
 // let result:object={}
 // let imgResize:any
 
+const route = useRoute();
 const userStore = useUserStore();
 const minioStore=useMinioStore()
 
@@ -112,7 +113,7 @@ onMounted(() => {
     isClipperReady.value=false
 });
 
-const putFile=async ({file}: {
+const putUploadFile=async ({file}: {
       file: UploadFileInfo
     })=>{
     console.log('UploadFileInfo',file);
@@ -126,11 +127,14 @@ const putFile=async ({file}: {
         //实例化图片裁剪组件
         clipper.value=new ImgClipper(file.file!,{
             container:'#clipper-container',
-            cWidth:750,
+            cWidth:400,
             cHeight:400,
+            // pre:'#pre-container',
+            // pWidth:200,
+            // pHeight:200,
             // fixed:1,
-            // iWidth:300,
-            // iHeight:300,
+            // outputWidth:300,
+            // outputHeight:300,
         })
         console.log(clipper);
         return true
@@ -147,7 +151,7 @@ const putFile=async ({file}: {
         })
         return true
     }else{
-        window.$message.error('只能上传png/jpg格式的图片文件，请重新上传')
+        window.$message.error('只能上传png/jpg格式的图片文件，请重新选择')
         return false
     }
     
@@ -162,7 +166,7 @@ const handleUploadCut=async ()=>{
     // console.log(uploadModalRef.value);
     
     if(isClipperReady.value){
-        result=await clipper.value.getAlter()
+        result=await clipper.value.getAlterResult()
         if(result){
             // imgSrc.value=alter.base64
             // Object.assign(faceState,alter)
@@ -177,6 +181,7 @@ const handleUploadOri=()=>{
 }
 
 const handleUpload=async (type:string)=>{
+    window.$spin.add()
     // fileToBase64((file.file)as File,(base64:string)=>{
     //         console.log('压缩前',base64);
     //         modelRef.value.avatar=base64
@@ -187,20 +192,40 @@ const handleUpload=async (type:string)=>{
     // })
     
     //文件名为图片原始文件名
-    preSignInfo.fileName=originalFile.value!.name
+    // preSignInfo.fileName=originalFile.value!.name
+    //文件名为图片原始文件名+时间戳
+    // preSignInfo.fileName=new Date().getTime()+originalFile.value!.name+(originalFile.value?.type === 'image/gif'?'.webp':'')
+	preSignInfo.fileName = originalFile.value!.name + '_' + new Date().getTime() + (originalFile.value?.type === 'image/gif'?'.gif':'.webp')
 
-    const params={
-        bucketName:'picture',
+
+    const fileParams={
+        bucketName:'archive',
+        subName:String(route.query.id)??route.params.id,
         fileName:preSignInfo.fileName,
     }
-    //获取预签名url
-    const url=await minioStore.MINIO_GET_URL(params)
-    if(url.status===200)preSignInfo.url=url.data.data.url
-    //put方法直接上传file至预签名url
     
+    //获取预签名url
+    const url=await minioStore.MINIO_GET_URL(fileParams)
+    if(url.status===200)preSignInfo.url=url.data.data.url
+    // if(url.status===200)preSignInfo.url=url.data.data.postURL
+    // //put方法直接上传file至预签名url
+
+	// let test:Object={...url.data.data.formData}
+    // console.log(test)
+    const file=type==='original'?originalFile.value!.file : result.file
+    
+    // const formData = new FormData();
+    // Object.entries(test).forEach(([k, v]) => {
+    //         formData.append(k, v);
+    // });
+    // formData.append('test', 'xxxxxxxxxxxxxxxxxxxx');
+
+    // formData.append('file', file as Blob);
+
     const res=await minioStore.MINIO_PUT({
         url:preSignInfo.url,
-        data: type==='original'?originalFile.value!.file : result.file,
+        data: file,
+        // data: formData,
         headers: {
             'Content-Type': result.file?.type,
             'Access-Control-Allow-Origin':'*', // 允许跨域
@@ -215,6 +240,7 @@ const handleUpload=async (type:string)=>{
         // result.file=null
         preSignInfo.url=preSignInfo.url!.split('?X-Amz-Algorithm')[0]
         emits('handleUploadDone',preSignInfo)
+        window.$spin.sub()
     }
 
 }
@@ -246,10 +272,14 @@ defineExpose<DefineExpose>({
     display: flex;
     justify-content: center;
     align-items: center;
-    // box-sizing: content-box;
-    border:1px solid #ccc;
-    // padding:5px;
-    min-height:200px;
-    overflow: hidden;
+    // // box-sizing: content-box;
+    // border:1px solid #ccc;
+    // // padding:5px;
+    // min-height:200px;
+    // overflow: hidden;
 }
+
+// #pre-container{
+//     margin:0 auto;
+// }
 </style>

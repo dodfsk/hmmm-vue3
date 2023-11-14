@@ -24,7 +24,7 @@
 					</n-form-item>
 
 					<n-space justify="space-evenly">
-						<n-button type="primary" @click="validateAction"> 登录 </n-button>
+						<n-button type="primary" v-debounce:click="validateAction"> 登录 </n-button>
 						<n-button @click="handleReg"> 注册 </n-button>
 					</n-space>
 				</n-form>
@@ -38,22 +38,18 @@ import { reactive, toRefs, ref } from 'vue'
 import { useRouter } from 'vue-router'
 // import { login } from "@/api/user/demo"
 import { useUserStore } from '@/store/user'
-import { debounce } from 'lodash-es'
 import { FormItemRule, FormRules, FormInst } from 'naive-ui'
+import { LoginType } from '@/types/auth'
 
 const router = useRouter()
 const { USER_LOGIN } = useUserStore()
 
 const formRef = ref<FormInst | null>(null)
 
-interface loginType {
-	username?: string
-	password?: string
-}
 
-const userState = reactive<loginType>({
-	username: undefined,
-	password: undefined,
+const userState = reactive<LoginType>({
+	username: '',
+	password: '',
 })
 // let { username, password } = toRefs(userState);
 
@@ -87,7 +83,7 @@ const inputRules={
     password:(value: string) => !value || /^[\w!@#$%&*]+$/.test(value), 
 }
 
-const handleLogin = debounce(
+const handleLogin = 
 	async () => {
 		// const res=await login(userState)
 		const res = await USER_LOGIN(userState)
@@ -100,20 +96,15 @@ const handleLogin = debounce(
 			//     duration: 3000,
 			// })
 			router.push({
-				path: '/user/face',
+				path: '/home',
 			})
 		}
-	},
-	800,
-	{
-		leading: true,
-		trailing: false,
 	}
-)
+
 
 const handleReg = () => {
 	router.push({
-		path: '/user/register',
+		path: '/auth/register',
 	})
 }
 </script>
@@ -127,7 +118,7 @@ const handleReg = () => {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background: url('@/assets/images/login_bg.jpg') repeat;
+	background: url('@/assets/image/login_bg.jpg') repeat;
 }
 .box {
 	display: flex;

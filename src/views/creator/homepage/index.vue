@@ -2,10 +2,9 @@
 	<div class="homepage-container">
 		<div class="homepage-box">
 			<div class="header">
-				<div class="header-left">
+                <n-divider title-placement="left">
 					<h2>创作中心</h2>
-					<hr />
-				</div>
+                </n-divider>
 			</div>
 
 			<div class="content">
@@ -57,7 +56,8 @@
 	overflow: auto;
 }
 .homepage-box {
-	width: 1200px;
+	width: 100%;
+    max-width: 960px;
 	height: 100%;
 	padding: 30px;
 	background-color: #fff;
@@ -73,15 +73,7 @@
 		margin-bottom: 20px;
 		display: flex;
 		justify-content: center;
-		&-left {
-			width: 70%;
-			text-align: left;
-			hr {
-				width: 50%;
-				min-width: 286px;
-				color: '#ccc';
-			}
-		}
+		
 	}
 	.content {
 		width: 80%;

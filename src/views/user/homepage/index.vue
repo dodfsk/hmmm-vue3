@@ -96,6 +96,7 @@ const customRequest = async ({
 	//   let reg_str =/^http:\/\/\d+\.\d+\.\d+\.\d+:\d+/
     const params= {
         bucketName: 'picture',
+		subName: 'test',
         fileName: file.name,
     }
 	//   .replace(reg_str,import.meta.env.VITE_APP_OSS)
@@ -117,28 +118,31 @@ const customRequest = async ({
 	}
 };
 
+
+
 let clipper:any
 let file:File
-
-
+let webpFile:File
 const getFile=()=>{
     file = (document.querySelector('#file') as HTMLInputElement).files?.item(0)!;
     clipper=new ImgClipper(file,{
         container:'#clipper-container',
-        cWidth:800,
+        cWidth:700,
         cHeight:400,
-        fixed:1920/1080,
-        iWidth:1280,
-        iHeight:720,
+        // fixed:1920/1080,
+        // iWidth:1280,
+        // iHeight:720,
     })
     console.log(clipper);
 }
 const getAlter=()=>{
     console.log(
-        clipper.getAlter(),
+        clipper.getAlterResult(),
         clipper.result
     );
 }
+
+
 </script>
 
 <style lang="less" scoped>

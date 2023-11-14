@@ -7,7 +7,7 @@
 						<n-input
 							v-model:value="userState.username"
 							placeholder="填写你的用户名"
-                            :allow-input="inputRules.username"
+							:allow-input="inputRules.username"
 							@keyup.enter="validateAction"
 						/>
 					</n-form-item>
@@ -17,7 +17,7 @@
 							type="password"
 							show-password-on="click"
 							placeholder="请输入密码"
-                            :allow-input="inputRules.password"
+							:allow-input="inputRules.password"
 							@keyup.enter="validateAction"
 						>
 							<template #password-visible-icon>
@@ -28,14 +28,14 @@
 							</template>
 						</n-input>
 					</n-form-item>
-					<n-form-item label="确认密码:" path="reenteredPassword" first>
+					<n-form-item label="确认密码:" path="reEnteredPassword" first>
 						<n-input
-							v-model:value="userState.reenteredPassword"
+							v-model:value="userState.reEnteredPassword"
 							:disabled="!userState.password"
 							type="password"
 							show-password-on="click"
 							placeholder="请和密码保持一致"
-                            :allow-input="inputRules.password"
+							:allow-input="inputRules.password"
 							@keyup.enter="validateAction"
 						>
 							<template #password-visible-icon>
@@ -48,7 +48,7 @@
 					</n-form-item>
 
 					<n-space justify="space-evenly">
-						<n-button type="primary" @click="validateAction"> 确定 </n-button>
+						<n-button type="primary" v-debounce:click="validateAction"> 确定 </n-button>
 
 						<n-button @click="handleBack"> 返回 </n-button>
 					</n-space>
@@ -61,26 +61,20 @@
 <script setup lang="ts">
 import { reactive, toRefs, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { debounce } from 'lodash-es'
 import { GlassesOutline, Glasses } from '@vicons/ionicons5'
 // import { register } from "@/api/user/demo"
 import { useUserStore } from '@/store/user'
 import { FormItemRule, FormRules, FormInst } from 'naive-ui'
-import { User } from '@/types/user'
+import { User, UserParam } from '@/types/user'
+import { RegisterType } from '@/types/auth'
 
 const router = useRouter()
 const { USER_REG } = useUserStore()
 
-type registerType = {
-	username?: string
-	password?: string
-	reenteredPassword?: string
-}
-
-const userState = reactive<registerType>({
-	username: undefined,
-	password: undefined,
-	reenteredPassword: undefined,
+const userState = reactive<RegisterType>({
+	username: '',
+	password: '',
+	reEnteredPassword: '',
 })
 
 // let { name, password } = toRefs(userState);
@@ -124,7 +118,7 @@ const rules: FormRules = {
 			trigger: ['input', 'blur'],
 		},
 	],
-	reenteredPassword: [
+	reEnteredPassword: [
 		{
 			required: true,
 			message: '请再次输入密码',
@@ -151,40 +145,34 @@ const validateAction = () => {
 	})
 }
 
-const inputRules={
-    username:(value: string) => !value || /^\w+$/.test(value),
-    password:(value: string) => !value || /^[\w!@#$%&*]+$/.test(value), 
+const inputRules = {
+	username: (value: string) => !value || /^\w+$/.test(value),
+	password: (value: string) => !value || /^[\w!@#$%&*]+$/.test(value),
 }
 
-const handleRegister = debounce(
-	async () => {
-		const params: User = {}
-		params.username = userState.username
-		params.password = userState.password
-		const res = await USER_REG(params)
-		const { code, message } = res.data
-
-		if (code == 200) {
-			// window.$notification.success({
-			// 	title: 'success',
-			// 	content: message || '注册成功!',
-			// 	meta: `${userState.username},欢迎`,
-			// 	duration: 3000,
-			// });
-			router.push({
-				path: '/user/login',
-			})
-		}
-	},
-	800,
-	{
-		leading: true,
-		trailing: false,
+const handleRegister = async () => {
+	const params: UserParam = {
+		username: userState.username,
+		password: userState.password,
 	}
-)
+	const res = await USER_REG(params)
+	const { code, message } = res.data
+
+	if (code == 200) {
+		// window.$notification.success({
+		// 	title: 'success',
+		// 	content: message || '注册成功!',
+		// 	meta: `${userState.username},欢迎`,
+		// 	duration: 3000,
+		// });
+		router.push({
+			path: '/auth/login',
+		})
+	}
+}
 const handleBack = () => {
 	router.push({
-		path: '/user/login',
+		path: '/auth/login',
 	})
 }
 </script>
@@ -192,12 +180,12 @@ const handleBack = () => {
 <style lang="less" scoped>
 // @import '@/views/root.less';
 .reg-container {
-	width:100%;
+	width: 100%;
 	height: 100%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background: url('@/assets/images/login_bg.jpg') repeat;
+	background: url('@/assets/image/login_bg.jpg') repeat;
 }
 .box {
 	display: flex;

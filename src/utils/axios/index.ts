@@ -1,6 +1,6 @@
 import apiUrl from '@/api';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { Response } from '@/types/axios';
+import { ResponseData } from '@/types/axios';
 import { getToken, TOKEN_PREFIX } from '@/utils/common/auth';
 import { defineComponent } from 'vue';
 import { useUserStore } from '@/store/user';
@@ -47,13 +47,13 @@ instance.interceptors.request.use(
 // axios实例  响应拦截器
 instance.interceptors.response.use(
 	// 对响应数据做点什么↓
-	(response: AxiosResponse<Response>) => {
+	(response: AxiosResponse<ResponseData>) => {
 		// if (response.headers.authorization) {
 		//   localStorage.setItem('app_token', response.headers.authorization)
 		// } else if (response.data && response.data.token) {
 		//   localStorage.setItem('app_token', response.data.token)
 		// }
-		const { data = {}, code, message, meta } = response.data;
+		const { data , code, message, meta } = response.data;
 		console.log('response', response);
 
 		// if (response.status === 200) {
@@ -68,17 +68,17 @@ instance.interceptors.response.use(
 				meta: meta || '',
 				duration: 2000,
 			});
-			if (code == 401 || code == 403) {
+			if (code == 401 ) {
                 const userStore=useUserStore()
 				userStore.logOut();
 			}
 		} else {
-			window.$notification.success({
-				title: 'success',
-				content: message || '',
-				meta: meta || '',
-				duration: 1000,
-			});
+			// window.$notification.success({
+			// 	title: 'success',
+			// 	content: message || '',
+			// 	meta: meta || '',
+			// 	duration: 1000,
+			// });
 		}
 		return response;
 	},
@@ -95,7 +95,7 @@ instance.interceptors.response.use(
 			});
 			return Promise.reject(error);
 		}
-		const { data = {}, code, meta, message } = error.response.data;
+		const { data , code, meta, message } = error.response.data;
 		if (code !== 200) {
 			// 请求已发出，但是不在2xx的范围
 			window.$notification.error({

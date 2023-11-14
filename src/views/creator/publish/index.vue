@@ -1,108 +1,196 @@
 <template>
 	<div class="publish-container">
-		<div class="publish-box">
-			<div class="header">
-				<div class="header-left">
-					<h2>我的发布</h2>
-					<hr />
-				</div>
+		<div class="publish-box" ref="publishRef">
+			<div class="publish-box__header">
+				<n-divider title-placement="left">
+					<h2>
+						发布管理 <n-number-animation ref="numberAnimationInstRef" :from="0" :to="publishState?.total" />
+					</h2>
+				</n-divider>
+				<n-divider title-placement="right">
+					<n-select
+						size="tiny"
+						style="width: 135px"
+						v-model:value="query.sort"
+						:options="sortOptions"
+						@update:value="getPublishList"
+					/>
+                    <n-select
+						size="tiny"
+						style="width: 80px"
+						v-model:value="query.order"
+						:options="orderOptions"
+						@update:value="getPublishList"
+					/>
+				</n-divider>
 			</div>
-			<div class="content">
-				<div class="content-item" v-for="item in publishList">
+			<div class="publish-box__content" v-if="publishState">
+				<div class="content-item" v-for="item in publishState.roomList" :key="item.hid">
 					<div class="content-item-left">
-						<div class="circle" style="color: #fff; padding-top: 35px">Cover</div>
-                        <div class="time">
-                            {{ 
-                                format(item.createdAt!,'yyyy-MM-dd HH:mm:ss') 
-                            }}
-                        </div>
+						<picture>
+							<img class="cover__img" v-if="item.cover" :src="item.cover" />
+							<img class="cover__img" v-else src="@/assets/image/tomato.webp" />
+						</picture>
 					</div>
 					<div class="content-item-right">
 						<div class="content-item-right__header">
-							<h1>{{ item.title }}</h1>
+							<h3>{{ item.title }}</h3>
 						</div>
 						<!-- <div class="content-item-right__article" v-html="item.content"> -->
-						<div class="content-item-right__article">
-
-                            <tiptapEditor
-                                ref="editorRef"
-                                theme="headless"
-                                v-model="item.content"
-                            />
-                        </div>
+						<div class="content-item-right__content">
+							<!-- <tiptapEditor ref="editorRef" theme="headless" v-model="item.content" /> -->
+						</div>
 
 						<div class="content-item-right__footer">
-							{{ item.description }}
-							<n-button type="info">查看</n-button>
-							<n-button type="primary">编辑</n-button>
+							<div class="date">
+								{{ item.createdAt && format(item.createdAt, 'yyyy-MM-dd HH:mm:ss') }}
+							</div>
+
+							<n-button-group>
+								<n-button type="primary" secondary size="small" @click="handleEdit(item)"
+									>编辑</n-button
+								>
+								<n-button type="info" secondary size="small" @click="handleView(item)">查看</n-button>
+							</n-button-group>
 						</div>
 					</div>
 				</div>
 
-                <n-space v-if="publishList.length===0" justify="center" align="center" style="width:100%;height:180px">
-                    <div>
-
-                        你还没有发布任何内容哦!
-                    </div>
-                </n-space>
+				<n-space
+					v-if="publishState.roomList.length === 0"
+					justify="center"
+					align="center"
+					style="width: 100%; height: 180px"
+				>
+					<div>你还没有发布任何内容哦!</div>
+				</n-space>
+			</div>
+			<div class="publish-box__footer">
+				<n-pagination
+					v-model:page="query.page"
+					:page-sizes="[query.size]"
+					:page-count="pageSize"
+					@update:page="handleChangePage"
+					show-quick-jumper
+				>
+					<template #goto> 跳转 </template>
+				</n-pagination>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { h, ref, Component, reactive, onMounted } from 'vue';
-import { useUserStore } from '@/store/user';
-import { useRoomStore } from '@/store/room';
-import { useRoute, useRouter } from 'vue-router';
-import tiptapEditor from '@/components/rich-editor/tiptapEditor.vue';
+import { h, ref, Component, reactive, onMounted, toRefs, computed } from 'vue'
+import { useUserStore } from '@/store/user'
+import { useRoomStore } from '@/store/room'
+import { useRoute, useRouter } from 'vue-router'
+import tiptapEditor from '@/components/rich-editor/tiptapEditor.vue'
 import { format } from 'date-fns'
-import { Room } from '@/types/room';
+import { Room, RoomList } from '@/types/room'
+import { Query } from '@/types/common';
 
-const route = useRoute();
-const router = useRouter();
-const userStore = useUserStore();
-const roomStore = useRoomStore();
-const publishList= ref<Room[]>([]
-    // [
-    //     {
-    //         _id: '630d095d4df7868fb4df2daf',
-    //         title: 'test1-nanoid',
-    //         from: 'hmlc',
-    //         hid: '5FVl5gixDs',
-    //         createdAt: '2022-08-29T18:45:49.022Z',
-    //         __v: 0,
-    //         description: '',
-    //         content: '<pre class="my-custom-class"><code>const a=12345\nconst b=()=&gt;{\n  return a\n}\n123</code></pre>',
-    //         updateAt: '2022-09-05T19:39:52.175Z',
-    //     },
-    // ]
-);
+const route = useRoute()
+const router = useRouter()
+const userStore = useUserStore()
+const roomStore = useRoomStore()
+
+const state = reactive<{
+	publishState?: RoomList
+	query: Query
+}>({
+	publishState: undefined,
+	query: {
+		page: route.query.page ? Number(route.query.page) : 1,
+		size: 10,
+		sort: 'createdAt',
+		order: -1,
+	},
+})
+const { query, publishState } = toRefs(state) //template中使用
+const pageSize = computed(() => {
+	let totalPage = 1
+	if (state.publishState) {
+		const total = state.publishState.total
+		const size = state.query.size!
+		totalPage = Math.floor((total + size - 1) / size)
+	}
+
+	return totalPage
+})
+const orderOptions = [
+	{
+		label: '正序',
+		value: 1,
+	},
+	{
+		label: '倒序',
+		value: -1,
+	},
+]
+const sortOptions = [
+	{
+		label: '创建时间排序',
+		value: 'createdAt',
+	},
+	{
+		label: '更新时间排序',
+		value: 'updatedAt',
+	},
+]
+
+const publishRef = ref<HTMLDivElement>()
+const handleChangePage = (page: number) => {
+	router.push({
+		query: {
+			page,
+		},
+	})
+	if (publishRef.value)
+		publishRef.value.scrollIntoView({
+			block: 'start',
+			behavior: 'smooth',
+		})
+	getPublishList()
+}
+const handleView = (data: Room) => {
+	router.push({
+		path: `/room/${data.hid}`,
+	})
+}
+const handleEdit = (data: Room) => {
+	router.push({
+		path: `/creator/draw`,
+		query: {
+			id: data.hid,
+		},
+	})
+}
+// const handleChangeSort = () => {
+// 	getPublishList()
+// }
 
 const getPublishList = async () => {
-	const res = await roomStore.ROOM_LIST({from:userStore.userInfo.username!,isPublic:true})
-	const { code, message, meta, data = {} } = res.data
-    if(code!==200){
-    }
-    // if(data.roomList){
-    //     data.roomList.forEach((item:Room) => {
-    //         item.createdAt=new Date(item.createdAt!)
-    //     });
-    // }
-    publishList.value=data.roomList
+    window.$spin.add()
+	const res = await roomStore.ROOM_MY_LIST(state.query)
+	const { code, message, meta, data } = res.data
+	if (code !== 200) {
+	}
+	state.publishState = data
+    window.$spin.sub()
 
-};
+}
 
 onMounted(() => {
-	getPublishList();
-});
+	getPublishList()
+})
 </script>
 
 <style lang="less" scoped>
 .publish-container {
-    width:100%;
-    height:100%;
-    background-color: #f5f5f5;
+	width: 100%;
+	height: 100%;
+	background-color: #f5f5f5;
 	// background-color: rgba(206, 255, 127, 0.5);
 	// padding: 20px;
 	display: flex;
@@ -111,62 +199,61 @@ onMounted(() => {
 	overflow: auto;
 }
 .publish-box {
-	width:1200px;
-	// max-width: 1500px;
-	// min-width: 500px;
-    margin:0 auto;
+	width: 100%;
+	max-width: 960px;
+	min-width: 660px;
+    // height: calc(100vh - 50px);
+	margin: 0 auto;
 	padding: 30px;
 	background-color: #fff;
 	border-radius: 3px;
 	box-shadow: 0 0 3px rgba(51, 51, 51, 0.721);
-    display:relative;
-	// display: flex;
-	// flex-direction: column;
-	// align-items: center;
 }
-.publish-box .header {
-	width: 80%;
-	// min-width:500px;
+.publish-box__header {
 	margin-bottom: 20px;
 	display: flex;
 	justify-content: center;
-	&-left {
-		width: 70%;
-		text-align: left;
-		hr {
-			width: 50%;
-			min-width: 286px;
-			color: '#ccc';
-		}
-	}
 }
-.publish-box .content {
-	// width: 80%;
-    height:100%;
-    flex: auto;
+.publish-box__content {
+	width: 100%;
 	display: flex;
 	flex-direction: column;
 	align-items: start;
 	gap: 24px;
 }
-.publish-box .content-item {
-	width: 100%;
-	max-height: 500px;
-	// border: 1px solid #000;
-	border-radius: 3px;
-	box-shadow: 0 0 5px rgba(51, 51, 51, 0.721);
+.publish-box__footer {
+	margin-top: 20px;
 	display: flex;
+	justify-content: center;
+}
+.content-item {
+	width: 100%;
+	height: 180px;
+	// border: 1px solid #000;
+	border-radius: 4px;
+	box-shadow: 0 0 2px rgba(51, 51, 51, 0.721);
+	display: flex;
+	// flex-direction: row;
 	&-left {
-		// flex:200px 1 auto;
-		width: 150px;
+		width: 320px;
 		height: 100%;
-		background-color: rgba(127, 255, 212, 0.666);
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		align-items: center;
+		// background-color: rgba(127, 255, 212, 0.666);
+		// display: flex;
+		// flex-direction: column;
+		// justify-content: space-between;
+		// align-items: center;
+		.cover__img {
+			width: 320px;
+			height: 180px;
+			border-radius: 4px 0px 0px 4px;
+			// object-fit: cover;//缩放会导致图像模糊
+		}
 	}
 	&-right {
+		// width: 100vw; //计算自适应宽度防止文字溢出
+		// width:calc(100% - 320px);
+		// min-width: 400px;
+		overflow: hidden;
 		flex: 1;
 		display: flex;
 		flex-direction: column;
@@ -174,38 +261,30 @@ onMounted(() => {
 		// align-items: start;
 		&__header {
 			width: 100%;
-	        max-height: 45px;
+			// max-height: 45px;
 			padding: 5px;
 			text-align: left;
-			overflow: hidden;
+			h3 {
+				display: flex;
+				overflow: hidden;
+			}
 		}
-		&__article {
+		&__content {
 			width: 100%;
-	        max-height: 400px;
+			max-height: 400px;
 			padding: 10px;
-			text-align: left;
 			overflow: auto;
 		}
 		&__footer {
-			height: 50px;
-			width: 100%;
+			// height: 50px;
 			padding: 5px;
-			text-align: right;
-			background-color: rgba(220, 20, 60, 0.63);
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			.date {
+				color: #999;
+			}
 		}
 	}
 }
-
-.circle {
-	width: 100px;
-	height: 100px;
-	padding: 3px;
-	// border: 1px solid #000;
-	border-radius: 50px;
-	background-color: darkslateblue;
-    text-align: center;
-}
-
-
-
 </style>
