@@ -1,12 +1,13 @@
 import { VueNodeViewRenderer } from '@tiptap/vue-3'
 import { Plugin, PluginKey } from 'prosemirror-state'
-import Image from '@tiptap/extension-image'
+import ImageModule from '@tiptap/extension-image'
 import ImageResizeComponent from './ImageResizeComponent.vue'
+import { imgCompress } from '@/utils/img/imgCompress'
 
-const ImageResizeModule = Image.extend({
+const ImageResizeModule = ImageModule.extend({
 	name: 'image', //module name
 
-    //添加属性
+	//添加属性
 	addAttributes() {
 		return {
 			...this.parent?.(),
@@ -31,35 +32,35 @@ const ImageResizeModule = Image.extend({
 			},
 		}
 	},
-    //渲染节点
+	//渲染节点
 	addNodeView() {
 		return VueNodeViewRenderer(ImageResizeComponent)
 	},
-    //添加自定义复制粘贴事件
+	//添加自定义复制粘贴事件
 	addProseMirrorPlugins() {
 		return [
 			new Plugin({
-	            key: new PluginKey('eventHandler'),
+				key: new PluginKey('eventHandler'),
 				props: {
 					handleDOMEvents: {
-                        //拖拽事件
+						//拖拽事件
 						drop(view, event) {
 							const hasFiles =
 								event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files.length
 							if (!hasFiles) {
 								return
 							}
-                            
-							const images = Array.from(event.dataTransfer.files).filter((file) =>
-								(/image/i).test(file.type)
+
+							const imagesList = Array.from(event.dataTransfer.files).filter((file) =>
+								/image/i.test(file.type)
 							)
 
-							if (images.length === 0) {
+							if (imagesList.length === 0) {
 								return
 							}
 
 							event.preventDefault()
-                            event.stopPropagation()
+							event.stopPropagation()
 
 							const { schema } = view.state
 							const coordinates = view.posAtCoords({
@@ -67,62 +68,97 @@ const ImageResizeModule = Image.extend({
 								top: event.clientY,
 							})
 
-							images.forEach((image,index) => {
+							imagesList.forEach((imageFile, index) => {
 								const reader = new FileReader()
-                                if(image.size>1024*1024){
-                                    window.$message.error(`图片大小${(image.size/(1024*1024)).toFixed(2)}MB , 此方式上传图片必须小于1M`)
-                                }
-                                else{
-                                    reader.onload = (readerEvent) => {
-                                        const node = schema.nodes.image.create({
-                                            src: readerEvent.target!.result,
-                                            alt: images[index].name
-                                        })//创建image节点,src:base64-url,alt:image-name
-                                        const transaction = view.state.tr.insert(coordinates!.pos, node)
-                                        view.dispatch(transaction)
-                                    }
-                                    reader.readAsDataURL(image)
-                                }
+
+								reader.readAsDataURL(imageFile)
+								reader.onload = (readerEvent) => {
+									const base64 = readerEvent.target!.result as string
+									if (imageFile.type !== 'image/gif') {
+										//采用webp压缩方案
+										imgCompress(base64, (res) => {
+											const node = schema.nodes.image.create({
+												src: res,
+												alt: imagesList[index].name,
+											}) //创建image节点,src:base64-url,alt:image-name
+											const transaction = view.state.tr.insert(coordinates!.pos, node)
+											view.dispatch(transaction)
+										})
+									} else {
+										//纯前端gif转webp,待实现
+										if (imageFile.size > 1024 * 1024) {
+											window.$message.error(
+												`图片大小${(imageFile.size / (1024 * 1024)).toFixed(
+													2
+												)}MB , 此方式上传图片必须小于1M`
+											)
+										} else {
+											const node = schema.nodes.image.create({
+												src: base64,
+												alt: imagesList[index].name,
+											}) //创建image节点,src:base64-url,alt:image-name
+											const transaction = view.state.tr.insert(coordinates!.pos, node)
+											view.dispatch(transaction)
+										}
+									}
+								}
 							})
 						},
-                        //粘贴事件
-						paste(view, event) {                            
+						//粘贴事件
+						paste(view, event) {
 							const hasFiles =
 								event.clipboardData && event.clipboardData.files && event.clipboardData.files.length
-                                if (!hasFiles) {
+							if (!hasFiles) {
 								return
 							}
 
-							const images = Array.from(event.clipboardData.files).filter((file) =>
-								(/image/i).test(file.type)
+							const imagesList = Array.from(event.clipboardData.files).filter((file) =>
+								/image/i.test(file.type)
 							)
 
-							if (images.length === 0) {
+							if (imagesList.length === 0) {
 								return
 							}
 
 							event.preventDefault()
-                            event.stopPropagation()
+							event.stopPropagation()
 
 							const { schema } = view.state
 
-							images.forEach((image,index) => {
+							imagesList.forEach((imageFile, index) => {
 								const reader = new FileReader()
-                                if(image.size>1024*1024){
-                                    window.$message.error(`图片大小${(image.size/(1024*1024)).toFixed(2)}MB , 此方式上传图片必须小于1M`)
-                                }
-                                else{
-                                    reader.onload = (readerEvent) => {
-                                        const node = schema.nodes.image.create({
-                                            src: readerEvent.target!.result,
-                                            alt: images[index].name
-                                        })//创建image节点,src:base64-url,alt:image-name
-                                        const transaction = view.state.tr.replaceSelectionWith(node)
-                                        view.dispatch(transaction)
-                                    }
-                                    reader.readAsDataURL(image)
-                                }
-                            })
+								reader.readAsDataURL(imageFile)
+								reader.onload = (readerEvent) => {
+									const base64 = readerEvent.target!.result as string
+									if (imageFile.type !== 'image/gif') {
+										//采用webp压缩方案
+										imgCompress(base64, (res) => {
+											const node = schema.nodes.image.create({
+												src: res,
+												alt: imagesList[index].name,
+											}) //创建image节点,src:base64-url,alt:image-name
+											const transaction = view.state.tr.replaceSelectionWith(node)
+											view.dispatch(transaction)
+										})
+									} else {
+										//纯前端gif转webp,待实现
+										if (imageFile.size > 1024 * 1024) {
+											window.$message.error(
+												`图片大小${(imageFile.size / (1024 * 1024)).toFixed(
+													2
+												)}MB , 此方式上传gif图片必须小于1M`
+											)
+										} else {
+											const node = schema.nodes.image.create({
+												src: base64,
+												alt: imagesList[index].name,
+											}) //创建image节点,src:base64-url,alt:image-name
+											const transaction = view.state.tr.replaceSelectionWith(node)
+											view.dispatch(transaction)
+										}
+									}
+								}
+							})
 						},
 					},
 				},
@@ -130,7 +166,6 @@ const ImageResizeModule = Image.extend({
 		]
 	},
 })
-
 
 // addCommands() {
 //     return {

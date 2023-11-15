@@ -22,9 +22,9 @@
 						</div>
 
 						<div class="up-info">
-							<div class="up-name">
+							<strong class="up-name">
 								{{ roomState?.from.username }}
-							</div>
+							</strong>
 							<div class="up-stats">
 								{{ roomState?.from.role }}
 							</div>
@@ -85,9 +85,14 @@
 											}"
 										/>
 									</div>
-									<div class="user-name">
-										{{ item.from?.username }}
-									</div>
+                                    <div class="user-info">
+                                        <strong class="user-name">
+                                            {{ item.from?.username }}
+                                        </strong>
+                                        <div class="up-stats">
+                                            {{ roomState?.from.role }}
+                                        </div>
+                                    </div>
 								</div>
 								<div class="comment-pannel-right">
 									<div class="user-action">
@@ -386,26 +391,35 @@ watch(
 }
 .article-pannel {
 	width: 100%;
+    height: 60px;
 	display: flex;
 	justify-content: space-between;
 }
 .article-pannel-left {
 	display: flex;
 	.up-face {
-		width: 56px;
-		margin: 4px;
+		width: 58px;
+		margin: 2px;
 		img {
-			width: 56px;
+			width: 58px;
 		}
 	}
 	.up-info {
-		font-size: 20px;
+        // display: flex;
+        .up-name{
+            font-size: 20px;
+            line-height: 20px;
+            color:#00965e
+        }
 	}
 }
 .article-title {
 	width: 100%;
 	margin-left: 12px;
 	margin-bottom: 20px;
+    h1{
+        font-weight: 500;
+    }
 }
 .article-stats {
 	padding: 0 12px;
@@ -449,6 +463,7 @@ watch(
 }
 .comment-container__header {
 	margin: 5px 0px 20px;
+    // background-color: rgb(250, 250, 252);
 }
 .comment-container__footer {
 	display: flex;
@@ -488,18 +503,23 @@ watch(
 .comment-pannel-left {
 	display: flex;
 	.user-face {
-		width: 42px;
-		margin: 4px;
+		width: 46px;
+		margin: 2px;
 		img {
-			width: 42px;
+			width: 46px;
 			height: auto;
 			object-fit: cover; //这里让图片保持原始比例并填充整个容器
 			object-position: center; //这里让图片居中显示
 		}
 	}
-	.user-name {
-		font-size: 16px;
-	}
+    .user-info{
+        // display: flex;
+        .user-name {
+            font-size: 14px;
+            line-height: 14px;
+            color:#00965e
+        }
+    }
 }
 .comment-pannel-right {
 	display: flex;

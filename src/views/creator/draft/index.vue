@@ -21,7 +21,7 @@
 						<template #suffix>
 							<n-button-group>
 								<n-button round secondary @click="draftEdit(item)">编辑</n-button>
-								<n-button round secondary v-debounce:click="draftDelete(item)">删除</n-button>
+								<n-button round secondary v-debounce:click="()=>draftDelete(item)">删除</n-button>
 							</n-button-group>
 						</template>
 						<div>{{ item.title }}</div>
@@ -96,7 +96,7 @@ const draftEdit = (data: Room) => {
 	})
 }
 
-const draftDelete = async (data: Room) => {
+const draftDelete = async  (data: Room) => {
 	const res = await roomStore.ROOM_DEL(data.hid!)
 	const { code, message, meta } = res.data
 	if (code == 200) {

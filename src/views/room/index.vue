@@ -21,7 +21,7 @@
 
 					<div class="room-card__info--bottom">
 						<div class="button">
-							<n-button type="info" size="tiny" strong secondary @click="handleShowModal(item.hid)">
+							<n-button type="info" size="tiny" strong secondary v-debounce:click="()=>handleShowModal(item.hid)">
 								<template #icon>
 									<n-icon :component="Search" />
 								</template>
