@@ -1,6 +1,7 @@
 import request from '@/utils/axios/index'
-import { Comment, CommentParam } from '@/types/comment'
+import { Comment, CommentList, CommentParam } from '@/types/comment'
 import { Query } from '@/types/common'
+import { Res } from '@/types/axios'
 
 // export const getCommentList = async (query?:any) => {
 // 	let url: string;
@@ -15,7 +16,7 @@ import { Query } from '@/types/common'
 export const getCommentList = async (id: string, query?: Query) => {
 	let url: string
 	url = `/comment/list/${id}`
-	return await request({
+	return <Res<CommentList>>await request({
 		url,
 		params: query,
 		method: 'get',
@@ -25,7 +26,7 @@ export const getCommentList = async (id: string, query?: Query) => {
 export const getComment = async (id: string, query?: Query) => {
 	let url: string
 	url = `/comment/${id}`
-	return await request({
+	return <Res<Comment>>await request({
 		url,
 		params: query,
 		method: 'get',
@@ -33,7 +34,7 @@ export const getComment = async (id: string, query?: Query) => {
 }
 
 export const setComment = async (data: CommentParam) => {
-	return await request({
+	return <Res<Comment>>await request({
 		url: '/comment',
 		method: 'post',
 		data,
@@ -41,7 +42,7 @@ export const setComment = async (data: CommentParam) => {
 }
 
 export const delComment = async (id: string) => {
-	return request({
+	return <Res<Comment>>await request({
 		url: `/comment/${id}`,
 		method: 'delete',
 	})

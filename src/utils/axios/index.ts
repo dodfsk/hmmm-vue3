@@ -71,6 +71,7 @@ instance.interceptors.response.use(
 			if (code == 401 ) {
                 const userStore=useUserStore()
 				userStore.logOut();
+                window.$spin.reset()
 			}
 		} else {
 			// window.$notification.success({

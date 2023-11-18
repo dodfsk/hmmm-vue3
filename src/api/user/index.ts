@@ -1,9 +1,10 @@
 import request from '@/utils/axios/index'
-import { ChangePswType, User ,UserParam } from '@/types/user'
+import { Res } from '@/types/axios'
+import { ChangePswType, User, UserParam } from '@/types/user'
 
 export const login = async (data: UserParam) => {
 	//登陆验证接口路径在auth
-	return await request({
+	return <Res<{ token: string }>>await request({
 		url: '/auth/login',
 		method: 'post',
 		data,
@@ -11,7 +12,7 @@ export const login = async (data: UserParam) => {
 }
 
 export const register = async (data: UserParam) => {
-	return await request({
+	return <Res<User>>await request({
 		url: '/user/register',
 		method: 'post',
 		data,
@@ -27,14 +28,14 @@ export const changePassword = async (data: ChangePswType) => {
 }
 
 export const findMyself = async () => {
-	return await request({
+	return <Res<User>>await request({
 		url: '/user/findMyself',
 		method: 'post',
 	})
 }
 
 export const updateMyself = async (data: UserParam) => {
-	return await request({
+	return <Res<User>>await request({
 		url: '/user/updateMyself',
 		method: 'post',
 		data,
@@ -42,7 +43,7 @@ export const updateMyself = async (data: UserParam) => {
 }
 
 export const removeMyself = async () => {
-	return await request({
+	return <Res<User>>await request({
 		url: '/user/removeMyself',
 		method: 'post',
 	})
@@ -50,12 +51,12 @@ export const removeMyself = async () => {
 
 export const getUser = async (id: string) => {
 	if (id) {
-		return request({
+		return <Res<User>>await request({
 			url: `/user/${id}`,
 			method: 'get',
 		})
 	}
-	return request({
+	return <Res<User>>await request({
 		url: '/user',
 		method: 'get',
 	})
@@ -64,7 +65,7 @@ export const getUser = async (id: string) => {
 //root接口//
 /////////////
 export const setUser = async (uid: string, data: UserParam) => {
-	return request({
+	return <Res<User>>await request({
 		url: `/user/${uid}`,
 		method: 'patch',
 		data,
@@ -72,7 +73,7 @@ export const setUser = async (uid: string, data: UserParam) => {
 }
 
 export const delUser = async (uid: string) => {
-	return request({
+	return <Res<User>>await request({
 		url: `/user/${uid}`,
 		method: 'delete',
 	})

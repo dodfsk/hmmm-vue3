@@ -9,7 +9,7 @@ export interface PswFormType extends ChangePswType {
 export type UserStats = {
 	follows: number
 	fans: number
-	// rooms: number
+	rooms: number
 }
 
 export type User = {

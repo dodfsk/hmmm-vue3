@@ -43,6 +43,7 @@
 							</strong>
 							<div class="up-stats">
 								粉丝:{{ roomState?.from.stats?.fans }}
+                                稿件:{{ roomState?.from.stats.rooms }}
 							</div>
 						</div>
 					</div>
@@ -107,6 +108,7 @@
 										</strong>
 										<div class="user-stats">
 											粉丝:{{ roomState?.from.stats.fans }}
+											稿件:{{ roomState?.from.stats.rooms }}
 										</div>
 									</div>
 								</div>
@@ -548,13 +550,13 @@ watch(
 	.user-info {
 		// display: flex;
 		.user-name {
-			font-size: 14px;
-			line-height: 14px;
+			font-size: 15px;
+			line-height: 15px;
 			color: #00965e;
 		}
 	}
     .user-stats{
-        font-size:10px;
+        font-size:11px;
         color: #999;
     }
 }

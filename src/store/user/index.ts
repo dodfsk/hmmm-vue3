@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia'
+import { Names } from '@/store/store-name'
+import { ref, computed, onMounted } from 'vue'
 import {
 	login,
 	register,
@@ -11,10 +13,7 @@ import {
 	findMyself,
 } from '@/api/user'
 import { setToken, getToken, delToken } from '@/utils/common/auth'
-import { Names } from '@/store/store-name'
-import { ref, computed, onMounted } from 'vue'
 import { ChangePswType, User, UserParam } from '@/types/user'
-import { Res } from '@/types/axios'
 
 // import _ from 'lodash-es'
 import { useRouter } from 'vue-router'
@@ -38,7 +37,7 @@ export const useUserStore = defineStore(
 
 		//action
 		const USER_LOGIN = async (params: UserParam) => {
-			const res: Res<{ token: string }> = await login(params)
+			const res  = await login(params)
 			const { code, data } = res.data
 			if (code === 200) {
 				setToken(data.token)
@@ -47,7 +46,7 @@ export const useUserStore = defineStore(
 			return res
 		}
 		const USER_REG = async (params: UserParam) => {
-			const res: Res<User> = await register(params)
+			const res = await register(params)
 			const { code, data } = res.data
 
 			// if (code === 200) {
@@ -63,7 +62,7 @@ export const useUserStore = defineStore(
 			return res
 		}
 		const USER_GET_MY = async () => {
-			const res: Res<User> = await findMyself()
+			const res= await findMyself()
 			const { code, data } = res.data
 			if (code === 200) {
 				setUserInfo(data)
@@ -75,7 +74,7 @@ export const useUserStore = defineStore(
 		}
 
 		const USER_GET = async (id: string) => {
-			const res: Res<User> = await getUser(id)
+			const res= await getUser(id)
 			const { code, data } = res.data
 			if (code === 200) {
 				if (data.birth) {
@@ -86,7 +85,7 @@ export const useUserStore = defineStore(
 		}
 
 		const USER_SET = async (params: UserParam) => {
-			const res: Res<User> = await updateMyself(params)
+			const res = await updateMyself(params)
 			const { code, data } = res.data
 
 			if (code === 200) {

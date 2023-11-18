@@ -1,18 +1,15 @@
 import { defineStore } from 'pinia'
-import { getRoom, getRoomList, getMyRoomList, setRoom, putRoom, delRoom, updateStatus } from '@/api/room'
-// import { removeToken } from '@/utils/common/token'
-// import { toLogin } from '@/utils/common/auth'
 import { Names } from '@/store/store-name'
 import { reactive, computed, onMounted } from 'vue'
+import { getRoom, getRoomList, getMyRoomList, setRoom, putRoom, delRoom, updateStatus } from '@/api/room'
 import { PreSignInfo, Room, RoomList } from '@/types/room'
-import { Res } from '@/types/axios'
 import { cloneDeep } from 'lodash-es'
 
 export const useRoomStore = defineStore(
 	Names.ROOM,
 	() => {
 		const ROOM_LIST = async (query?: object) => {
-			const res: Res<RoomList> = await getRoomList(query)
+			const res = await getRoomList(query)
 			const { code, data } = res.data
 			if (code === 200) {
 				if (data.roomList) {
@@ -25,7 +22,7 @@ export const useRoomStore = defineStore(
 		}
 
 		const ROOM_MY_LIST = async (params: any) => {
-			const res: Res<RoomList> = await getMyRoomList(params)
+			const res = await getMyRoomList(params)
 			const { code, data } = res.data
 			if (code === 200) {
 				if (data.roomList) {
@@ -37,13 +34,13 @@ export const useRoomStore = defineStore(
 			return res
 		}
 		const ROOM_UPD_STATUS = async (id: string, params: Partial<Room>) => {
-			const res: Res<Room> = await updateStatus(id, params)
+			const res = await updateStatus(id, params)
 			const { code, data } = res.data
 			return res
 		}
 
 		const ROOM_GET = async (id: string) => {
-			const res: Res<Room> = await getRoom(id)
+			const res = await getRoom(id)
 			const { code, data } = res.data
 			if (code === 200) {
 				data.createdAt = new Date(data.createdAt!)
@@ -53,14 +50,14 @@ export const useRoomStore = defineStore(
 
 		const ROOM_SET = async (params: Partial<Room>) => {
 			const roomState = cloneDeep(params)
-			const res: Res<Room> = await setRoom(roomState)
+			const res = await setRoom(roomState)
 			const { code, data } = res.data
 			return res
 		}
 		const ROOM_PUT = async (params: Partial<Room>) => {
 			const roomState = cloneDeep(params)
 
-			const res: Res<Room> = await putRoom(roomState)
+			const res = await putRoom(roomState)
 			const { code, data } = res.data
 			return res
 		}

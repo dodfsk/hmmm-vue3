@@ -1,13 +1,10 @@
 import { defineStore } from 'pinia'
-import { getCommentList, getComment, setComment, delComment } from '@/api/comment'
-// import { removeToken } from '@/utils/common/token'
-// import { toLogin } from '@/utils/common/auth'
 import { Names } from '@/store/store-name'
-import { cloneDeep } from 'lodash-es'
 import { reactive, computed, onMounted } from 'vue'
+import { getCommentList, getComment, setComment, delComment } from '@/api/comment'
 import { Comment, CommentList, CommentParam } from '@/types/comment'
-import { Res } from '@/types/axios'
 import { Query } from '@/types/common'
+import { cloneDeep } from 'lodash-es'
 
 export const useCommentStore = defineStore(
 	Names.COMMENT,
@@ -29,7 +26,7 @@ export const useCommentStore = defineStore(
 		// }
 
 		const COMMENT_GET_LIST = async (id: string, query?: Query) => {
-			const res: Res<CommentList> = await getCommentList(id, query)
+			const res= await getCommentList(id, query)
 			const { code, data } = res.data
 			if (code === 200) {
 				data.commentList.forEach((item: Comment) => {
@@ -40,13 +37,13 @@ export const useCommentStore = defineStore(
 		}
 
 		const COMMENT_SET = async (params: CommentParam) => {
-			const res: Res<Comment> = await setComment(params)
+			const res = await setComment(params)
 			const { code, data } = res.data
 			return res
 		}
 
 		const COMMENT_DEL = async (id: string) => {
-			const res: Res<Comment> = await delComment(id)
+			const res = await delComment(id)
 			const { code, data } = res.data
 			return res
 		}
