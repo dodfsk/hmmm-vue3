@@ -6,11 +6,11 @@ export type PreSignInfo = {
 	fileName: string
 }
 export type RoomStats = {
-	like: number
-	view: number
-	reply: number
+	likes: number
+	views: number
+	floors: number
+	stars: number
 }
-
 export type RoomList={
     total:number,
     roomList:Room[]
@@ -19,9 +19,9 @@ export type RoomList={
 export type Room = {
 	_id: string
 	hid: string
-	title?: string
-	content?: string | Delta
-	intro?: string
+	title: string
+	content: string | Delta
+	desc?: string
 	cover?: string
 	from: User
 	assets?: Array<PreSignInfo> //考虑拆分成单独的assets表,通过hid字段绑定关系,计划任务定期查=>附加表是否有绑定,无绑定做删除事件

@@ -3,7 +3,7 @@
 		<div style="width: 100%; height: 250px; background-color: rgba(0, 0, 0, 0.7)"></div>
 
 		<div class="home__content">
-			<div style="display: flex; gap: 24px; padding: 10px 0px">
+			<div style="display: flex; gap: 24px; padding: 10px 0px; overflow: auto;">
 				<n-button type="primary" v-debounce:click="handleRandom">随机</n-button>
 				<n-button type="info" @click="handleWait">功能1</n-button>
 				<n-button type="warning" @click="handleWait">功能2</n-button>

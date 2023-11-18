@@ -76,8 +76,8 @@ onMounted(()=>{
     // align-items:stretch;
     // flex:1;
 	// background: url("@/assets/image/login_bg.jpg") repeat;
-	// background:#ccdbe8b0;
-    background-color: rgb(246,247,249);
+	// background:#e9ecef;
+    // background-color: rgb(246,247,249);
     // overflow: auto;   
     // overflow-y: auto;
     // overflow-y: hidden;

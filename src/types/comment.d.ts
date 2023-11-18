@@ -1,21 +1,24 @@
 import { User } from '@/types/user'
 import { PreSignInfo } from '@/types/room'
 
-export type CommentList={
-    total:number,
-    commentList:Comment[]
+export type CommentStats = {
+	likes: number
+	// replys: number
 }
-
+export type CommentList = {
+	total: number
+	commentList: Comment[]
+}
 export type Comment = {
-	_id?: string
-	oid?: string
-	content?: string
-	floor?: number
-	from?: User
-    replyTo?:Comment & string
-	stats?: CommentStats
+	_id: string
+	oid: string
+	content: string
+	floor: number
+	from: User
+	replyTo?: Comment
+	stats: CommentStats
 	assets?: Array<PreSignInfo>
-	createdAt?: Date
+	createdAt: Date
 	updatedAt?: Date
 }
 
@@ -27,7 +30,6 @@ export type Comment = {
 // 	updatedAt?: Date
 // }
 
-export type CommentStats = {
-	like: number
-	reply: number
+export interface CommentParam extends Partial<Comment> {
+	replyTo?: string
 }

@@ -26,7 +26,7 @@
             </template>
 
             <div class="box">
-                {{item.intro}}
+                {{item.desc}}
             </div>
 
             <template #action>

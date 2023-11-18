@@ -58,7 +58,7 @@
 							/>
 							<n-input
 								placeholder="简介"
-								v-model:value="roomState.intro"
+								v-model:value="roomState.desc"
 								:class="animationFlag ? 'description-enabled' : 'description'"
 								style="outline: 3px solid #000; border-radius: 0"
 							/>

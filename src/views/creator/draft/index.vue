@@ -25,7 +25,7 @@
 							</n-button-group>
 						</template>
 						<div>{{ item.title }}</div>
-						<div>{{ item.intro }}</div>
+						<div>{{ item.desc }}</div>
 					</n-list-item>
 					<n-space
 						v-if="draftState && !draftState.total"

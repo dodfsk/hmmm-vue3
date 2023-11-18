@@ -5,7 +5,7 @@ import { getCommentList, getComment, setComment, delComment } from '@/api/commen
 import { Names } from '@/store/store-name'
 import { cloneDeep } from 'lodash-es'
 import { reactive, computed, onMounted } from 'vue'
-import { Comment, CommentList } from '@/types/comment'
+import { Comment, CommentList, CommentParam } from '@/types/comment'
 import { Res } from '@/types/axios'
 import { Query } from '@/types/common'
 
@@ -39,7 +39,7 @@ export const useCommentStore = defineStore(
 			return res
 		}
 
-		const COMMENT_SET = async (params: Comment) => {
+		const COMMENT_SET = async (params: CommentParam) => {
 			const res: Res<Comment> = await setComment(params)
 			const { code, data } = res.data
 			return res

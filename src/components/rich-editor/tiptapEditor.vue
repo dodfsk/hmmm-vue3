@@ -198,7 +198,6 @@
 
 	</div>
 </template>
-
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, reactive, ref, ShallowRef, toRefs, useAttrs, watch } from 'vue'
 import { PreSignInfo } from '@/types/room'
@@ -273,9 +272,9 @@ type BubbleState={
     height?: number | null
     isBase64:boolean
 }
-
 const props = withDefaults(defineProps<Props>(), {
 	modelValue: '',
+    assets:()=>[]
 })
 const emits = defineEmits<Emits>()
 // const emit = defineEmits(['update:modelValue'])
@@ -296,7 +295,7 @@ const showFooter=computed(()=>{
     if(props.theme==='headless'){
         return false
     }
-    return props.assets!.length>0
+    return assets.value&&assets.value.length>0
 })
 
 const editor: ShallowRef<Editor | undefined> = useEditor({
@@ -330,8 +329,8 @@ const editor: ShallowRef<Editor | undefined> = useEditor({
 		// HTML
         if(props.theme!=='headless'){
             emits('update:modelValue', editor.getHTML()) //双向绑定
-            if(props.assets!.length>0){
-                emits('update:assets', props.assets!) //双向绑定
+            if(assets.value&&assets.value.length>0){
+                emits('update:assets', assets.value!) //双向绑定
             }
         }
 
@@ -612,15 +611,15 @@ const BubbleMenuBar = computed(() => [
 ])
 
 const insertImage=(data:PreSignInfo)=>{
-    const indexF=props.assets!.findIndex((item)=>item.fileName===data.fileName)
+    const indexF=assets.value!.findIndex((item)=>item.fileName===data.fileName)
     console.log(indexF,data)
     if(indexF===-1){
         const pushData={
             url:data.url,
             fileName:data.fileName
         }
-        props.assets!.push(pushData)
-        console.log(props.assets)
+        assets.value!.push(pushData)
+        console.log(assets.value)
     }
     editor.value?.chain().focus().setImage({ src: data.url!,alt:data.fileName }).run()
     showModal.value=false
@@ -628,11 +627,11 @@ const insertImage=(data:PreSignInfo)=>{
     
 }
 const removeImage=(data:PreSignInfo)=>{
-    const indexF=props.assets!.findIndex((item)=>item.fileName===data.fileName)
+    const indexF=assets.value!.findIndex((item)=>item.fileName===data.fileName)
     console.log(indexF,data.fileName)
     if(indexF>-1){
-        props.assets!.splice(indexF,1)
-        console.log(props.assets)
+        assets.value!.splice(indexF,1)
+        console.log(assets.value)
     }
     
     //↓此处正则替换删除所有对应的img图片标签
@@ -772,12 +771,11 @@ defineExpose({
 		border-radius: 0.3rem;
         overflow-x: auto;
 		// overflow: visible;
-        // white-space: pre;
         word-break: normal;
         word-wrap: normal;
 		code {
 			color: inherit;
-			padding: 0;
+            overflow:hidden;
 			background: none;
 			font-size: 0.8rem;
 		    font-family: Consolas,Monaco,Andale Mono,Ubuntu Mono,JetBrainsMono, monospace;   

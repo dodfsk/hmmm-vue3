@@ -7,7 +7,8 @@
 				{{ language }}
 			</option>
 		</select>
-		<pre><code :language="props.node.attrs.language"><node-view-content style="white-space: pre;"/></code></pre>
+		<pre><node-view-content as="code" :language="props.node.attrs.language" style="white-space: pre;"/></pre>
+        <!-- 必须内联white-space:pre替换掉默认的white-space:pre-warp -->
 	</node-view-wrapper>
 </template>
 

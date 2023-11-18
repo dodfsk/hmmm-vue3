@@ -12,6 +12,8 @@ declare module '@vue/runtime-core' {
     ImageResizeComponent: typeof import('./src/components/rich-editor/components/ImageResizeComponent.vue')['default']
     NAvatar: typeof import('naive-ui')['NAvatar']
     NavTop: typeof import('./src/components/nav/NavTop.vue')['default']
+    NBreadcrumb: typeof import('naive-ui')['NBreadcrumb']
+    NBreadcrumbItem: typeof import('naive-ui')['NBreadcrumbItem']
     NButton: typeof import('naive-ui')['NButton']
     NButtonGroup: typeof import('naive-ui')['NButtonGroup']
     NCard: typeof import('naive-ui')['NCard']

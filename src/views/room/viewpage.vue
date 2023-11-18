@@ -1,5 +1,21 @@
 <template>
 	<div class="room-container">
+		<div class="room-breadcrumb">
+			<n-breadcrumb>
+				<n-breadcrumb-item
+					@click="
+						router.push({
+							path: '/home',
+						})
+					"
+				>
+					<n-icon :component="Square" /> Room</n-breadcrumb-item
+				>
+				<n-breadcrumb-item>
+					<div>{{ roomState?.hid }}</div>
+				</n-breadcrumb-item>
+			</n-breadcrumb>
+		</div>
 		<div class="article-container">
 			<div class="article-container__header">
 				<div class="article-title">
@@ -26,7 +42,7 @@
 								{{ roomState?.from.username }}
 							</strong>
 							<div class="up-stats">
-								{{ roomState?.from.role }}
+								粉丝:{{ roomState?.from.stats?.fans }}
 							</div>
 						</div>
 					</div>
@@ -41,7 +57,7 @@
 					<div class="time-area">
 						{{ roomState?.createdAt && format(roomState.createdAt, 'yyyy-MM-dd HH:mm:ss') }}
 					</div>
-					<div class="stats-area">{{ roomState?.stats.reply }}评论</div>
+					<div class="stats-area">{{ roomState?.stats.floors }}评论</div>
 				</div>
 				<div class="divider"></div>
 			</div>
@@ -85,14 +101,14 @@
 											}"
 										/>
 									</div>
-                                    <div class="user-info">
-                                        <strong class="user-name">
-                                            {{ item.from?.username }}
-                                        </strong>
-                                        <div class="up-stats">
-                                            {{ roomState?.from.role }}
-                                        </div>
-                                    </div>
+									<div class="user-info">
+										<strong class="user-name">
+											{{ item.from?.username }}
+										</strong>
+										<div class="user-stats">
+											粉丝:{{ roomState?.from.stats.fans }}
+										</div>
+									</div>
 								</div>
 								<div class="comment-pannel-right">
 									<div class="user-action">
@@ -165,8 +181,8 @@
 			</div>
 			<div class="comment-edit__footer">
 				<div class="comment-edit__footer-left">
-					<div class="quote-reply" v-if="newComment.replyTo">
-						引用回复 @{{ newComment.replyTo.from?.username }} #-{{ newComment.replyTo.floor }}
+					<div class="quote-reply" v-if="quetoState">
+						引用回复 @{{ quetoState?.from.username }} #-{{ quetoState?.floor }}
 						<n-button text @click="handleResetQuote">
 							<n-icon size="20px" color="#666" :component="CloseOutline"></n-icon>
 						</n-button>
@@ -189,12 +205,12 @@ import { useRoomStore } from '@/store/room'
 import { useUserStore } from '@/store/user'
 import { Room } from '@/types/room'
 
-import { CommentList, Comment } from '@/types/comment'
+import { CommentList, Comment, CommentParam } from '@/types/comment'
 import { Query } from '@/types/common'
 
 import { useCommentStore } from '@/store/comment'
 
-import { EllipsisVertical, CloseOutline } from '@vicons/ionicons5'
+import { Square, EllipsisVertical, CloseOutline } from '@vicons/ionicons5'
 
 const route = useRoute()
 const router = useRouter()
@@ -203,20 +219,23 @@ const userStore = useUserStore()
 console.log('route.params.id', route.params.id)
 
 const tipTapRef = ref<DefineExpose | undefined>()
+const quetoState=ref<Comment>()
 
 const state = reactive<{
 	roomState?: Room
 	commentState?: CommentList
+    newComment:CommentParam
 	query: Query
 }>({
 	roomState: undefined,
 	commentState: undefined,
+    newComment:{},
 	query: {
 		page: route.query.page ? Number(route.query.page) : 1,
 		size: 10,
 	},
 })
-const { roomState, commentState, query } = toRefs(state) //template中使用
+const { roomState, commentState,newComment, query } = toRefs(state) //template中使用
 
 const pageSize = computed(() => {
 	let totalPage = 1
@@ -250,40 +269,36 @@ const handleSelect = (key: string | number, data: Comment) => {
 //////////////////////////////////////////////////////////////////////////////////////////
 const commentStore = useCommentStore()
 
-const newComment = reactive<Comment>({
-	oid: '',
-	content: '',
-	assets: [],
-})
-
 const handlePublishComment = async () => {
 	if (!state.roomState) {
 		return
 	}
-	newComment.oid = state.roomState.hid
-	if (newComment.replyTo) newComment.replyTo = newComment.replyTo._id
+	state.newComment.oid = state.roomState.hid
+	if (quetoState.value) {
+        state.newComment.replyTo = quetoState.value._id
+    }
 
-	const res = await commentStore.COMMENT_SET(newComment)
+	const res = await commentStore.COMMENT_SET(state.newComment)
 	const { code, data } = res.data
 	if (code == 200) {
 		router.go(0)
 	}
 }
 const handleQuote = (data: any) => {
-	newComment.replyTo = data
+	quetoState.value = data
 }
 const handleResetQuote = () => {
-	newComment.replyTo = undefined
+	quetoState.value = undefined
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 const getCommentList = async (id: string, query: Query) => {
-    window.$spin.add()
+	window.$spin.add()
 	const res = await commentStore.COMMENT_GET_LIST(id, query)
 	const { code, data } = res.data
 	if (code == 200) {
 		state.commentState = data
-        window.$spin.sub()
+		window.$spin.sub()
 	}
 }
 const commentRef = ref<HTMLDivElement>()
@@ -322,7 +337,7 @@ const handleDel = async () => {
 }
 
 const getRoomDetail = async (id: string) => {
-        window.$spin.add()
+	window.$spin.add()
 	const res = await roomStore.ROOM_GET(id)
 	const { code, data } = res.data
 	if (code == 200) {
@@ -331,7 +346,7 @@ const getRoomDetail = async (id: string) => {
 		// title.value=data.title
 		// Object.assign(roomState, data)
 		state.roomState = data
-        window.$spin.sub()
+		window.$spin.sub()
 
 		// roomState.comment=[{
 		//     from:'test',
@@ -362,9 +377,20 @@ watch(
 	min-height: calc(100vh - 50px);
 	// display: flex;
 	// flex-direction: column;
-	padding: 10px 0px 20px;
+	background: #edf2f7;
+	padding: 8px 0px 20px;
 	position: relative;
 	// margin: 0 auto;
+}
+.room-breadcrumb {
+	font-size: 10px;
+	margin: 0px auto 10px;
+	padding: 5px 0px;
+	border-radius: 12px;
+	max-width: 960px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	// background-color: #fff;
 }
 .divider {
 	height: 1px;
@@ -377,11 +403,11 @@ watch(
 .article-container {
 	max-width: 960px;
 	background-color: #fff;
-	border-radius: 4px;
+	border-radius: 12px;
 	-ms-flex-negative: 0;
 	flex-shrink: 0;
 	padding: 30px 40px 40px;
-	margin: 0px auto 12px;
+	margin: 0px auto 20px;
 }
 
 .article-container__header {
@@ -391,7 +417,7 @@ watch(
 }
 .article-pannel {
 	width: 100%;
-    height: 60px;
+	height: 60px;
 	display: flex;
 	justify-content: space-between;
 }
@@ -405,21 +431,25 @@ watch(
 		}
 	}
 	.up-info {
-        // display: flex;
-        .up-name{
-            font-size: 20px;
-            line-height: 20px;
-            color:#00965e
-        }
+		// display: flex;
+		.up-name {
+			font-size: 18px;
+			line-height: 18px;
+			color: #00965e;
+		}
 	}
+    .up-stats{
+        font-size:12px;
+        color: #999;
+    }
 }
 .article-title {
 	width: 100%;
 	margin-left: 12px;
 	margin-bottom: 20px;
-    h1{
-        font-weight: 500;
-    }
+	h1 {
+		font-weight: 500;
+	}
 }
 .article-stats {
 	padding: 0 12px;
@@ -453,17 +483,20 @@ watch(
 .comment-container {
 	max-width: 960px;
 	background-color: #fff;
-	// border-radius: 4px;
+	border-radius: 12px;
 	-ms-flex-negative: 0;
 	flex-shrink: 0;
 	padding: 5px 40px 5px;
-	margin: 0 auto;
+	margin: 0px auto 20px;
 	// margin-bottom: 12px;
 	scroll-margin-top: 60px;
 }
 .comment-container__header {
 	margin: 5px 0px 20px;
-    // background-color: rgb(250, 250, 252);
+	h2 {
+		font-weight: 500;
+	}
+	// background-color: rgb(250, 250, 252);
 }
 .comment-container__footer {
 	display: flex;
@@ -512,13 +545,17 @@ watch(
 			object-position: center; //这里让图片居中显示
 		}
 	}
-    .user-info{
-        // display: flex;
-        .user-name {
-            font-size: 14px;
-            line-height: 14px;
-            color:#00965e
-        }
+	.user-info {
+		// display: flex;
+		.user-name {
+			font-size: 14px;
+			line-height: 14px;
+			color: #00965e;
+		}
+	}
+    .user-stats{
+        font-size:10px;
+        color: #999;
     }
 }
 .comment-pannel-right {
@@ -553,8 +590,9 @@ watch(
 }
 
 .comment-edit {
+	border-radius: 12px;
 	max-width: 960px;
-	margin: 12px auto 0px;
+	margin: 0px auto;
 	padding: 25px 40px 25px;
 	background-color: #fff;
 }

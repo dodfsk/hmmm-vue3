@@ -1,5 +1,5 @@
 import request from '@/utils/axios/index'
-import { Comment } from '@/types/comment'
+import { Comment, CommentParam } from '@/types/comment'
 import { Query } from '@/types/common'
 
 // export const getCommentList = async (query?:any) => {
@@ -32,7 +32,7 @@ export const getComment = async (id: string, query?: Query) => {
 	})
 }
 
-export const setComment = async (data: Comment) => {
+export const setComment = async (data: CommentParam) => {
 	return await request({
 		url: '/comment',
 		method: 'post',

@@ -12,7 +12,7 @@
 			<img :src="roomState.cover" />
 		</template>
 		<template #header>
-			<h2>
+			<h2 style="font-weight: 500;">
 				{{ roomState.title }}
 			</h2>
 		</template>
@@ -25,9 +25,14 @@
 				style="padding: 0; margin: 0; user-select: none"
 				round
 			/>
-			<div class="up-name">
-				{{ roomState.from.username }}
-			</div>
+            <div class="up-info">
+                <strong class="up-name">
+                    {{ roomState.from.username }}
+                </strong>
+                <div class="up-stats">
+
+                </div>
+            </div>
 		</template>
 
 		<tiptapEditor ref="editorRef" theme="headless" v-model="roomState.content" />
@@ -49,7 +54,7 @@
 					<div class="time-area">
 						{{ roomState?.createdAt && format(roomState.createdAt, 'yyyy-MM-dd HH:mm:ss') }}
 					</div>
-					<div class="stats-area">{{ roomState?.stats.reply }}评论</div>
+					<div class="stats-area">{{ roomState?.stats.floors }}评论</div>
 				</div>
 			</div>
 		</template>
@@ -103,7 +108,9 @@ const handleReply = (hid: string) => {
 
 <style lang="less" scoped>
 .up-name {
-	font-size: 20px;
+	font-size: 18px;
+    line-height: 18px;
+    color:#00965e
 }
 .footer {
 	display: flex;
