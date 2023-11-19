@@ -15,7 +15,7 @@
 						:options="sortOptions"
 						@update:value="getPublishList"
 					/>
-                    <n-select
+					<n-select
 						size="tiny"
 						style="width: 80px"
 						v-model:value="query.order"
@@ -66,6 +66,8 @@
 				</n-space>
 			</div>
 			<div class="publish-box__footer">
+				<n-divider />
+
 				<n-pagination
 					v-model:page="query.page"
 					:page-sizes="[query.size]"
@@ -88,7 +90,7 @@ import { useRoute, useRouter } from 'vue-router'
 import tiptapEditor from '@/components/rich-editor/tiptapEditor.vue'
 import { format } from 'date-fns'
 import { Room, RoomList } from '@/types/room'
-import { Query } from '@/types/common';
+import { Query } from '@/types/common'
 
 const route = useRoute()
 const router = useRouter()
@@ -171,14 +173,13 @@ const handleEdit = (data: Room) => {
 // }
 
 const getPublishList = async () => {
-    window.$spin.add()
+	window.$spin.add()
 	const res = await roomStore.ROOM_MY_LIST(state.query)
 	const { code, message, meta, data } = res.data
 	if (code !== 200) {
 	}
 	state.publishState = data
-    window.$spin.sub()
-
+	window.$spin.sub()
 }
 
 onMounted(() => {
@@ -190,7 +191,7 @@ onMounted(() => {
 .publish-container {
 	width: 100%;
 	height: 100%;
-	background-color: #f5f5f5;
+	background: #e9ecef;
 	// background-color: rgba(206, 255, 127, 0.5);
 	// padding: 20px;
 	display: flex;
@@ -202,12 +203,12 @@ onMounted(() => {
 	width: 100%;
 	max-width: 960px;
 	min-width: 660px;
-    // height: calc(100vh - 50px);
+	// height: calc(100vh - 50px);
 	margin: 0 auto;
 	padding: 30px;
 	background-color: #fff;
-	border-radius: 3px;
-	box-shadow: 0 0 3px rgba(51, 51, 51, 0.721);
+	border-radius: 8px;
+	box-shadow: 0 0 3px rgba(51, 51, 51, 0.321);
 }
 .publish-box__header {
 	margin-bottom: 20px;
@@ -222,16 +223,19 @@ onMounted(() => {
 	gap: 24px;
 }
 .publish-box__footer {
-	margin-top: 20px;
+	margin: 20px 0px;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
+	align-items: center;
 }
 .content-item {
 	width: 100%;
 	height: 180px;
 	// border: 1px solid #000;
 	border-radius: 4px;
-	box-shadow: 0 0 2px rgba(51, 51, 51, 0.721);
+	// border:1px solid #e4edf4;
+	box-shadow: 0 0 2px rgba(51, 51, 51, 0.421);
 	display: flex;
 	// flex-direction: row;
 	&-left {

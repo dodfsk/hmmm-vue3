@@ -125,7 +125,7 @@ onMounted(() => {
 	// width: 100%;
 	height: 100%;
 	padding: 20px;
-	background-color: #f5f5f5;
+	background-color: #e9ecef;
 	// display:flex;
 	// flex-direction: column;
 	// align-items: center;
@@ -138,8 +138,8 @@ onMounted(() => {
 	min-width: 560px;
 	padding: 30px;
 	background-color: #fff;
-	border-radius: 3px;
-	box-shadow: 0 0 5px rgba(51, 51, 51, 0.721);
+	border-radius: 5px;
+	box-shadow: 0 0 5px rgba(51, 51, 51, 0.321);
 	display: flex;
 	flex-direction: column;
 	align-items: center;

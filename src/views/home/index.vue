@@ -3,7 +3,7 @@
 		<div style="width: 100%; height: 250px; background-color: rgba(0, 0, 0, 0.7)"></div>
 
 		<div class="home__content">
-			<div style="display: flex; gap: 24px; padding: 10px 0px; overflow: auto;">
+			<div style="display: flex; gap: 24px; padding: 10px 0px; overflow: auto">
 				<n-button type="primary" v-debounce:click="handleRandom">随机</n-button>
 				<n-button type="info" @click="handleWait">功能1</n-button>
 				<n-button type="warning" @click="handleWait">功能2</n-button>
@@ -16,8 +16,8 @@
 				<div class="room-card" :title="item.title" v-for="item in roomList" :key="item.hid">
 					<a :href="`/room/${item.hid}`" target="_blank">
 						<picture>
-							<img class="room-card__img" v-if="item.cover" :src="item.cover" />
-							<img class="room-card__img" v-else src="@/assets/image/tomato.webp" />
+							<source v-if="item.cover" :srcset="item.cover" />
+							<img class="room-card__img" src="@/assets/image/tomato.webp" @error="imgError" />
 						</picture>
 					</a>
 					<div class="room-card__info">
@@ -26,7 +26,7 @@
 						</div>
 
 						<div class="room-card__info--bottom">
-							<div class="button">
+							<div class="action">
 								<n-button type="info" size="tiny" strong secondary @click="handleShowModal(item.hid)">
 									<template #icon>
 										<n-icon :component="Search" />
@@ -39,8 +39,20 @@
 									</template>
 								</n-button>
 							</div>
-							<div class="from">
-								{{ item.from?.username }}
+							<div class="up-info">
+								<div class="up-name">
+									{{ item.from?.username }}
+								</div>
+								<n-avatar
+									:size="42"
+									:src="
+										item?.from?.avatar ??
+										'https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg'
+									"
+									fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+									class="up-face"
+									round
+								/>
 							</div>
 						</div>
 					</div>
@@ -67,6 +79,11 @@ const showModal = ref(false)
 const roomData = ref<Room>()
 const roomList = ref<Array<Room>>()
 
+const imgError = (e: any) => {
+	const img = e.target
+	img.src = '/src/assets/image/tomato.webp'
+}
+
 const roomDraw = () => {
 	router.push({
 		path: `/creator/draw`,
@@ -79,14 +96,14 @@ const roomEnter = (hid?: string) => {
 	})
 }
 
-const handleWait=()=>{
-    window.$message.info('等待添加')
+const handleWait = () => {
+	window.$message.info('等待添加')
 }
 
-const handleRandom=()=>{
-    const cursor=Math.floor(Math.random()*8)
-    const hid=roomList.value![cursor].hid
-    handleShowModal(hid)
+const handleRandom = () => {
+	const cursor = Math.floor(Math.random() * 8)
+	const hid = roomList.value![cursor].hid
+	handleShowModal(hid)
 }
 
 const handleShowModal = async (hid: string) => {
@@ -109,7 +126,7 @@ const getRoomList = async () => {
 	if (keyword) {
 		query = { from: keyword }
 	}
-    query.size=8
+	query.size = 8
 	const res = await roomStore.ROOM_LIST(query)
 	const { code, data } = res.data
 	if (res.status == 200) {
@@ -154,6 +171,7 @@ onMounted(() => {
 	// box-shadow: 20px 20px 60px #ced1d6,-20px -20px 60px #fff;
 	// outline: 3px solid #000;
 	&__img {
+		border: 1px solid #e4edf4;
 		border-radius: 8px;
 		max-width: 100%;
 		height: auto;
@@ -180,17 +198,27 @@ onMounted(() => {
 	}
 	&--bottom {
 		// flex-grow: 1;
-		height: 26px;
+		height: 30px;
 		display: flex;
 		justify-content: space-between;
+		align-items: end;
 		color: rgb(126, 126, 126);
-		.button {
+		.action {
 			width: 60px;
 		}
-		.from {
-			max-width: 100px;
-			overflow: hidden;
-			text-overflow: ellipsis;
+		.up-info {
+			display: flex;
+			align-items: end;
+			.up-name {
+				max-width: 100px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			.up-face {
+				padding: 0;
+				margin: 0;
+				user-select: none;
+			}
 		}
 	}
 }

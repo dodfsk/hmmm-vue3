@@ -6,7 +6,6 @@
 			v-show="isClipperReady"
 			:size="38"
 			fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-			object-fit="cover"
 			style="padding: 0; margin: 0; user-select: none"
 			round
 		>

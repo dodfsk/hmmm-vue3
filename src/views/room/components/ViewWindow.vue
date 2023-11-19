@@ -4,7 +4,7 @@
 		size="huge"
 		transform-origin="center"
 		@after-leave="handleCloseModal"
-        :style="{
+		:style="{
 			maxWidth: '840px',
 		}"
 	>
@@ -12,28 +12,27 @@
 			<img :src="roomState.cover" />
 		</template>
 		<template #header>
-			<h2 style="font-weight: 500;">
+			<h2 style="font-weight: 500">
 				{{ roomState.title }}
 			</h2>
 		</template>
-		<template #header-extra>
+		<template #header-extra> </template>
+		<div class="up-pannel">
 			<n-avatar
-				:size="56"
+				:size="42"
 				:src="roomState.from.avatar ?? 'https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg'"
 				fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-				object-fit="cover"
-				style="padding: 0; margin: 0; user-select: none"
+				style="padding: 0; margin: 0; user-select: none;border:1px solid #e4edf4;"
 				round
 			/>
-            <div class="up-info">
-                <strong class="up-name">
-                    {{ roomState.from.username }}
-                </strong>
-                <div class="up-stats">
-
-                </div>
-            </div>
-		</template>
+			<div class="up-info">
+				<strong class="up-name">
+					{{ roomState.from.username }}
+				</strong>
+				<div class="up-stats"></div>
+			</div>
+		</div>
+        <div class="divider"></div>
 
 		<tiptapEditor ref="editorRef" theme="headless" v-model="roomState.content" />
 
@@ -107,10 +106,22 @@ const handleReply = (hid: string) => {
 </script>
 
 <style lang="less" scoped>
+.divider {
+	height: 1px;
+	width: 100%;
+	background: rgba(114, 114, 114, 0.3);
+	margin: 12px 0px 20px;
+}
+
+
+.up-pannel {
+	display: flex;
+	align-items: center;
+}
 .up-name {
 	font-size: 18px;
-    line-height: 18px;
-    color:#00965e
+	line-height: 18px;
+	color: #00965e;
 }
 .footer {
 	display: flex;

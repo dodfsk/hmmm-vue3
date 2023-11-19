@@ -329,6 +329,7 @@ watch(
 .draw-container {
 	width: 100%;
 	height: 100%;
+	background:#e9ecef;
 	// padding-top:20px;
 	display: flex;
 	// flex-direction: column;
@@ -336,7 +337,6 @@ watch(
 	// align-items: center;
 	overflow-x: auto;
 	overflow-y: hidden;
-	background-color: #f5f5f5;
 }
 .draw-pre {
 	margin: auto;
@@ -348,7 +348,7 @@ watch(
 	// width: 90%;
 	// height: 90%;
 	// min-height: 500px;
-	box-shadow: 0 0 1px rgba(51, 51, 51, 0.721);
+	box-shadow: 0 0 1px rgba(51, 51, 51, 0.321);
 	max-width: 960px;
 }
 .draw-content__header {

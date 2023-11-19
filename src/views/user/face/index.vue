@@ -13,7 +13,7 @@
 						:size="168"
 						:src="imgSrc"
 						fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-						object-fit="cover"
+                        style="border:1px solid #e4edf4;"
 						round
 					>
 						<div v-if="!imgSrc">
@@ -160,7 +160,7 @@ onMounted(() => {
     width: 100%;
 	height: 100%;
 	padding: 20px;
-	background-color: #f5f5f5;
+	background-color: #e9ecef;
 	// display: flex;
 	// flex-direction: column;
 	// align-items: center;
@@ -175,7 +175,7 @@ onMounted(() => {
 	padding: 30px;
 	background-color: #fff;
 	border-radius: 3px;
-	box-shadow: 0 0 5px rgba(51, 51, 51, 0.721);
+	box-shadow: 0 0 5px rgba(51, 51, 51, 0.321);
 	display: flex;
 	flex-direction: column;
 	align-items: center;

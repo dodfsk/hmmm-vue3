@@ -2,9 +2,9 @@
 	<div class="homepage-container">
 		<div class="homepage-box">
 			<div class="header">
-                <n-divider title-placement="left">
+				<n-divider title-placement="left">
 					<h2>创作中心</h2>
-                </n-divider>
+				</n-divider>
 			</div>
 
 			<div class="content">
@@ -14,29 +14,22 @@
 						content: true,
 					}"
 				>
-					<n-row>
-						<n-col :span="8">
-							<n-statistic label="你一共发布了" tabular-nums style="width: 200px">
-								<n-number-animation ref="numberAnimationInstRef" :from="0" :to="114" />
-								<template #suffix> 篇文章 </template>
-							</n-statistic>
-						</n-col>
+					<div class="stats-grid">
+						<n-statistic label="你一共发布了" tabular-nums>
+							<n-number-animation ref="numberAnimationInstRef" :from="0" :to="114" />
+							<template #suffix> 篇文章 </template>
+						</n-statistic>
 
-						<n-col :span="8">
-							<n-statistic label="你一共绘制了" tabular-nums>
-								<n-number-animation ref="numberAnimationInstRef" :from="0" :to="514" />
-								<template #suffix> 个房间 </template>
-							</n-statistic>
-						</n-col>
+						<n-statistic label="你一共绘制了" tabular-nums>
+							<n-number-animation ref="numberAnimationInstRef" :from="0" :to="514" />
+							<template #suffix> 个房间 </template>
+						</n-statistic>
 
-						<n-col :span="8">
-							<n-statistic label="你一共一共一共" tabular-nums>
-								<n-number-animation ref="numberAnimationInstRef" :from="0" :to="1919" />
-								<template #suffix> 次请求 </template>
-							</n-statistic>
-						</n-col>
-
-					</n-row>
+						<n-statistic label="你一共一共一共" tabular-nums>
+							<n-number-animation ref="numberAnimationInstRef" :from="0" :to="1919" />
+							<template #suffix> 次请求 </template>
+						</n-statistic>
+					</div>
 				</n-card>
 			</div>
 		</div>
@@ -49,7 +42,7 @@
 .homepage-container {
 	width: 100%;
 	height: 100%;
-	background-color: #f5f5f5;
+	background: #e9ecef;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -57,12 +50,12 @@
 }
 .homepage-box {
 	width: 100%;
-    max-width: 960px;
+	max-width: 960px;
 	height: 100%;
 	padding: 30px;
 	background-color: #fff;
 	border-radius: 3px;
-	box-shadow: 0 0 3px rgba(51, 51, 51, 0.721);
+	box-shadow: 0 0 3px rgba(51, 51, 51, 0.321);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -73,7 +66,6 @@
 		margin-bottom: 20px;
 		display: flex;
 		justify-content: center;
-		
 	}
 	.content {
 		width: 80%;
@@ -83,6 +75,10 @@
 		gap: 24px;
 	}
 }
-
-
+.stats-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	// grid-template-rows: repeat(3, 1fr);
+	grid-gap: 20px 12px;
+}
 </style>

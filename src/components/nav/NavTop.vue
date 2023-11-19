@@ -48,7 +48,7 @@
 				content-style="padding: 10px 0"
 			>
 				<template #trigger>
-					<div class="nav-avatar" style="width: 38px; height: 38px; padding: 0">
+					<div class="nav-avatar" style="width: 38px; height: 38px; padding: 0;">
 						<n-avatar
 							:size="38"
 							:src="
@@ -56,7 +56,7 @@
 								'https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg'
 							"
 							fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-							style="padding: 0; margin: 0; user-select: none"
+							style="padding: 0; margin: 0; user-select: none;border:1px solid #e4edf4;"
 							round
 							@click="handleUser('/face')"
 						/>

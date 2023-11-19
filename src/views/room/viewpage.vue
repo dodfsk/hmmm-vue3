@@ -1,5 +1,6 @@
 <template>
 	<div class="room-container">
+		<!-- 面包屑 -->
 		<div class="room-breadcrumb">
 			<n-breadcrumb>
 				<n-breadcrumb-item
@@ -16,6 +17,7 @@
 				</n-breadcrumb-item>
 			</n-breadcrumb>
 		</div>
+		<!-- 文章容器 -->
 		<div class="article-container">
 			<div class="article-container__header">
 				<div class="article-title">
@@ -31,8 +33,7 @@
 									'https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg'
 								"
 								fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-								object-fit="cover"
-								style="padding: 0; margin: 0; user-select: none"
+								style="padding: 0; margin: 0; user-select: none; border: 1px solid #e4edf4"
 								round
 							/>
 						</div>
@@ -42,8 +43,7 @@
 								{{ roomState?.from.username }}
 							</strong>
 							<div class="up-stats">
-								粉丝:{{ roomState?.from.stats?.fans }}
-                                稿件:{{ roomState?.from.stats.rooms }}
+								粉丝:{{ roomState?.from.stats?.fans }} 稿件:{{ roomState?.from.stats.rooms }}
 							</div>
 						</div>
 					</div>
@@ -73,7 +73,7 @@
 			</div>
 			<div class="article-container__footer"></div>
 		</div>
-
+		<!-- 评论区容器 -->
 		<div class="comment-container" ref="commentRef">
 			<div class="comment-container__header">
 				<h2>{{ commentState?.total }} 地板</h2>
@@ -93,8 +93,7 @@
 												'https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg'
 											"
 											fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-											object-fit="cover"
-											style="padding: 0; margin: 0; user-select: none"
+											style="padding: 0; margin: 0; user-select: none; border: 1px solid #e4edf4"
 											round
 											lazy
 											:intersection-observer-options="{
@@ -107,8 +106,7 @@
 											{{ item.from?.username }}
 										</strong>
 										<div class="user-stats">
-											粉丝:{{ roomState?.from.stats.fans }}
-											稿件:{{ roomState?.from.stats.rooms }}
+											粉丝:{{ roomState?.from.stats.fans }} 稿件:{{ roomState?.from.stats.rooms }}
 										</div>
 									</div>
 								</div>
@@ -152,36 +150,43 @@
 							<div class="floor-area">#-{{ item.floor }}</div>
 						</div>
 					</div>
+					<div class="comment-empty" v-if="!commentState.total">没有更多评论</div>
 				</template>
 			</div>
 			<div class="comment-container__footer">
-				<div class="pagination">
+				<div class="pagination" v-if="commentState?.total">
 					<n-pagination
 						v-model:page="query.page"
 						:page-sizes="[query.size]"
-						:page-count="pageSize"
+						:page-count="pageCount"
 						@update:page="handleChangePage"
 						show-quick-jumper
+						size="small"
 					>
 						<template #goto> 跳转 </template>
 					</n-pagination>
 				</div>
 			</div>
 		</div>
-
+		<!-- 评论编辑区 -->
 		<div class="comment-edit" ref="commentEditRef">
 			<div class="comment-edit__header">
 				<h2>快速回帖</h2>
 			</div>
 			<div class="comment-edit__content">
 				<tiptapEditor
+					v-if="userStore.userInfo"
 					:key="String(route.query.id) || 'defaultKey'"
 					v-model="newComment.content"
 					v-model:assets="newComment.assets"
 					ref="tipTapRef"
 				></tiptapEditor>
+				<div class="unLogin" v-else>
+					<div>请登陆后再回复</div>
+					<n-button type="info" @click="handleLogin"> 登陆 </n-button>
+				</div>
 			</div>
-			<div class="comment-edit__footer">
+			<div class="comment-edit__footer" v-if="userStore.userInfo">
 				<div class="comment-edit__footer-left">
 					<div class="quote-reply" v-if="quetoState">
 						引用回复 @{{ quetoState?.from.username }} #-{{ quetoState?.floor }}
@@ -221,25 +226,25 @@ const userStore = useUserStore()
 console.log('route.params.id', route.params.id)
 
 const tipTapRef = ref<DefineExpose | undefined>()
-const quetoState=ref<Comment>()
+const quetoState = ref<Comment>()
 
 const state = reactive<{
 	roomState?: Room
 	commentState?: CommentList
-    newComment:CommentParam
+	newComment: CommentParam
 	query: Query
 }>({
 	roomState: undefined,
 	commentState: undefined,
-    newComment:{},
+	newComment: {},
 	query: {
 		page: route.query.page ? Number(route.query.page) : 1,
 		size: 10,
 	},
 })
-const { roomState, commentState,newComment, query } = toRefs(state) //template中使用
+const { roomState, commentState, newComment, query } = toRefs(state) //template中使用
 
-const pageSize = computed(() => {
+const pageCount = computed(() => {
 	let totalPage = 1
 	if (state.commentState) {
 		const total = state.commentState.total
@@ -277,8 +282,8 @@ const handlePublishComment = async () => {
 	}
 	state.newComment.oid = state.roomState.hid
 	if (quetoState.value) {
-        state.newComment.replyTo = quetoState.value._id
-    }
+		state.newComment.replyTo = quetoState.value._id
+	}
 
 	const res = await commentStore.COMMENT_SET(state.newComment)
 	const { code, data } = res.data
@@ -338,6 +343,12 @@ const handleDel = async () => {
 	}
 }
 
+const handleLogin = () => {
+	router.push({
+		path: '/auth/login',
+	})
+}
+
 const getRoomDetail = async (id: string) => {
 	window.$spin.add()
 	const res = await roomStore.ROOM_GET(id)
@@ -373,6 +384,7 @@ watch(
 <style lang="less" scoped>
 // @import '@/views/root.less';
 
+//主容器
 .room-container {
 	width: 100%;
 	height: 100%;
@@ -399,12 +411,14 @@ watch(
 	width: 100%;
 	// background: hsla(0,0%,59.2%,.21);
 	background: rgba(114, 114, 114, 0.3);
-	margin: 20px 0px;
+	margin: 12px 0px 20px;
 }
 
+//文章容器
 .article-container {
 	max-width: 960px;
 	background-color: #fff;
+	border: 1px solid #e4edf4;
 	border-radius: 12px;
 	-ms-flex-negative: 0;
 	flex-shrink: 0;
@@ -440,10 +454,10 @@ watch(
 			color: #00965e;
 		}
 	}
-    .up-stats{
-        font-size:12px;
-        color: #999;
-    }
+	.up-stats {
+		font-size: 12px;
+		color: #999;
+	}
 }
 .article-title {
 	width: 100%;
@@ -475,16 +489,12 @@ watch(
 .edit-box {
 	max-width: 900px;
 }
-// .comment-container__content {
-// 	width: 100%;
-// 	margin: 20px auto;
-// 	padding: 5px 20px;
-// 	// display: flex;
-// }
 
+//评论容器
 .comment-container {
 	max-width: 960px;
 	background-color: #fff;
+	border: 1px solid #e4edf4;
 	border-radius: 12px;
 	-ms-flex-negative: 0;
 	flex-shrink: 0;
@@ -500,11 +510,17 @@ watch(
 	}
 	// background-color: rgb(250, 250, 252);
 }
+// .comment-container__content {
+// 	width: 100%;
+// 	margin: 20px auto;
+// 	padding: 5px 20px;
+// 	// display: flex;
+// }
 .comment-container__footer {
 	display: flex;
 	justify-content: center;
 	// align-items: center;
-	margin: 10px 0px;
+	margin: 12px 0px;
 
 	.pagination {
 		display: flex;
@@ -512,14 +528,18 @@ watch(
 		align-items: center;
 	}
 }
-
+.comment-empty {
+	height: 50px;
+	font-size: 16px;
+	color: #999;
+	text-align: center;
+}
 .comment-card {
 	width: 100%; //计算自适应宽度防止文字溢出
 	display: flex;
 	flex-direction: column;
 	padding: 20px 0 14px 0;
 	border-bottom: #ccc 1px solid;
-
 	// .view-box {
 	// width: calc(100% - 50px); //计算自适应宽度防止文字溢出
 	// }
@@ -543,8 +563,8 @@ watch(
 		img {
 			width: 46px;
 			height: auto;
-			object-fit: cover; //这里让图片保持原始比例并填充整个容器
-			object-position: center; //这里让图片居中显示
+			// object-fit: cover; //这里让图片保持原始比例并填充整个容器
+			// object-position: center; //这里让图片居中显示
 		}
 	}
 	.user-info {
@@ -555,10 +575,10 @@ watch(
 			color: #00965e;
 		}
 	}
-    .user-stats{
-        font-size:11px;
-        color: #999;
-    }
+	.user-stats {
+		font-size: 11px;
+		color: #99a2aa;
+	}
 }
 .comment-pannel-right {
 	display: flex;
@@ -591,7 +611,9 @@ watch(
 	}
 }
 
+//发表评论的富文本编辑器容器
 .comment-edit {
+	border: 1px solid #e4edf4;
 	border-radius: 12px;
 	max-width: 960px;
 	margin: 0px auto;
@@ -604,6 +626,15 @@ watch(
 .comment-edit__content {
 	width: 100%;
 	height: 250px;
+	.unLogin {
+		height: 250px;
+		font-size: 18px;
+		color: #99a2aa;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-evenly;
+		align-items: center;
+	}
 }
 
 .comment-edit__footer {
