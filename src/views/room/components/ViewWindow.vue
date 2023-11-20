@@ -22,7 +22,7 @@
 				:size="42"
 				:src="roomState.from.avatar ?? 'https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg'"
 				fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-				style="padding: 0; margin: 0; user-select: none;border:1px solid #e4edf4;"
+				style="padding: 0; margin: 0; user-select: none; border: 1px solid #e4edf4"
 				round
 			/>
 			<div class="up-info">
@@ -32,7 +32,7 @@
 				<div class="up-stats"></div>
 			</div>
 		</div>
-        <div class="divider"></div>
+		<div class="divider"></div>
 
 		<tiptapEditor ref="editorRef" theme="headless" v-model="roomState.content" />
 
@@ -113,7 +113,6 @@ const handleReply = (hid: string) => {
 	margin: 12px 0px 20px;
 }
 
-
 .up-pannel {
 	display: flex;
 	align-items: center;
@@ -143,4 +142,10 @@ const handleReply = (hid: string) => {
 		color: #99a2aa;
 	}
 }
+
+// @media screen and (max-width: 540px) {
+	// :deep(.n-card__content) {
+	// 	padding: 0px;
+	// }
+// }
 </style>

@@ -1,7 +1,14 @@
 <template>
 	<div class="draw-container">
 		<div class="draw-pre" v-if="!route.query.id">
-			<n-card class="content">
+			<n-card
+				class="content"
+				:style="{
+					maxWidth: '480px',
+					minWidth: '360px',
+					margin: 'auto',
+				}"
+			>
 				<template #header>
 					<div>设置房间模板</div>
 				</template>
@@ -9,8 +16,6 @@
 					class="form-box"
 					:style="{
 						height: '80px',
-						width: '450px',
-						margin: 'auto',
 					}"
 				>
 					<n-form
@@ -19,9 +24,6 @@
 						label-placement="left"
 						:model="roomState"
 						size="small"
-						:style="{
-							maxWidth: '400px',
-						}"
 					>
 						<!-- :rules="rules" -->
 
@@ -145,12 +147,10 @@ const preSignInfo: PreSignInfo = {
 	fileName: '',
 }
 
-onMounted(() => {
-	
-})
+onMounted(() => {})
 
 const handleSaveCover = async (preSign: PreSignInfo) => {
-    window.$spin.add()
+	window.$spin.add()
 	if (state.roomState) {
 		state.roomState.cover = preSign.url
 		const params = {
@@ -162,7 +162,7 @@ const handleSaveCover = async (preSign: PreSignInfo) => {
 		const { code } = res.data
 		if (code == 200) {
 			window.$message.success('封面已更新')
-            window.$spin.sub()
+			window.$spin.sub()
 		}
 	}
 	showModal.value = false
@@ -282,7 +282,7 @@ const handleCover = async () => {
 }
 
 const getRoomDetail = async (id: string) => {
-    window.$spin.add()
+	window.$spin.add()
 	const res = await roomStore.ROOM_GET(id)
 	const { code, data } = res.data
 	if (code == 200) {
@@ -291,7 +291,7 @@ const getRoomDetail = async (id: string) => {
 		// Object.assign(roomState, data);
 		state.roomState = data
 		// tipTapRef.value!.editorRef.editor.commands.setContent(roomState.content)
-        window.$spin.sub()
+		window.$spin.sub()
 	}
 }
 
@@ -329,7 +329,7 @@ watch(
 .draw-container {
 	width: 100%;
 	height: 100%;
-	background:#e9ecef;
+	background: #e9ecef;
 	// padding-top:20px;
 	display: flex;
 	// flex-direction: column;
@@ -339,6 +339,7 @@ watch(
 	overflow-y: hidden;
 }
 .draw-pre {
+	width: 100%;
 	margin: auto;
 }
 // .draw-box{

@@ -50,18 +50,33 @@
                         @keydown.enter.prevent
                     />
                 </n-form-item> -->
-					<n-form-item path="phone" label="手机">
+					<n-form-item path="phone" label="性别">
+						<n-select
+							v-model:value="modelRef.sex"
+                            style="width:120px"
+							:options=sexTypeOptions
+						/>
+					</n-form-item>
+
+					<n-form-item path="phone" label="手机(待移除)">
 						<n-input
 							v-model:value="modelRef.phone"
 							:allow-input="inputRules.phone"
 							@keydown.enter.prevent
 						/>
 					</n-form-item>
-					<n-form-item path="email" label="邮箱">
+					<n-form-item path="email" label="邮箱(待移除)">
 						<n-input v-model:value="modelRef.email" @keydown.enter.prevent />
 					</n-form-item>
 					<n-form-item path="birth" label="生日">
-						<n-date-picker  v-model:value="modelRef.birth" value-format="yyyy.MM.dd HH:mm:ss" @keydown.enter.prevent />
+						<n-date-picker
+							v-model:value="modelRef.birth"
+							value-format="yyyy.MM.dd HH:mm:ss"
+							@keydown.enter.prevent
+						/>
+					</n-form-item>
+					<n-form-item path="phone" label="签名">
+						<n-input v-model:value="modelRef.sign" type="textarea" @keydown.enter.prevent />
 					</n-form-item>
 				</n-form>
 			</div>
@@ -94,6 +109,20 @@ const formRef = ref<FormInst | null>(null)
 const rPasswordFormItemRef = ref<FormItemInst | null>(null)
 const modelRef = ref<UserParam>({})
 
+const sexTypeOptions = [
+    {
+        label:'男',
+        value:'man'
+    },
+    {
+        label:'女',
+        value:'woman'
+    },
+    {
+        label:'未知',
+        value:'unknown'
+    }
+]
 
 const inputRules = {
 	phone: (value: string) => !value || /^[0-9]*$/.test(value),
@@ -120,21 +149,21 @@ const rules: FormRules = {
 // };
 
 const getUserInfo = async () => {
-    window.$spin.add()
+	window.$spin.add()
 	const res = await userStore.USER_GET_MY()
 	const { code, message, meta, data } = res.data
-	if (code==200) {
-	    modelRef.value = data
-        window.$spin.sub()
+	if (code == 200) {
+		modelRef.value = data
+		window.$spin.sub()
 	}
 }
 const handleUpdate = async () => {
-    window.$spin.add()
+	window.$spin.add()
 	const res = await userStore.USER_SET(modelRef.value)
 	const { code, message, meta, data } = res.data
-    if (code==200) {
-        window.$message.success('保存成功')
-        window.$spin.sub()
+	if (code == 200) {
+		window.$message.success('保存成功')
+		window.$spin.sub()
 	}
 }
 
@@ -148,7 +177,7 @@ onMounted(() => {
 .profile-container {
 	// width: 100%;
 	height: 100%;
-	padding: 20px;
+	// padding: 4px;
 	background-color: #e9ecef;
 	// display:flex;
 	// flex-direction: column;
@@ -159,8 +188,8 @@ onMounted(() => {
 	width: 100%;
 	margin: auto;
 	// width:fit-content;
-	max-width: 960px;
-	min-width: 560px;
+	max-width: 660px;
+	min-width: 360px;
 	padding: 30px;
 	background-color: #fff;
 	border-radius: 3px;

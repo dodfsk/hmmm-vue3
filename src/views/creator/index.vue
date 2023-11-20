@@ -1,69 +1,66 @@
 <template>
-<div class="creator-container">
-    <n-layout has-sider class="creator-layout">
-        <n-layout-sider
-            class="creator-sider"
-            bordered
-            show-trigger="bar"
-            default-collapsed
-            collapse-mode="width"
-            :collapsed-width="64"
-            :width="180"
-            :native-scrollbar="false"
-            :inverted="inverted"
-        >   
-            <n-menu
-                :inverted="inverted"
-                :collapsed-width="64"
-                :collapsed-icon-size="22"
-                :options="menuOptions"
-                :value="route.name"
-            />
-        </n-layout-sider>
+	<n-layout has-sider class="creator-layout-container">
+		<n-layout-sider
+			class="creator-layout-sider"
+			collapse-mode="width"
+			:collapsed-width="48"
+			:width="200"
+			bordered
+			default-collapsed
+			:show-collapsed-content="false"
+			show-trigger="bar"
+			:native-scrollbar="false"
+			:inverted="inverted"
+		>
+			<n-menu
+				:inverted="inverted"
+				:collapsed-width="48"
+				:collapsed-icon-size="21"
+				:options="menuOptions"
+				:value="route.name"
+			/>
+		</n-layout-sider>
 
-        <n-layout-content
-            class="creator-content"
-        >
-                <router-view />
-        </n-layout-content>
-    </n-layout>
-</div>
+		<n-layout-content class="creator-layout-content">
+			<router-view />
+		</n-layout-content>
+	</n-layout>
 </template>
 
-<script setup lang='ts'>
-import { h, ref, Component, reactive } from 'vue';
-import { NIcon } from 'naive-ui';
+<script setup lang="ts">
+import { h, ref, Component, reactive } from 'vue'
+import { NIcon } from 'naive-ui'
 import {
 	HomeOutline,
-    BrushOutline,
-    FileTrayFullOutline,
-    AlbumsOutline,
+	BrushOutline,
+	FileTrayFullOutline,
+	AlbumsOutline,
 	SettingsOutline,
-    BuildOutline,
+	BuildOutline,
 	WineOutline as WineIcon,
-} from '@vicons/ionicons5';
-import { useUserStore } from '@/store/user';
-import { RouterLink, useRoute, useRouter } from 'vue-router';
+} from '@vicons/ionicons5'
+import { useUserStore } from '@/store/user'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 
-const route = useRoute();
-const router = useRouter();
-const userStore = useUserStore();
-const inverted = ref(false);
+const route = useRoute()
+const router = useRouter()
+const userStore = useUserStore()
+const inverted = ref(false)
 
 function renderIcon(icon: Component) {
-	return () => h(NIcon, null, { default: () => h(icon) });
+	return () => h(NIcon, null, { default: () => h(icon) })
 }
 const menuOptions = [
-    {
+	{
 		label: () =>
 			h(
 				RouterLink,
 				{
 					to: {
 						path: '/creator',
-                        // params: {
-                        //         lang: 'zh-CN',
-                        // },
+						// params: {
+						//         lang: 'zh-CN',
+						// },
 					},
 				},
 				{ default: () => '首页' }
@@ -71,16 +68,16 @@ const menuOptions = [
 		key: 'creator-homepage',
 		icon: renderIcon(HomeOutline),
 	},
-    {
+	{
 		label: () =>
 			h(
 				RouterLink,
 				{
 					to: {
 						path: '/creator/draw',
-                        // params: {
-                        //         lang: 'zh-CN',
-                        // },
+						// params: {
+						//         lang: 'zh-CN',
+						// },
 					},
 				},
 				{ default: () => '绘制' }
@@ -95,9 +92,9 @@ const menuOptions = [
 				{
 					to: {
 						path: '/creator/draft',
-                        // params: {
-                        //         lang: 'zh-CN',
-                        // },
+						// params: {
+						//         lang: 'zh-CN',
+						// },
 					},
 				},
 				{ default: () => '草稿箱' }
@@ -119,7 +116,7 @@ const menuOptions = [
 		key: 'creator-publish',
 		icon: renderIcon(AlbumsOutline),
 	},
-    {
+	{
 		label: '设置',
 		key: 'dance-dance-dance',
 		icon: renderIcon(BuildOutline),
@@ -137,35 +134,33 @@ const menuOptions = [
 			},
 		],
 	},
-
-];
-
+]
 </script>
 
-<style lang='less' scoped>
-.creator-container{
-    height:100%;
-    width:100%;
-    // height: calc(100vh - 50px);
-    // max-width:1500px;
-    // margin: 0 auto;
-    // padding:50px;
-    // display: flex;
-    // justify-content: center;
-    // align-items: center;
+<style lang="less" scoped>
+.creator-layout-container {
+	height: 100%;
+	width: 100%;
+	// height: calc(100vh - 50px);
+	// max-width:1500px;
+	// margin: 0 auto;
+	// padding:50px;
+	// display: flex;
+	// justify-content: center;
+	// align-items: center;
 }
 
-.creator-sider{
-    height:calc(100vh - 50px);
-    // height:100%;
-    // overflow:auto;
+.creator-layout-sider {
+	height: calc(100vh - 50px);
+	// height:100%;
+	// overflow:auto;
 }
-.creator-content{
-    max-height:calc(100vh - 50px);
-    // height:100%;
-    // overflow:auto;
+.creator-layout-content {
+	max-height: calc(100vh - 50px);
+	// height:100%;
+	// overflow:auto;
 }
-:deep(.n-layout-scroll-container){
-    overflow:hidden;
+:deep(.n-layout-scroll-container) {
+	overflow: hidden;
 }
 </style>

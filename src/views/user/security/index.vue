@@ -124,7 +124,7 @@ onMounted(() => {
 .security-container {
 	// width: 100%;
 	height: 100%;
-	padding: 20px;
+	// padding: 4px;
 	background-color: #e9ecef;
 	// display:flex;
 	// flex-direction: column;
@@ -134,8 +134,8 @@ onMounted(() => {
 .security-box {
 	width: 100%;
 	margin: auto;
-	max-width: 960px;
-	min-width: 560px;
+	max-width: 660px;
+	min-width: 360px;
 	padding: 30px;
 	background-color: #fff;
 	border-radius: 5px;

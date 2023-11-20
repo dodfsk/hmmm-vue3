@@ -6,7 +6,7 @@
 				<n-breadcrumb-item
 					@click="
 						router.push({
-							path: '/home',
+							path: '/room',
 						})
 					"
 				>
@@ -418,7 +418,7 @@ watch(
 .article-container {
 	max-width: 960px;
 	background-color: #fff;
-	border: 1px solid #e4edf4;
+	outline: 1px solid #e4edf4;
 	border-radius: 12px;
 	-ms-flex-negative: 0;
 	flex-shrink: 0;
@@ -494,7 +494,7 @@ watch(
 .comment-container {
 	max-width: 960px;
 	background-color: #fff;
-	border: 1px solid #e4edf4;
+	outline: 1px solid #e4edf4;
 	border-radius: 12px;
 	-ms-flex-negative: 0;
 	flex-shrink: 0;
@@ -613,7 +613,7 @@ watch(
 
 //发表评论的富文本编辑器容器
 .comment-edit {
-	border: 1px solid #e4edf4;
+	outline: 1px solid #e4edf4;
 	border-radius: 12px;
 	max-width: 960px;
 	margin: 0px auto;
@@ -658,6 +658,15 @@ watch(
 	}
 }
 @media screen and (max-width: 540px) {
+    .article-container {
+	    padding: 20px 10px 30px;
+    }
+    .comment-container {
+	    padding: 5px 10px 5px;
+    }
+    .comment-edit{
+	    padding: 25px 10px 25px;
+    }
 	.comment-edit__content {
 		height: 350px;
 	}

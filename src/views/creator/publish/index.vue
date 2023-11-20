@@ -148,12 +148,13 @@ const handleChangePage = (page: number) => {
 			page,
 		},
 	})
-	if (publishRef.value)
-		publishRef.value.scrollIntoView({
-			block: 'start',
+	
+	getPublishList().then(()=>{
+		window.scrollTo({
+			top: 0,
 			behavior: 'smooth',
 		})
-	getPublishList()
+    })
 }
 const handleView = (data: Room) => {
 	router.push({
@@ -232,11 +233,11 @@ onMounted(() => {
 .content-item {
 	width: 100%;
 	height: 180px;
-	// border: 1px solid #000;
+	outline:1px solid #e4edf4;
 	border-radius: 4px;
-	// border:1px solid #e4edf4;
 	box-shadow: 0 0 2px rgba(51, 51, 51, 0.421);
 	display: flex;
+    // flex-wrap: wrap;
 	// flex-direction: row;
 	&-left {
 		width: 320px;

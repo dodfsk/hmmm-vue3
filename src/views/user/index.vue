@@ -1,58 +1,70 @@
 <template>
-        <div class="user-container">
-            <n-layout has-sider class="user-layout">
-                <n-layout-sider
-                    class="user-sider"
-                    bordered
-                    default-collapsed
-                    show-trigger="bar"
-                    collapse-mode="width"
-                    :collapsed-width="64"
-                    :width="200"
-                    :native-scrollbar="false"
-                    :inverted="inverted"
-                >
-                    <n-menu
-                        :inverted="inverted"
-                        :collapsed-width="64"
-                        :collapsed-icon-size="22"
-                        :options="menuOptions"
-                        :value="route.name"
-                    />
-                </n-layout-sider>
+	<n-layout has-sider class="user-layout-container">
+		<n-layout-sider
+			class="user-layout-sider"
+			collapse-mode="width"
+			:collapsed-width="48"
+			:width="200"
+			bordered
+			default-collapsed
+			:show-collapsed-content="false"
+			show-trigger="bar"
+			:native-scrollbar="false"
+			:inverted="inverted"
+		>
+			<n-menu
+				:inverted="inverted"
+				:collapsed-width="48"
+				:collapsed-icon-size="21"
+				:options="menuOptions"
+				:value="route.name"
+			/>
+		</n-layout-sider>
 
-                <n-layout-content
-                    class="user-content"
-                >
-                        <router-view />
-                </n-layout-content>
-            </n-layout>
+		<n-layout-content class="user-layout-content">
+			<router-view />
+		</n-layout-content>
+	</n-layout>
+    
+    <!-- <div class="user-layout-container">
+        <div class="user-layout-sider">
+            <n-menu
+				:inverted="inverted"
+				:collapsed-width="48"
+				:collapsed-icon-size="21"
+				:options="menuOptions"
+				:value="route.name"
+			/>
         </div>
+        <div class="user-layout-content">
+			<router-view />
+        </div>
+    </div> -->
 </template>
 
 <script lang="ts" setup>
-import { h, ref, Component, reactive } from 'vue';
-import { NIcon } from 'naive-ui';
+import { h, ref, Component, reactive } from 'vue'
+import { NIcon } from 'naive-ui'
 import {
 	EarthOutline,
-    IdCardOutline,
-    HappyOutline,
+	IdCardOutline,
+	HappyOutline,
 	PersonOutline,
 	SettingsOutline,
 	WineOutline as WineIcon,
-    ShieldCheckmarkOutline,
-} from '@vicons/ionicons5';
+	ShieldCheckmarkOutline,
+} from '@vicons/ionicons5'
 
-import { useUserStore } from '@/store/user';
-import { RouterLink, useRoute, useRouter } from 'vue-router';
+import { useUserStore } from '@/store/user'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 
-const route = useRoute();
-const router = useRouter();
-const userStore = useUserStore();
-const inverted = ref(false);
+const route = useRoute()
+const router = useRouter()
+const userStore = useUserStore()
+const inverted = ref(false)
 
 function renderIcon(icon: Component) {
-	return () => h(NIcon, null, { default: () => h(icon) });
+	return () => h(NIcon, null, { default: () => h(icon) })
 }
 const menuOptions = [
 	{
@@ -62,12 +74,12 @@ const menuOptions = [
 				{
 					to: {
 						path: '/user',
-                        // params: {
-                        //         lang: 'zh-CN',
-                        // },
+						// params: {
+						//         lang: 'zh-CN',
+						// },
 					},
 				},
-				{ default: () => '个人空间' }
+				{ default: () => '个人中心' }
 			),
 		key: 'user-homepage',
 		icon: renderIcon(EarthOutline),
@@ -86,7 +98,7 @@ const menuOptions = [
 		key: 'user-profile',
 		icon: renderIcon(IdCardOutline),
 	},
-    {
+	{
 		label: () =>
 			h(
 				RouterLink,
@@ -100,7 +112,7 @@ const menuOptions = [
 		key: 'user-face',
 		icon: renderIcon(HappyOutline),
 	},
-    {
+	{
 		label: () =>
 			h(
 				RouterLink,
@@ -119,11 +131,10 @@ const menuOptions = [
 		key: 'dance-dance-dance',
 		icon: renderIcon(SettingsOutline),
 		children: [
-            {
+			{
 				label: '网站设置',
 				key: 'beverage',
 				icon: renderIcon(WineIcon),
-
 			},
 			{
 				type: 'group',
@@ -140,7 +151,7 @@ const menuOptions = [
 						key: 'sheep-man',
 						icon: renderIcon(PersonOutline),
 					},
-                    {
+					{
 						label: '评论管理',
 						key: 'sheep-man',
 						icon: renderIcon(PersonOutline),
@@ -149,34 +160,57 @@ const menuOptions = [
 			},
 		],
 	},
-];
+]
 </script>
 
 <style lang="less" scoped>
+.user-layout-container {
+	// height: 100%;
+	width: 100%;
+	height: calc(100vh - 50px);
+	// max-width:1500px;
+	// margin: 0 auto;
+	// background-color: #e9ecef;
+	// display: flex;
+    // flex-wrap: wrap;
+	// justify-content: center;
+	// align-items: center;
+}
 
-.user-container{
-    height:100%;
-    width:100%;
-    // height: calc(100vh - 50px);
-    // max-width:1500px;
-    // margin: 0 auto;
-    // padding:50px;
+.user-layout-sider {
+	// background-color: #fff;
+	height: calc(100vh - 50px);
     // display: flex;
-    // justify-content: center;
-    // align-items: center;
+    // width: 180px;
+    // flex: 1;
+    // width:100%;
+	height:100%;
+	// overflow:auto;
 }
+// @media (min-width: 1024px){
+//     .user-layout-sider {
+//         flex: 0 0 auto;
+//         width: 200px;
+//         height:100vh;
+//     }
+// }
 
-.user-sider{
-    height:calc(100vh - 50px);
-    // height:100%;
-    // overflow:auto;
+.user-layout-content {
+    // flex: 1;
+	max-height: calc(100vh - 50px);
+	// height:100%;
+    // width: 800px;
+	// overflow:auto;
 }
-.user-content{
-    max-height:calc(100vh - 50px);
-    // height:100%;
-    // overflow:auto;
-}
-:deep(.n-layout-scroll-container){
-    overflow:hidden;
+// @media (min-width: 1024px){
+//     .user-layout-content {
+//         flex: 0 0 auto;
+//         width: 800px;
+//         height:100%;
+//     }
+// }
+
+:deep(.n-layout-scroll-container) {
+	overflow: hidden;
 }
 </style>

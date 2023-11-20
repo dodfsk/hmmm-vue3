@@ -45,18 +45,17 @@
 				:disabled="!userStore?.userInfo?.username"
 				ref="userPopover"
 				:scrollable="true"
-				content-style="padding: 10px 0"
 			>
 				<template #trigger>
-					<div class="nav-avatar" style="width: 38px; height: 38px; padding: 0;">
+					<div class="nav-avatar">
 						<n-avatar
+							class="nav-face"
 							:size="38"
 							:src="
 								userStore.userInfo?.avatar ??
 								'https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg'
 							"
 							fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-							style="padding: 0; margin: 0; user-select: none;border:1px solid #e4edf4;"
 							round
 							@click="handleUser('/face')"
 						/>
@@ -321,12 +320,17 @@ const handleLogOut = () => {
 		height: 64px;
 	}
 }
-// .circle {
-// 	margin-right: 50px;
-// 	padding: 3px;
-// 	border: 1px solid #000;
-// 	border-radius: 20px;
-// }
+.nav-avatar{
+    width: 38px;
+    height: 38px;
+    .nav-face {
+        padding: 0;
+        margin: 0;
+        user-select: none;
+        outline: 1px solid #e4edf4;
+    }
+}
+
 // .popover-grid {
 // 	display: grid;
 // 	grid-template-columns: auto auto auto auto auto;

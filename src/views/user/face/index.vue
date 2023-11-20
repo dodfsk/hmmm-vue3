@@ -1,5 +1,23 @@
 <template>
 	<div class="face-container">
+        <!-- 面包屑 -->
+		<!-- <div class="face-breadcrumb">
+			<n-breadcrumb>
+				<n-breadcrumb-item
+					@click="
+						router.push({
+							path: '/home',
+						})
+					"
+				>
+					<n-icon :component="Person" /> User</n-breadcrumb-item
+				>
+				<n-breadcrumb-item>
+					<div>我的头像</div>
+				</n-breadcrumb-item>
+			</n-breadcrumb>
+		</div> -->
+
 		<div class="face-box">
 			<div class="face-box__header">
 				<n-divider title-placement="left" color="#333">
@@ -13,7 +31,7 @@
 						:size="168"
 						:src="imgSrc"
 						fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-                        style="border:1px solid #e4edf4;"
+                        style="outline:1px solid #e4edf4;"
 						round
 					>
 						<div v-if="!imgSrc">
@@ -43,6 +61,7 @@
 
 <script lang="ts" setup>
 import { ref, provide, reactive, onMounted, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useMessage } from 'naive-ui'
 import { useUserStore } from '@/store/user'
 import { useMinioStore } from '@/store/minio'
@@ -52,8 +71,10 @@ import { imgCompress } from '@/utils/img/imgCompress'
 import FaceUploadModal from './components/FaceUploadModal.vue'
 import type { Result } from '@/utils/img/imgClipper'
 import { cloneDeep } from 'lodash-es'
-import { HappyOutline } from '@vicons/ionicons5'
+import { HappyOutline,Person } from '@vicons/ionicons5'
 
+const route = useRoute()
+const router = useRouter()
 const userStore = useUserStore()
 const minioStore = useMinioStore()
 const message = useMessage()
@@ -159,19 +180,30 @@ onMounted(() => {
 .face-container {
     width: 100%;
 	height: 100%;
-	padding: 20px;
+	// padding: 20px;
 	background-color: #e9ecef;
 	// display: flex;
 	// flex-direction: column;
 	// align-items: center;
 	overflow: auto;
 }
+.face-breadcrumb {
+	font-size: 10px;
+	// margin: 0px auto 10px;
+	padding: 5px 0px;
+	border-radius: 12px;
+	max-width: 660px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	// background-color: #fff;
+}
 .face-box {
 	width: 100%;
+	// min-height: 100%;
 	// width:fit-content;
 	margin: auto;
-	max-width: 960px;
-	min-width: 560px;
+	max-width: 660px;
+	// min-width: 560px;
 	padding: 30px;
 	background-color: #fff;
 	border-radius: 3px;

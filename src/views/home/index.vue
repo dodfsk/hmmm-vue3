@@ -171,7 +171,7 @@ onMounted(() => {
 	// box-shadow: 20px 20px 60px #ced1d6,-20px -20px 60px #fff;
 	// outline: 3px solid #000;
 	&__img {
-		border: 1px solid #e4edf4;
+		outline: 1px solid #e4edf4;
 		border-radius: 8px;
 		max-width: 100%;
 		height: auto;
