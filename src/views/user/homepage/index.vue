@@ -152,7 +152,7 @@ const getAlter=()=>{
     // display:flex;
     // flex-direction: column;
     // align-items: center;
-    overflow: auto;
+    // overflow: auto;
 }
 // img{
 //     width:400px;

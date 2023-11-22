@@ -43,7 +43,7 @@ const aref = () => {
 
 .hello-container {
 	height: 100%;
-	min-height: calc(100vh - 50px);
+	// min-height: calc(100vh - 50px);
     // margin-bottom:auto;
 	display: flex;
 	justify-content: center;

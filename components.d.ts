@@ -10,6 +10,7 @@ declare module '@vue/runtime-core' {
     AppProvider: typeof import('./src/components/global/AppProvider.vue')['default']
     CodeBlockComponent: typeof import('./src/components/rich-editor/components/CodeBlockComponent.vue')['default']
     ImageResizeComponent: typeof import('./src/components/rich-editor/components/ImageResizeComponent.vue')['default']
+    NAffix: typeof import('naive-ui')['NAffix']
     NAvatar: typeof import('naive-ui')['NAvatar']
     NavTop: typeof import('./src/components/nav/NavTop.vue')['default']
     NBreadcrumb: typeof import('naive-ui')['NBreadcrumb']

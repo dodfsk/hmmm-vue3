@@ -92,6 +92,42 @@ const routes: Array<RouteRecordRaw> = [
 			},
 		],
 	},
+    {
+		path: '/usernew',
+		name: 'usernew',
+		// redirect: '/user/homepage',
+		component: () => import('@/views/user/indexNew.vue'),
+		meta: {
+			key: 'usernew',
+		},
+        children: [
+			{
+				path: '',
+				name: 'usernew-homepage',
+				component: () => import('@/views/user/homepage/index.vue'),
+			},
+			{
+				path: 'profile',
+				name: 'usernew-profile',
+				component: () => import('@/views/user/profile/index.vue'),
+			},
+			{
+				path: 'face',
+				name: 'usernew-face',
+				component: () => import('@/views/user/face/index.vue'),
+			},
+			{
+				path: 'security',
+				name: 'usernew-security',
+				component: () => import('@/views/user/security/index.vue'),
+			},
+			{
+				path: 'more',
+				name: 'usernew-more',
+				component: () => import('@/views/user/components/more.vue'),
+			},
+		],
+    },
 	{
 		path: '/user',
 		name: 'user',

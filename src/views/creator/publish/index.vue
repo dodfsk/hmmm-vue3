@@ -148,13 +148,13 @@ const handleChangePage = (page: number) => {
 			page,
 		},
 	})
-	
-	getPublishList().then(()=>{
-		window.scrollTo({
-			top: 0,
+
+	getPublishList().then(() => {
+		publishRef.value?.scrollIntoView({
+			block: 'start',
 			behavior: 'smooth',
 		})
-    })
+	})
 }
 const handleView = (data: Room) => {
 	router.push({
@@ -192,19 +192,20 @@ onMounted(() => {
 .publish-container {
 	width: 100%;
 	height: 100%;
-	background: #e9ecef;
+	// background: #e9ecef;
 	// background-color: rgba(206, 255, 127, 0.5);
 	// padding: 20px;
 	display: flex;
 	flex-direction: column;
 	// align-items: center;
+	// overflow-x: auto;
 	overflow: auto;
 }
 .publish-box {
+	flex: 1;
 	width: 100%;
 	max-width: 960px;
 	min-width: 660px;
-	// height: calc(100vh - 50px);
 	margin: 0 auto;
 	padding: 30px;
 	background-color: #fff;
@@ -233,11 +234,11 @@ onMounted(() => {
 .content-item {
 	width: 100%;
 	height: 180px;
-	outline:1px solid #e4edf4;
+	outline: 1px solid #e4edf4;
 	border-radius: 4px;
 	box-shadow: 0 0 2px rgba(51, 51, 51, 0.421);
 	display: flex;
-    // flex-wrap: wrap;
+	// flex-wrap: wrap;
 	// flex-direction: row;
 	&-left {
 		width: 320px;

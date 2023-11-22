@@ -44,12 +44,10 @@
 				</template>
 			</n-card>
 		</div>
-		<div class="draw-box" v-if="route.query.id">
-			<n-skeleton v-if="!roomState" :sharp="false" />
-			<n-card class="draw-content" v-else>
-				<template #header>
-					<div style="text-align: left">#绘制房间</div>
-					<div class="draw-content__header">
+		<div class="draw-box" v-if="route.query.id&&roomState">
+				<div class="draw-box__header">
+					<h2 style="text-align: left">#绘制房间</h2>
+					<div class="draw-form">
 						<n-input-group class="input-group">
 							<n-input
 								placeholder="标题"
@@ -72,9 +70,9 @@
 							<n-button color="#666" v-debounce:click="handleCover"> 上传封面</n-button>
 						</n-button-group>
 					</div>
-				</template>
+                </div>
 
-				<div class="edit-box">
+				<div class="draw-box__content">
 					<tiptapEditor
 						:key="String(route.query.id) || 'defaultKey'"
 						v-model="roomState.content"
@@ -83,8 +81,8 @@
 						@handleSaveAssets="handleSaveAssets"
 					/>
 				</div>
-				<template #footer>
-					<n-space justify="end" class="footer">
+				<div class="draw-box__footer">
+					<n-space justify="end">
 						<n-button type="info" v-debounce:click="handleSave" v-if="!roomState.status">保 存</n-button>
 						<n-button type="warning" v-debounce:click="handleUpdate" v-if="roomState.status"
 							>提 交</n-button
@@ -93,9 +91,8 @@
 							发 布
 						</n-button>
 					</n-space>
-				</template>
-			</n-card>
-		</div>
+				</div>
+			</div>
 	</div>
 	<CoverUploadModal
 		v-model:show="showModal"
@@ -332,27 +329,28 @@ watch(
 	background: #e9ecef;
 	// padding-top:20px;
 	display: flex;
-	// flex-direction: column;
-	justify-content: center;
+	flex-direction: column;
+	// justify-content: center;
 	// align-items: center;
-	overflow-x: auto;
-	overflow-y: hidden;
+	overflow: auto;
 }
 .draw-pre {
 	width: 100%;
 	margin: auto;
 }
-// .draw-box{
-//     // margin: auto;
-// }
-.draw-content {
-	// width: 90%;
-	// height: 90%;
-	// min-height: 500px;
-	box-shadow: 0 0 1px rgba(51, 51, 51, 0.321);
+.draw-box{
+    flex: 1;
+	width: 100%;
 	max-width: 960px;
+	margin: 0 auto;
+	padding: 30px;
+	background-color: #fff;
+	border-radius: 8px;
+	box-shadow: 0 0 3px rgba(51, 51, 51, 0.321);
 }
-.draw-content__header {
+.draw-box__header{
+    margin-bottom: 20px;
+    .draw-form {
 	display: flex;
 	justify-content: space-between;
 	// .title{
@@ -372,17 +370,16 @@ watch(
         to {width:100%;}
     });;
 }
-.input-group {
-	justify-content: space-between;
-	padding: 0 0 0 3px;
 }
-.edit-box {
-	height: 70vh;
-	max-width: 900px;
+.draw-box__content {
+	height: calc(100% - 120px);
+    min-height: 240px;
+	max-width: 960px;
 	// border: 1px solid #888;
 	// border-radius: 7px 0 0 7px;
+    
 }
-.footer {
+.draw-box__footer {
 	margin-top: 10px;
 }
 

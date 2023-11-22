@@ -23,8 +23,11 @@ document.title = 'hmmm'
 html,
 body,
 #app {
+    width: 100%;
 	height: 100%;
+	// overflow: auto;
 	// overflow: hidden;
+	// overflow-x: visible;
 	// overflow-y: overlay;
 	.n-config-provider {
 		height: inherit;

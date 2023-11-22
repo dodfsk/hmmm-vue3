@@ -2,7 +2,7 @@
 	<div class="editor-container" :class="theme">
 		<div class="editor__header" v-if="editor && theme != 'headless'">
 			<template v-for="(item, index) in TipTapMenuBar" :key="item.key">
-                <!-- 普通按钮 -->
+				<!-- 普通按钮 -->
 				<button
 					class="menu-item"
 					v-if="!item.type"
@@ -16,61 +16,45 @@
 						{{ item.title }}
 					</div>
 				</button>
-                <!-- 颜色选择 -->
-				<input
-					v-if="item.type === 'color'"
-					type="color"
-					id="color"
-					@change="item.cmd"
-					:value="item.value"
-				/>
-                <!-- 分隔竖线 -->
+				<!-- 颜色选择 -->
+				<input v-if="item.type === 'color'" type="color" id="color" @change="item.cmd" :value="item.value" />
+				<!-- 分隔竖线 -->
 				<div class="divider" v-if="item.type === 'divider'" :key="`divider${index}`"></div>
-                <!-- 图片上传 -->
-                <n-popover 
-                    v-if="item.type==='image'"
+				<!-- 图片上传 -->
+				<n-popover
+					v-if="item.type === 'image'"
 					trigger="hover"
-                    raw
-                    :show-arrow="false"
+					raw
+					:show-arrow="false"
 					:footer-style="{ display: 'flex', justifyContent: 'end' }"
 				>
 					<template #trigger>
 						<button
-                            class="menu-item"
-                            v-if="item.type==='image'"
-                            :class="item.class"
-                            :disabled="item.disabled"
-                            :title="item.title"
-                        >
-                            <n-icon size="18" :component="item.svg" v-if="item.svg" />
-                        </button>
+							class="menu-item"
+							v-if="item.type === 'image'"
+							:class="item.class"
+							:disabled="item.disabled"
+							:title="item.title"
+						>
+							<n-icon size="18" :component="item.svg" v-if="item.svg" />
+						</button>
 					</template>
-                    <div
-                        :style="{
-                            border:'#000 solid 3px',
-                            borderRadius:'8px',
-                            padding:'4px 10px',
-                            background:'#fff',
-                        }"
-                    >
-                    <n-button-group vertical size="small">
-
-                        <n-button
-                            color="#000"
-                            quaternary
-                            size="small"
-                            @click="item.cmd"
-                        >图片地址</n-button>
-                        <n-button
-                            color="#000"
-                            quaternary
-                            size="small"
-                            @click="()=>showModal=true"
-                        >本地上传</n-button>
-                    </n-button-group>
-                    </div>
-                </n-popover>
-
+					<div
+						:style="{
+							border: '#000 solid 3px',
+							borderRadius: '8px',
+							padding: '4px 10px',
+							background: '#fff',
+						}"
+					>
+						<n-button-group vertical size="small">
+							<n-button color="#000" quaternary size="small" @click="item.cmd">图片地址</n-button>
+							<n-button color="#000" quaternary size="small" @click="() => (showModal = true)"
+								>本地上传</n-button
+							>
+						</n-button-group>
+					</div>
+				</n-popover>
 			</template>
 
 			<!-- <button
@@ -82,120 +66,122 @@
 		</div>
 
 		<div class="editor__content">
-			<EditorContent ref="editorRef" v-bind="$attrs" :editor="editor" style="height:100%">
+			<EditorContent ref="editorRef" v-bind="$attrs" :editor="editor" style="height: 100%">
 				<!-- <template #[slotName]="slotProps" v-for="(slot, slotName) in $slots" >
                     <slot :name="slotName" v-bind="slotProps"></slot>
                 </template> -->
 			</EditorContent>
 		</div>
 
-        <div class="editor__footer" v-if="showFooter">
-            <UploadFileCard
-                v-for="item in assets"
-                :key="item.fileName"
-                v-bind="item"
-                @handleReInsert="reinsertImage"
-                @handleFileDel="removeImage"
-            ></UploadFileCard>
-        </div>
+		<div class="editor__footer" v-if="showFooter">
+			<UploadFileCard
+				v-for="item in assets"
+				:key="item.fileName"
+				v-bind="item"
+				@handleReInsert="reinsertImage"
+				@handleFileDel="removeImage"
+			></UploadFileCard>
+		</div>
 
-        <BubbleMenu
-            class="bubble-menu"
-            :tippy-options="{ animation: true, duration: 100 }"
-            :editor="editor"
-            :keepInBounds="true"
-            v-if="editor && theme !== 'headless'"
-            v-show="editor.isActive('image')"
-        >
-            <template v-for="(item, index) in BubbleMenuBar" :key="item.key">
-                <button class="bubble-item" v-if="!item.type" @click="item.cmd" :title="item.title">
-                    <n-icon size="22" :component="item.svg" v-if="item.svg" />
-                </button>
-                <!-- 编辑图片的pop框 -->
-                <n-popover
-                    trigger="manual"
-                    v-if="item.type === 'pop'"
-                    :show="showPopover"
-                    raw
-                    :show-arrow="false"
-                    @clickoutside="
-                        () => {
-                            showPopover = false
-                        }
-                    "
-                    :footer-style="{ display: 'flex', justifyContent: 'end' }"
-                >
-                    <template #trigger>
-                        <button class="bubble-item" :title="item.title" @click="item.click">
-                            <n-icon size="22" :component="item.svg" v-if="item.svg" />
-                        </button>
-                    </template>
-                    <div
-                        :style="{
-                            border:'#000 solid 3px',
-                            borderRadius:'8px',
-                            padding:'6px 8px',
-                            background:'#fff',
-                        }"
-                    >
-                        <n-space vertical align="end">
-                        <n-form size="tiny">
-                            <n-form-item label="src">
-                                <n-input  v-model:value="bubbleState.src" placeholder="请输入图片地址" :disabled="bubbleState.isBase64"/>
-                            </n-form-item>
-                            <n-form-item label="alt">
-                                <n-input v-model:value="bubbleState.alt" placeholder="请输入图片描述"/>
-                            </n-form-item>
-                            <n-form-item label="scalePercent">
-                                <n-input-number
-                                    v-model:value="bubbleState.scalePercent"
-                                    placeholder="原图百分比"
-                                    min="0"
-                                    step="5"
-                                    clearable
-                                    style="width:200px"
-                                >
-                                    <template #prefix>%&nbsp</template>
-                                </n-input-number>
-                            </n-form-item>
-                            <n-form-item label="width">
-                                <n-input-number
-                                    v-model:value="bubbleState.width"
-                                    :disabled="bubbleState.scalePercent!==null&&bubbleState.scalePercent!==0"
-                                    placeholder="宽 度 auto"
-                                    clearable
-                                    style="width:200px"
-                                >
-                                    <template #prefix>px</template>
-                                </n-input-number>
-                            </n-form-item>
-                            <n-form-item label="height">
-                                <n-input-number
-                                    v-model:value="bubbleState.height"
-                                    :disabled="bubbleState.scalePercent!==null&&bubbleState.scalePercent!==0"
-                                    placeholder="高 度 auto"
-                                    clearable
-                                    style="width:200px"
-                                >
-                                <template #prefix>px</template>
-                                </n-input-number>
-                            </n-form-item>
-                        </n-form>
-                            <n-button size="tiny" type="info" @click="item.cmd"> 确定 </n-button>
-                        </n-space>
-                    </div>
+		<BubbleMenu
+			class="bubble-menu"
+			:tippy-options="{ animation: true, duration: 100 }"
+			:editor="editor"
+			:keepInBounds="true"
+			v-if="editor && theme !== 'headless'"
+			v-show="editor.isActive('image')"
+		>
+			<template v-for="(item, index) in BubbleMenuBar" :key="item.key">
+				<button class="bubble-item" v-if="!item.type" @click="item.cmd" :title="item.title">
+					<n-icon size="22" :component="item.svg" v-if="item.svg" />
+				</button>
+				<!-- 编辑图片的pop框 -->
+				<n-popover
+					trigger="manual"
+					v-if="item.type === 'pop'"
+					:show="showPopover"
+					raw
+					:show-arrow="false"
+					@clickoutside="
+						() => {
+							showPopover = false
+						}
+					"
+					:footer-style="{ display: 'flex', justifyContent: 'end' }"
+				>
+					<template #trigger>
+						<button class="bubble-item" :title="item.title" @click="item.click">
+							<n-icon size="22" :component="item.svg" v-if="item.svg" />
+						</button>
+					</template>
+					<div
+						:style="{
+							border: '#000 solid 3px',
+							borderRadius: '8px',
+							padding: '6px 8px',
+							background: '#fff',
+						}"
+					>
+						<n-space vertical align="end">
+							<n-form size="tiny">
+								<n-form-item label="src">
+									<n-input
+										v-model:value="bubbleState.src"
+										placeholder="请输入图片地址"
+										:disabled="bubbleState.isBase64"
+									/>
+								</n-form-item>
+								<n-form-item label="alt">
+									<n-input v-model:value="bubbleState.alt" placeholder="请输入图片描述" />
+								</n-form-item>
+								<n-form-item label="scalePercent">
+									<n-input-number
+										v-model:value="bubbleState.scalePercent"
+										placeholder="原图百分比"
+										min="0"
+										step="5"
+										clearable
+										style="width: 200px"
+									>
+										<template #prefix>%&nbsp</template>
+									</n-input-number>
+								</n-form-item>
+								<n-form-item label="width">
+									<n-input-number
+										v-model:value="bubbleState.width"
+										:disabled="bubbleState.scalePercent !== null && bubbleState.scalePercent !== 0"
+										placeholder="宽 度 auto"
+										clearable
+										style="width: 200px"
+									>
+										<template #prefix>px</template>
+									</n-input-number>
+								</n-form-item>
+								<n-form-item label="height">
+									<n-input-number
+										v-model:value="bubbleState.height"
+										:disabled="bubbleState.scalePercent !== null && bubbleState.scalePercent !== 0"
+										placeholder="高 度 auto"
+										clearable
+										style="width: 200px"
+									>
+										<template #prefix>px</template>
+									</n-input-number>
+								</n-form-item>
+							</n-form>
+							<n-button size="tiny" type="info" @click="item.cmd"> 确定 </n-button>
+						</n-space>
+					</div>
+				</n-popover>
+			</template>
+		</BubbleMenu>
 
-                </n-popover>
-            </template>
-        </BubbleMenu>
-
-        <UploadModal
-            v-if="editor && theme !== 'headless'"
-            v-model:show="showModal"
-            ref="uploadModalRef"
-            @handleUploadDone="insertImage"
-        ></UploadModal>
-
+		<UploadModal
+			v-if="editor && theme !== 'headless'"
+			v-model:show="showModal"
+			ref="uploadModalRef"
+			@handleUploadDone="insertImage"
+		></UploadModal>
 	</div>
 </template>
 <script setup lang="ts">
@@ -215,8 +201,7 @@ import { Color } from '@tiptap/extension-color'
 import Image from './components/ImageResizeModule'
 import CodeBlockLowlight from './components/CodeBlockModule'
 import UploadModal from './components/UploadModal.vue'
-import UploadFileCard  from './components/UploadFileCard.vue'
-
+import UploadFileCard from './components/UploadFileCard.vue'
 
 import 'highlight.js/styles/vs2015.css'
 
@@ -230,7 +215,7 @@ import {
 	TextWrap,
 	Separator,
 	ClearFormatting,
-    Link as LinkSvg,
+	Link as LinkSvg,
 	Code,
 	Quote,
 	H1,
@@ -246,8 +231,8 @@ import {
 	Multiplier05X,
 	Multiplier1X,
 	Edit,
-    BorderRadius,
-    Trash,
+	BorderRadius,
+	Trash,
 } from '@vicons/tabler'
 
 export type DefineExpose = {
@@ -256,46 +241,46 @@ export type DefineExpose = {
 type Props = {
 	theme?: string
 	modelValue?: string
-    assets?:PreSignInfo[]
+	assets?: PreSignInfo[]
 }
 type Emits = {
 	// (e: 'functionName', value: any): void
 	(e: 'update:modelValue', value: string): void
 	(e: 'update:assets', value: PreSignInfo[]): void
-    (e: 'handleSaveAssets'): void
+	(e: 'handleSaveAssets'): void
 }
-type BubbleState={
-    src?: string
-    alt?: string
-    scalePercent?: number | null
-    width?: number | null
-    height?: number | null
-    isBase64:boolean
+type BubbleState = {
+	src?: string
+	alt?: string
+	scalePercent?: number | null
+	width?: number | null
+	height?: number | null
+	isBase64: boolean
 }
 const props = withDefaults(defineProps<Props>(), {
 	modelValue: '',
-    assets:()=>[]
+	assets: () => [],
 })
 const emits = defineEmits<Emits>()
 // const emit = defineEmits(['update:modelValue'])
 
-const { theme, modelValue,assets } = toRefs(props)
+const { theme, modelValue, assets } = toRefs(props)
 
 const showPopover = ref<boolean>(false)
 const bubbleState = reactive<BubbleState>({
 	scalePercent: null,
 	width: null,
 	height: null,
-    isBase64:false,
+	isBase64: false,
 })
 
 const showModal = ref<boolean>(false)
 const uploadModalRef = ref()
-const showFooter=computed(()=>{
-    if(props.theme==='headless'){
-        return false
-    }
-    return assets.value&&assets.value.length>0
+const showFooter = computed(() => {
+	if (props.theme === 'headless') {
+		return false
+	}
+	return assets.value && assets.value.length > 0
 })
 
 const editor: ShallowRef<Editor | undefined> = useEditor({
@@ -303,10 +288,10 @@ const editor: ShallowRef<Editor | undefined> = useEditor({
 	extensions: [
 		StarterKit.configure({ codeBlock: false }),
 		CodeBlockLowlight,
-        Link.configure({
-            openOnClick: false,
-            // autolink: false,
-        }),
+		Link.configure({
+			openOnClick: false,
+			// autolink: false,
+		}),
 		Color,
 		TextStyle,
 		TextAlign.configure({
@@ -325,14 +310,14 @@ const editor: ShallowRef<Editor | undefined> = useEditor({
 		}),
 	],
 	onUpdate: ({ editor }) => {
-        //编辑器内容更新时触发emit事件
+		//编辑器内容更新时触发emit事件
 		// HTML
-        if(props.theme!=='headless'){
-            emits('update:modelValue', editor.getHTML()) //双向绑定
-            if(assets.value&&assets.value.length>0){
-                emits('update:assets', assets.value!) //双向绑定
-            }
-        }
+		if (props.theme !== 'headless') {
+			emits('update:modelValue', editor.getHTML()) //双向绑定
+			if (assets.value && assets.value.length > 0) {
+				emits('update:assets', assets.value!) //双向绑定
+			}
+		}
 
 		// JSON
 		// emits('update:modelValue', editor.getJSON())
@@ -341,14 +326,16 @@ const editor: ShallowRef<Editor | undefined> = useEditor({
 const editorRef = ref()
 
 const TipTapMenuBar = computed(() => [
-    {
-        type: 'color',
-        title: '文本颜色',
-        key: 'color',
-        cmd:(e:any)=>{editor.value?.chain().focus().setColor(e.target.value).blur().run()},
-        //change事件+blur移除焦点防止文本选中bug
-        value:editor.value?.getAttributes('textStyle').color || '#000000'
-    },
+	{
+		type: 'color',
+		title: '文本颜色',
+		key: 'color',
+		cmd: (e: any) => {
+			editor.value?.chain().focus().setColor(e.target.value).blur().run()
+		},
+		//change事件+blur移除焦点防止文本选中bug
+		value: editor.value?.getAttributes('textStyle').color || '#000000',
+	},
 	{
 		title: '加粗',
 		key: 'bold',
@@ -429,45 +416,44 @@ const TipTapMenuBar = computed(() => [
 	{
 		type: 'divider',
 	},
-	{   
-        type:'image',
+	{
+		type: 'image',
 		title: '图片',
 		key: 'Image',
 		cmd: () => {
-                const url = window.prompt('URL')
-                if (url) {
-                    editor.value?.chain().focus().setImage({ src: url }).run()
-			    }
+			const url = window.prompt('URL')
+			if (url) {
+				editor.value?.chain().focus().setImage({ src: url }).run()
+			}
 		},
 		svg: Photo,
 	},
-    {   
-        title: '超链接',
+	{
+		title: '超链接',
 		key: 'link',
 		cmd: () => {
-            if(!editor.value?.isActive('link')){
-                const previousUrl = editor.value?.getAttributes('link').href
-                const url = window.prompt('URL', previousUrl)
-                // cancelled
-                if (url === null) {
-                    return
-                }
-                // empty
-                if (url === '') {
-                    editor.value?.chain().focus().extendMarkRange('link').unsetLink().run()
-                    return
-                }
-                // update link
-                editor.value?.chain().focus().extendMarkRange('link').setLink({ href: url }).blur().run()
-            }
-            else{
-                editor.value?.chain().focus().extendMarkRange('link').unsetLink().blur().run()
-                //移除超链接后移除焦点防止文本选中
-            }
-        },
+			if (!editor.value?.isActive('link')) {
+				const previousUrl = editor.value?.getAttributes('link').href
+				const url = window.prompt('URL', previousUrl)
+				// cancelled
+				if (url === null) {
+					return
+				}
+				// empty
+				if (url === '') {
+					editor.value?.chain().focus().extendMarkRange('link').unsetLink().run()
+					return
+				}
+				// update link
+				editor.value?.chain().focus().extendMarkRange('link').setLink({ href: url }).blur().run()
+			} else {
+				editor.value?.chain().focus().extendMarkRange('link').unsetLink().blur().run()
+				//移除超链接后移除焦点防止文本选中
+			}
+		},
 		class: { 'is-active': editor.value?.isActive('link') },
-        svg:LinkSvg,
-    },
+		svg: LinkSvg,
+	},
 	{
 		title: '代码块',
 		key: 'codeBlock',
@@ -567,34 +553,34 @@ const BubbleMenuBar = computed(() => [
 		disabled: bubbleState.isBase64,
 		click: () => {
 			showPopover.value = true
-            bubbleState.isBase64=false
-            
+			bubbleState.isBase64 = false
+
 			const imgState = editor.value!.getAttributes('image')
-            //将0.x化为百分比做显示
-            if(imgState.scalePercent){
-                imgState.scalePercent*=100
-            }
-            //对base64格式地址做处理
-            if(imgState.src&&imgState.src.indexOf('data:image')>-1){
-                imgState.src='粘贴或拖拽插入的base64格式图片'
-                bubbleState.isBase64=true
-            }
-            //将图片信息传递给form表单
+			//将0.x化为百分比做显示
+			if (imgState.scalePercent) {
+				imgState.scalePercent *= 100
+			}
+			//对base64格式地址做处理
+			if (imgState.src && imgState.src.indexOf('data:image') > -1) {
+				imgState.src = '粘贴或拖拽插入的base64格式图片'
+				bubbleState.isBase64 = true
+			}
+			//将图片信息传递给form表单
 			Object.assign(bubbleState, imgState)
 		},
 		cmd: () => {
-            //将百分比转换为0.x更新图片
-            if(bubbleState.scalePercent){
-                bubbleState.scalePercent/=100
-            }
-            //如果是base64图片,则删除src属性,避免更新
-            if(bubbleState.isBase64){
-                delete bubbleState.src
-            }
-            console.log(bubbleState)
-            
+			//将百分比转换为0.x更新图片
+			if (bubbleState.scalePercent) {
+				bubbleState.scalePercent /= 100
+			}
+			//如果是base64图片,则删除src属性,避免更新
+			if (bubbleState.isBase64) {
+				delete bubbleState.src
+			}
+			console.log(bubbleState)
+
 			editor.value
-			    ?.chain()
+				?.chain()
 				.focus()
 				.updateAttributes('image', { ...bubbleState })
 				.run()
@@ -602,91 +588,88 @@ const BubbleMenuBar = computed(() => [
 		},
 		svg: Edit,
 	},
-    {
-        title:'删除图片',
-        key:'imgDelete',
-        cmd:()=>editor.value?.chain().focus().deleteSelection().run(),
-        svg:Trash,
-    }
+	{
+		title: '删除图片',
+		key: 'imgDelete',
+		cmd: () => editor.value?.chain().focus().deleteSelection().run(),
+		svg: Trash,
+	},
 ])
 
-const insertImage=(data:PreSignInfo)=>{
-    const indexF=assets.value!.findIndex((item)=>item.fileName===data.fileName)
-    console.log(indexF,data)
-    if(indexF===-1){
-        const pushData={
-            url:data.url,
-            fileName:data.fileName
-        }
-        assets.value!.push(pushData)
-        console.log(assets.value)
-    }
-    editor.value?.chain().focus().setImage({ src: data.url!,alt:data.fileName }).run()
-    showModal.value=false
-    emits('handleSaveAssets')//自动更新附件信息
-    
+const insertImage = (data: PreSignInfo) => {
+	const indexF = assets.value!.findIndex((item) => item.fileName === data.fileName)
+	console.log(indexF, data)
+	if (indexF === -1) {
+		const pushData = {
+			url: data.url,
+			fileName: data.fileName,
+		}
+		assets.value!.push(pushData)
+		console.log(assets.value)
+	}
+	editor.value?.chain().focus().setImage({ src: data.url!, alt: data.fileName }).run()
+	showModal.value = false
+	emits('handleSaveAssets') //自动更新附件信息
 }
-const removeImage=(data:PreSignInfo)=>{
-    const indexF=assets.value!.findIndex((item)=>item.fileName===data.fileName)
-    console.log(indexF,data.fileName)
-    if(indexF>-1){
-        assets.value!.splice(indexF,1)
-        console.log(assets.value)
-    }
-    
-    //↓此处正则替换删除所有对应的img图片标签
-    const regStr=`<img [^>]*src=['"]${data.url}['"][^>]*>`
-    // const regStr=`<img [^>]*src=['"]([^'"]+)[^>]*>`
-    const imgReg=new RegExp(regStr,'g')
-    
-    const content=editor.value!.getHTML().replace(imgReg,(match, capture)=>{
-        console.log('match, capture',match, capture)
-        return ''
-    })
-    emits('update:modelValue', content) //双向绑定修改数据
-    // editor.value!.commands.setContent(content)//修改编辑器视图
-    emits('handleSaveAssets')//自动更新附件信息
+const removeImage = (data: PreSignInfo) => {
+	const indexF = assets.value!.findIndex((item) => item.fileName === data.fileName)
+	console.log(indexF, data.fileName)
+	if (indexF > -1) {
+		assets.value!.splice(indexF, 1)
+		console.log(assets.value)
+	}
+
+	//↓此处正则替换删除所有对应的img图片标签
+	const regStr = `<img [^>]*src=['"]${data.url}['"][^>]*>`
+	// const regStr=`<img [^>]*src=['"]([^'"]+)[^>]*>`
+	const imgReg = new RegExp(regStr, 'g')
+
+	const content = editor.value!.getHTML().replace(imgReg, (match, capture) => {
+		console.log('match, capture', match, capture)
+		return ''
+	})
+	emits('update:modelValue', content) //双向绑定修改数据
+	// editor.value!.commands.setContent(content)//修改编辑器视图
+	emits('handleSaveAssets') //自动更新附件信息
 }
-const reinsertImage=(data:PreSignInfo)=>{
-    editor.value?.chain().focus().setImage({ src: data.url!,alt:data.fileName }).run()
+const reinsertImage = (data: PreSignInfo) => {
+	editor.value?.chain().focus().setImage({ src: data.url!, alt: data.fileName }).run()
 }
 
+watch(
+	//内容-数据 双向绑定
+	() => props.modelValue,
+	(newValue, oldValue) => {
+		if (props.theme !== 'headless') {
+			// HTML
+			const isSame = editor.value!.getHTML() === newValue
 
-watch(//内容-数据 双向绑定
-    ()=>props.modelValue,
-    (newValue,oldValue)=>{
+			// JSON
+			// const isSame = JSON.stringify(this.editor.getJSON()) === JSON.stringify(value)
 
-    if(props.theme!=='headless'){
-        // HTML
-        const isSame = editor.value!.getHTML() === newValue
+			if (isSame) {
+				return
+			}
 
-        // JSON
-        // const isSame = JSON.stringify(this.editor.getJSON()) === JSON.stringify(value)
-
-        if (isSame) {
-            return
-        }
-
-        editor.value!.commands.setContent(newValue, false)
-        }
-    }
+			editor.value!.commands.setContent(newValue, false)
+		}
+	}
 )
 
 onMounted(() => {
 	if (props.theme === 'headless') {
 		editor.value?.setEditable(false)
 	}
-    // document.addEventListener("paste", (e:any)=>{
-    //     if(e.clipboardData.items.type.match(/^image\//i))
-    //     editor.value?.chain().focus().setImage({ src: '',alt:'' }).run()
-    // })
+	// document.addEventListener("paste", (e:any)=>{
+	//     if(e.clipboardData.items.type.match(/^image\//i))
+	//     editor.value?.chain().focus().setImage({ src: '',alt:'' }).run()
+	// })
 })
 
 onBeforeUnmount(() => {
 	editor.value?.destroy()
-    // document.removeEventListener("paste", handlectrlvEvent)
+	// document.removeEventListener("paste", handlectrlvEvent)
 })
-
 
 defineExpose({
 	editorRef,
@@ -696,15 +679,15 @@ defineExpose({
 <style lang="less">
 @import '@/utils/less/scrollbar.less';
 .ProseMirror {
-    .scrollbar-to(pre);
-    pre:hover{
-        &::-webkit-scrollbar-thumb {
-            cursor: pointer;
-            background-color: #666;
-        }
-    }
+	.scrollbar-to(pre);
+	pre:hover {
+		&::-webkit-scrollbar-thumb {
+			cursor: pointer;
+			background-color: #666;
+		}
+	}
 	// min-width:600px;
-    min-height:100%;
+	min-height: 100%;
 	word-wrap: break-word;
 	white-space: pre-wrap;
 	white-space: break-spaces;
@@ -723,9 +706,9 @@ defineExpose({
 		margin-top: 0.75em;
 	}
 
-    a {
-        color: #48add8;
-    }
+	a {
+		color: #48add8;
+	}
 	ul,
 	ol {
 		padding: 0 1rem;
@@ -769,16 +752,16 @@ defineExpose({
 		color: #f8f8f2;
 		padding: 0.5rem 1rem;
 		border-radius: 0.3rem;
-        overflow-x: auto;
+		overflow-x: auto;
 		// overflow: visible;
-        word-break: normal;
-        word-wrap: normal;
+		word-break: normal;
+		word-wrap: normal;
 		code {
 			color: inherit;
-            overflow:hidden;
+			overflow: hidden;
 			background: none;
 			font-size: 0.8rem;
-		    font-family: Consolas,Monaco,Andale Mono,Ubuntu Mono,JetBrainsMono, monospace;   
+			font-family: Consolas, Monaco, Andale Mono, Ubuntu Mono, JetBrainsMono, monospace;
 		}
 	}
 	mark {
@@ -791,7 +774,7 @@ defineExpose({
 		margin: 0.5rem 1rem 1rem;
 		padding: 1rem;
 		border: 2px solid rgba(#0d0d0d, 0.1);
-        background-color: #eee;
+		background-color: #eee;
 	}
 	hr {
 		border: none;
@@ -807,24 +790,24 @@ defineExpose({
 		margin: 0 2px;
 	}
 
-    .ProseMirror-separator {
-        visibility:hidden;//此class的dom导致无法选择行末尾的内联节点,因此隐藏元素只保留交互
-    }
+	.ProseMirror-separator {
+		visibility: hidden; //此class的dom导致无法选择行末尾的内联节点,因此隐藏元素只保留交互
+	}
 }
 // .headless {
-    // .ProseMirror {
-    //     img{
-    //         width:100%
-    //     }
-    // }
+// .ProseMirror {
+//     img{
+//         width:100%
+//     }
+// }
 // }
 </style>
 
 <style lang="less" scoped>
 @import '@/utils/less/scrollbar.less';
 @content: .editor__content;
-@footer:.editor__footer;
-@class:@content@footer;
+@footer: .editor__footer;
+@class: @content @footer;
 .scrollbar-to(@class);
 //↓scoped class
 
@@ -836,20 +819,29 @@ defineExpose({
 	// max-height: 26rem;
 	// color: #0d0d0d;
 	// background-color: #fff;
-	border: 3px solid #0d0d0d;
+	outline: 3px solid #0d0d0d;
+	// border: 3px solid #0d0d0d;
 	border-radius: 0.75rem;
 	// overflow:auto;
 }
 .headless {
 	border: none;
+	outline: none;
+	// background-color: transparent;
 	.editor__content {
 		overflow-x: hidden;
 		overflow-y: hidden;
-        // max-width:700px;
+		// max-width:700px;
 	}
 }
 
 .editor__header {
+	position: sticky;
+	top: 0px;
+	z-index: 1000;
+	border-radius: 0.75rem 0.75rem 0 0;
+	background-color: #fff;
+	//粘性布局浮顶
 	text-align: left;
 	display: flex;
 	align-items: center;
@@ -920,16 +912,16 @@ defineExpose({
 	-webkit-overflow-scrolling: touch;
 }
 .editor__footer {
-    width:100%;
-    white-space: nowrap;
-    overflow-y: hidden;
-    overflow-x: auto ;
-    overflow-x: overlay ;
+	width: 100%;
+	white-space: nowrap;
+	overflow-y: hidden;
+	overflow-x: auto;
+	overflow-x: overlay;
 	// flex: 0 0 auto;
 	// flex-wrap: wrap;
-    min-height:40px;
-    height:40px;
-    height:auto;
+	min-height: 40px;
+	height: 40px;
+	height: auto;
 	padding: 5px;
 	border-top: 3px solid #0d0d0d;
 }

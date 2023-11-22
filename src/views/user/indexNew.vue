@@ -1,29 +1,27 @@
 <template>
-	<n-layout has-sider class="user-layout-container">
-		<n-layout-sider
-			class="user-layout-sider"
-			collapse-mode="width"
-			:collapsed-width="48"
-			:width="200"
-			bordered
-			default-collapsed
-			show-trigger="bar"
-			:inverted="inverted"
-		>
-			<n-menu
-				:inverted="inverted"
-				:collapsed-width="48"
-				:collapsed-icon-size="21"
-				:options="menuOptions"
-				:value="route.name"
-			/>
-		</n-layout-sider>
+	<div class="user-layout-container">
+        <div class="user-layout-header">
+            <div class="user-title">
+                个人中心
+            </div>
+        </div>
+        <div class="user-layout-flexbox">
 
-		<n-layout-content class="user-layout-content">
-			<router-view />
-		</n-layout-content>
-	</n-layout>
-    
+            <div class="user-layout-sider">
+                <n-menu
+                    :inverted="inverted"
+                    :collapsed="false"
+                    :collapsed-width="48"
+                    :collapsed-icon-size="21"
+                    :options="menuOptions"
+                    :value="route.name"
+                />
+            </div>
+            <div class="user-layout-content">
+                <router-view />
+            </div>
+        </div>
+	</div>
 </template>
 
 <script lang="ts" setup>
@@ -41,11 +39,14 @@ import {
 
 import { useUserStore } from '@/store/user'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
+// import axios from '@/utils/axios/demo'
+import axios from 'axios'
 
 const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
 const inverted = ref(false)
+const media = window.matchMedia("(max-width: 900px)");
 
 function renderIcon(icon: Component) {
 	return () => h(NIcon, null, { default: () => h(icon) })
@@ -57,15 +58,15 @@ const menuOptions = [
 				RouterLink,
 				{
 					to: {
-						path: '/user',
+						path: '/usernew',
 						// params: {
 						//         lang: 'zh-CN',
 						// },
 					},
 				},
-				{ default: () => '个人中心' }
+				{ default: () => '首页' }
 			),
-		key: 'user-homepage',
+		key: 'usernew-homepage',
 		icon: renderIcon(EarthOutline),
 	},
 	{
@@ -74,12 +75,12 @@ const menuOptions = [
 				RouterLink,
 				{
 					to: {
-						path: '/user/profile',
+						path: '/usernew/profile',
 					},
 				},
 				{ default: () => '我的资料' }
 			),
-		key: 'user-profile',
+		key: 'usernew-profile',
 		icon: renderIcon(IdCardOutline),
 	},
 	{
@@ -88,12 +89,12 @@ const menuOptions = [
 				RouterLink,
 				{
 					to: {
-						path: '/user/face',
+						path: '/usernew/face',
 					},
 				},
 				{ default: () => '我的头像' }
 			),
-		key: 'user-face',
+		key: 'usernew-face',
 		icon: renderIcon(HappyOutline),
 	},
 	{
@@ -102,12 +103,12 @@ const menuOptions = [
 				RouterLink,
 				{
 					to: {
-						path: '/user/security',
+						path: '/usernew/security',
 					},
 				},
 				{ default: () => '账号安全' }
 			),
-		key: 'user-security',
+		key: 'usernew-security',
 		icon: renderIcon(ShieldCheckmarkOutline),
 	},
 	{
@@ -149,51 +150,66 @@ const menuOptions = [
 
 <style lang="less" scoped>
 .user-layout-container {
-	// height: 100%;
+	min-height: calc(100vh - 50px);
+	// min-height: 100%;
 	width: 100%;
-	height: calc(100vh - 50px);
+	// height: calc(100vh - 50px);
 	// max-width:1500px;
 	// margin: 0 auto;
-	// background-color: #e9ecef;
+	background-color: #e9ecef;
+    // display: inline-block;
 	// display: flex;
-    // flex-wrap: wrap;
+	// flex-wrap: wrap;
 	// justify-content: center;
 	// align-items: center;
-	// overflow:auto;
+    // overflow: auto;
 }
-
+.user-layout-header{
+    width: 860px;
+    margin:0 auto;
+}
+.user-layout-flexbox{
+    display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
 .user-layout-sider {
+	background-color: #fff;
+	// height: calc(100vh - 50px);
+	// position: sticky;
+	// top: 50px;
 	// background-color: #fff;
-	height: calc(100vh - 50px);
-    // display: flex;
-    // width: 180px;
-    // flex: 1;
-    // width:100%;
-	height:100%;
+	// flex: 1;
+	width: 200px;
+	height: 100%;
 	// overflow:auto;
 }
-// @media (min-width: 1024px){
-//     .user-layout-sider {
-//         flex: 0 0 auto;
-//         width: 200px;
-//         height:100vh;
-//     }
-// }
+@media (max-width: 880px) {
+	.user-layout-sider {
+		// flex: 0 0 auto;
+		width: 100%;
+	}
+}
 
 .user-layout-content {
-    // flex: 1;
-	max-height: calc(100vh - 50px);
+	// flex: 1;
+	// min-height: 100%;
+	// min-height: calc(100vh - 50px);
+	background-color: #fff;
 	// height:100%;
-    // width: 800px;
-	overflow:auto;
+    width: 100% ;
+    max-width: 660px;
+	min-width: 360px;
+	// overflow:auto;
 }
-// @media (min-width: 1024px){
-//     .user-layout-content {
-//         flex: 0 0 auto;
-//         width: 800px;
-//         height:100%;
-//     }
-// }
+@media (max-width: 880px){
+    .user-layout-content {
+        // flex: 0 0 auto;
+        height:100%;
+        // max-width: 880px;
+	    // max-width: 100%;
+    }
+}
 
 :deep(.n-layout-scroll-container) {
 	overflow: hidden;

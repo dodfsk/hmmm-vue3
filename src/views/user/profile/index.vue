@@ -175,21 +175,20 @@ onMounted(() => {
 <style lang="less" scoped>
 // @import '@/views/root.less';
 .profile-container {
-	// width: 100%;
+	width: 100%;
 	height: 100%;
 	// padding: 4px;
-	background-color: #e9ecef;
+	// background-color: #e9ecef;
 	// display:flex;
 	// flex-direction: column;
 	// align-items: center;
-	overflow: auto;
+	// overflow: auto;
 }
 .profile-box {
-	width: 100%;
+	// width: 100%;
 	margin: auto;
-	// width:fit-content;
-	max-width: 660px;
-	min-width: 360px;
+	// max-width: 660px;
+	// min-width: 360px;
 	padding: 30px;
 	background-color: #fff;
 	border-radius: 3px;

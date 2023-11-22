@@ -1,5 +1,5 @@
 <template>
-	<n-layout has-sider class="creator-layout-container">
+	<n-layout has-sider class="creator-layout-container" >
 		<n-layout-sider
 			class="creator-layout-sider"
 			collapse-mode="width"
@@ -7,9 +7,7 @@
 			:width="200"
 			bordered
 			default-collapsed
-			:show-collapsed-content="false"
 			show-trigger="bar"
-			:native-scrollbar="false"
 			:inverted="inverted"
 		>
 			<n-menu
@@ -46,7 +44,7 @@ const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
 const inverted = ref(false)
-
+const containerRef=ref()
 function renderIcon(icon: Component) {
 	return () => h(NIcon, null, { default: () => h(icon) })
 }
@@ -138,29 +136,37 @@ const menuOptions = [
 </script>
 
 <style lang="less" scoped>
+//naiveui限制,折叠菜单只能在layout中使用,无法很好的使用最外层滚动条
+
 .creator-layout-container {
-	height: 100%;
 	width: 100%;
-	// height: calc(100vh - 50px);
+	// height: 100%;//继承父类高度,使用最外层的滚动条
+	height: calc(100vh - 50px);//通过vh限制窗口高度,使用内部的滚动条
 	// max-width:1500px;
 	// margin: 0 auto;
 	// padding:50px;
 	// display: flex;
 	// justify-content: center;
 	// align-items: center;
+	// overflow:auto;
 }
-
 .creator-layout-sider {
-	height: calc(100vh - 50px);
+	height:100%;
+	// height: calc(100vh - 50px);
+    // position: fixed;
+    // top:0;
 	// height:100%;
 	// overflow:auto;
 }
 .creator-layout-content {
-	max-height: calc(100vh - 50px);
-	// height:100%;
+	height:100%;
+	background: #e9ecef;
+    // padding-left: 48px;
+	// min-height: calc(100% - 50px);
+	// max-height: calc(100vh - 50px);
 	// overflow:auto;
 }
-:deep(.n-layout-scroll-container) {
-	overflow: hidden;
-}
+// :deep(.n-layout-scroll-container) {
+// 	overflow: hidden;
+// }
 </style>

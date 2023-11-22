@@ -41,11 +41,17 @@ onMounted(() => {
 
 <style lang="less" scoped>
 .root__container {
-	// height: 100%;
+	width:  100%;
+	height: 100%;
+    // height: max-content;
+	// height: calc(100% - 50px);
 	// height: 100vh;
 	// overflow: auto;
 	max-width: 2200px;
 	margin: 0 auto;
+	// overflow: auto;
+    display: flex;
+    flex-direction: column;
 }
 // .n-layout-content {
 //     height: 100%;
@@ -57,27 +63,25 @@ onMounted(() => {
 	// position: -webkit-sticky;
 	// position: sticky;
 	position: fixed;
-	// background-color: rgba(255, 255, 255, 0.98);
-	// box-shadow: 0 0 5px rgba(51, 51, 51, 0.721);
-	top: 0px;
+	// top: 0;
 	z-index: 250;
 }
 .root__content {
+    flex: 1;
+	padding-top: 50px;
 	// display: flex;
 	// flex-direction: column;
 	// position: relative;
 	// margin:0 auto;
-	padding-top: 50px;
 	// width: auto;
 	// min-height: 100%;
-	min-height: calc(100% - 50px);
+	// min-height: calc(100% - 50px);
 	// height: calc(100% - 50px);
 	// height:100%;
 	// height:fit-content;//根据内容自适应尺寸
 	// box-sizing: content-box;
 	// align-items:stretch;
 	// flex:1;
-	// background: url("@/assets/image/login_bg.jpg") repeat;
 	// background:#e9ecef;
 	// background-color: rgb(246,247,249);
 	// overflow: auto;
