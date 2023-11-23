@@ -419,8 +419,8 @@ watch(
 	background-color: #fff;
 	outline: 1px solid #e4edf4;
 	border-radius: 12px;
-	-ms-flex-negative: 0;
-	flex-shrink: 0;
+	// -ms-flex-negative: 0;
+	// flex-shrink: 0;
 	padding: 30px 40px 40px;
 	margin: 0px auto 20px;
 }
@@ -460,7 +460,7 @@ watch(
 }
 .article-title {
 	width: 100%;
-	margin-left: 12px;
+	padding-left: 12px;
 	margin-bottom: 20px;
 	h1 {
 		font-weight: 500;

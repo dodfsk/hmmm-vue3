@@ -192,7 +192,7 @@ import Image from './components/ImageResizeModule'
 import CodeBlockLowlight from './components/CodeBlockModule'
 import UploadModal from './components/UploadModal.vue'
 import UploadFileCard from './components/UploadFileCard.vue'
-
+//加载highlight-css样式表
 import 'highlight.js/styles/vs2015.css'
 
 import {

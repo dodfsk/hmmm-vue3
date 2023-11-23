@@ -54,7 +54,7 @@
 	height: 100%;
 	padding: 30px;
 	background-color: #fff;
-	border-radius: 3px;
+	// border-radius: 3px;
 	box-shadow: 0 0 3px rgba(51, 51, 51, 0.321);
 	display: flex;
 	flex-direction: column;

@@ -209,7 +209,7 @@ onMounted(() => {
 	margin: 0 auto;
 	padding: 30px;
 	background-color: #fff;
-	border-radius: 8px;
+	// border-radius: 4px;
 	box-shadow: 0 0 3px rgba(51, 51, 51, 0.321);
 }
 .publish-box__header {

@@ -1,5 +1,5 @@
 import { VueNodeViewRenderer } from '@tiptap/vue-3'
-import { Plugin, PluginKey } from 'prosemirror-state'
+import { Plugin, PluginKey } from '@tiptap/pm/state'
 import ImageModule from '@tiptap/extension-image'
 import ImageResizeComponent from './ImageResizeComponent.vue'
 import { imgCompress } from '@/utils/img/imgCompress'

@@ -1,14 +1,14 @@
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
 
-import { fileURLToPath, URL } from 'url';
-// const { resolve } = require('path')
+import { fileURLToPath, URL } from 'url'
 
-import AutoImport from 'unplugin-auto-import/vite';
-import Components from 'unplugin-vue-components/vite';
-import { NaiveUiResolver } from 'unplugin-vue-components/resolvers';
-import  injectPlugin from '@rollup/plugin-inject'
-// const inject =require('@rollup/plugin-inject')
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
+import injectPlugin from '@rollup/plugin-inject'
+
+import compressPlugin from 'vite-plugin-compression'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -21,14 +21,22 @@ export default defineConfig({
 					'naive-ui': ['useDialog', 'useMessage', 'useNotification', 'useLoadingBar'],
 				},
 			],
-		}),
+		}), // unplugin-auto-import自动引入
 		Components({
-			resolvers: [NaiveUiResolver()], // unplugin-auto-import自动引入
+			resolvers: [NaiveUiResolver()], //unplugin-vue-components自动引入组件
 		}),
+		compressPlugin({
+			verbose: true, // 默认即可
+			disable: false, 
+			// deleteOriginFile: false, //保留源文件方案
+			// threshold: 1, //文件大小大于该值才启用压缩，单位是字节
+			threshold: 10*1024, //大于10kb
+			algorithm: 'gzip', //压缩算法
+			ext: '.gz', //文件类型
+		}), //gzip压缩
 	],
 	resolve: {
 		alias: {
-			//   "@": resolve(__dirname, "./src/"),
 			'@': fileURLToPath(new URL('./src', import.meta.url)),
 		},
 	},
@@ -51,4 +59,4 @@ export default defineConfig({
 			},
 		},
 	},
-});
+})

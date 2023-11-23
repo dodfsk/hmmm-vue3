@@ -148,11 +148,12 @@ const getAlter=()=>{
 <style lang="less" scoped>
 .container {
 	padding: 40px;
+    height: 100%;
 	// background-color:#ccc;
     // display:flex;
     // flex-direction: column;
     // align-items: center;
-    // overflow: auto;
+    overflow: auto;
 }
 // img{
 //     width:400px;

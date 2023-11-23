@@ -1,5 +1,5 @@
 import apiUrl from '@/api'
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import { ResponseData } from '@/types/axios'
 import { getToken, TOKEN_PREFIX } from '@/utils/common/auth'
 import { defineComponent } from 'vue'
@@ -29,10 +29,10 @@ const instance: AxiosInstance = axios.create({
 // axios实例  请求拦截器
 instance.interceptors.request.use(
 	// 在发送请求之前做些什么↓
-	(config: AxiosRequestConfig) => {
+	(config: InternalAxiosRequestConfig) => {
 		const token = getToken()
 		if (token) {
-			config.headers = { Authorization: `${TOKEN_PREFIX}${token}` }
+			config.headers.Authorization = `${TOKEN_PREFIX}${token}`
 		}
 		// 让每个请求携带自定义 token, 可根据实际情况修改
 		return config
@@ -68,8 +68,8 @@ instance.interceptors.response.use(
 				duration: 2000,
 			})
 			if (code == 401 || code == 403) {
-                //401-token失效
-                //403-拒绝访问
+				//401-token失效
+				//403-拒绝访问
 				const userStore = useUserStore()
 				userStore.logOut()
 				window.$spin.reset()
