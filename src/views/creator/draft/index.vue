@@ -132,7 +132,7 @@ onMounted(() => {
 	display: flex;
 	flex-direction: column;
 	// align-items: center;
-	overflow: auto;
+	// overflow: auto;
 }
 .draft-box {
     flex: 1;

@@ -9,6 +9,7 @@
 			default-collapsed
 			show-trigger="bar"
 			:inverted="inverted"
+            :native-scrollbar="false"
 		>
 			<n-menu
 				:inverted="inverted"

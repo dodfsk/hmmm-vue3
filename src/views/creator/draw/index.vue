@@ -18,13 +18,7 @@
 						height: '80px',
 					}"
 				>
-					<n-form
-						ref="formRef"
-						:label-width="80"
-						label-placement="left"
-						:model="roomState"
-						size="small"
-					>
+					<n-form ref="formRef" :label-width="80" label-placement="left" :model="roomState" size="small">
 						<!-- :rules="rules" -->
 
 						<n-form-item label="类型" path="selectValue">
@@ -44,55 +38,59 @@
 				</template>
 			</n-card>
 		</div>
-		<div class="draw-box" v-if="route.query.id&&roomState">
-				<div class="draw-box__header">
-					<h2 style="text-align: left">#绘制房间</h2>
-					<div class="draw-form">
-						<n-input-group class="input-group">
-							<n-input
-								placeholder="标题"
-								v-model:value="roomState.title"
-								class="title"
-								autofocus
-								style="outline: 3px solid #000"
-							/>
-							<n-input
-								placeholder="简介"
-								v-model:value="roomState.desc"
-								:class="animationFlag ? 'description-enabled' : 'description'"
-								style="outline: 3px solid #000; border-radius: 0"
-							/>
-							<!-- @animationend="animationFlag=false" -->
-						</n-input-group>
+		<div class="draw-box" v-if="route.query.id && roomState">
+			<div class="draw-box__header">
+				
+				<div style="display: flex;justify-content: space-between; flex-wrap: wrap;">
+                    <div style="text-align: left;font-weight: 200;font-size: 56px;">#绘制房间</div>
 
-						<n-button-group style="outline: 3px solid #000; border-radius: 0 5px 5px 0; margin-right: 5px">
-							<n-button color="black" @click="handleAnimation">添加简介</n-button>
-							<n-button color="#666" v-debounce:click="handleCover"> 上传封面</n-button>
-						</n-button-group>
-					</div>
-                </div>
-
-				<div class="draw-box__content">
-					<tiptapEditor
-						:key="String(route.query.id) || 'defaultKey'"
-						v-model="roomState.content"
-						v-model:assets="roomState.assets"
-						ref="tipTapRef"
-						@handleSaveAssets="handleSaveAssets"
-					/>
+                    <div class=draw-cover>
+                        <n-image :src="roomState.cover??'/src/assets/image/tomato.webp'" height="100" class="draw-cover-img"/>
+                        <n-button color="#666" v-debounce:click="handleCover" style="outline: 1px solid #000;height: 100px;"> 上传封面</n-button>
+                    </div>
 				</div>
-				<div class="draw-box__footer">
-					<n-space justify="end">
-						<n-button type="info" v-debounce:click="handleSave" v-if="!roomState.status">保 存</n-button>
-						<n-button type="warning" v-debounce:click="handleUpdate" v-if="roomState.status"
-							>提 交</n-button
-						>
-						<n-button type="primary" v-debounce:click="handlePublish" v-if="!roomState.status">
-							发 布
-						</n-button>
-					</n-space>
+
+				<div class="draw-form">
+					<n-input-group class="input-group" style="height:40px">
+						<n-input
+							placeholder="标题"
+							v-model:value="roomState.title"
+							class="title"
+							style="font-size: 18px;line-height:40px"
+						/>
+						<n-input
+							placeholder="简介"
+							v-model:value="roomState.desc"
+							:class="animationFlag ? 'description-enabled' : 'description'"
+							style="border-radius: 0;line-height:40px;border-left: 2px solid #000;"
+						/>
+						<!-- @animationend="animationFlag=false" -->
+					</n-input-group>
+
+					<div style="outline: 2px solid #000; border-radius: 0 5px 5px 0; ">
+						<n-button color="black" @click="handleAnimation" style="height:40px">添加简介</n-button>
+					</div>
 				</div>
 			</div>
+
+			<div class="draw-box__content">
+				<tiptapEditor
+					ref="tipTapRef"
+					v-model="roomState.content"
+					v-model:assets="roomState.assets"
+					@handleSaveAssets="handleSaveAssets"
+				/>
+			</div>
+			<div class="draw-box__footer">
+				<n-space justify="end">
+					<n-button type="info" v-debounce:click="handleSave" v-if="!roomState.status">保 存</n-button>
+					<n-button type="warning" v-debounce:click="handleUpdate" v-if="roomState.status">提 交</n-button>
+					<n-button type="primary" v-debounce:click="handlePublish" v-if="!roomState.status">
+						发 布
+					</n-button>
+				</n-space>
+			</div>
+		</div>
 	</div>
 	<CoverUploadModal
 		v-model:show="showModal"
@@ -326,20 +324,20 @@ watch(
 .draw-container {
 	width: 100%;
 	height: 100%;
-	background: #e9ecef;
+	// background: #e9ecef;
 	// padding-top:20px;
 	display: flex;
 	flex-direction: column;
 	// justify-content: center;
 	// align-items: center;
-	overflow: auto;
+	// overflow: auto;
 }
 .draw-pre {
 	width: 100%;
 	margin: auto;
 }
-.draw-box{
-    flex: 1;
+.draw-box {
+	flex: 1;
 	width: 100%;
 	max-width: 960px;
 	margin: 0 auto;
@@ -348,42 +346,63 @@ watch(
 	border-radius: 8px;
 	box-shadow: 0 0 3px rgba(51, 51, 51, 0.321);
 }
-.draw-box__header{
-    margin-bottom: 20px;
-    .draw-form {
-	display: flex;
-	justify-content: space-between;
-	// .title{
-	//     // min-width:20px;
-	// //    width: 800px;1
-	// //    width:100%;
-	// }
-	.description {
-		display: none;
-		width: 0px;
-	}
-	.description-enabled {
-		animation: widthChange 0.9s ease-out;
-	}
-	.keyframes (all,widthChange,{
+.draw-box__header {
+	width: 100%;
+	margin-bottom: 20px;
+    .draw-cover{
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        .draw-cover-img{
+            outline: 1px solid #000;
+        }
+    }
+	.draw-form {
+		display: flex;
+		justify-content: space-between;
+	    border-radius: 4px;
+        outline: 2px solid #000;
+		// .title{
+		//     // min-width:20px;
+		// //    width: 800px;1
+		// //    width:100%;
+		// }
+		.description {
+			display: none;
+			width: 0px;
+		}
+		.description-enabled {
+			animation: widthChange 0.9s ease-out;
+		}
+		.keyframes (all,widthChange,{
         from {width:0px;}
         to {width:100%;}
     });;
-}
+	}
 }
 .draw-box__content {
-	height: calc(100% - 120px);
-    min-height: 240px;
-	max-width: 960px;
+	width: 100%;
+	// flex:0 0 240px;
+	// min-height: 240px;
+	// max-width: 960px;
 	// border: 1px solid #888;
 	// border-radius: 7px 0 0 7px;
-    
 }
 .draw-box__footer {
 	margin-top: 10px;
+    .n-button {
+        width: 90px;
+    }
 }
 
-.n-button {
-	width: 90px;
+
+:deep(.ProseMirror) {
+	min-height: 450px;
+}
+//粘性布局浮顶
+:deep(.editor__header) {
+	position: sticky;
+	top: 0px;
+	z-index: 1000;
 }
 </style>

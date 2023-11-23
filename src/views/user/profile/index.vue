@@ -179,13 +179,14 @@ onMounted(() => {
 	height: 100%;
 	// padding: 4px;
 	// background-color: #e9ecef;
-	// display:flex;
-	// flex-direction: column;
+	display:flex;
+	flex-direction: column;
 	// align-items: center;
-	// overflow: auto;
+	overflow: auto;
 }
 .profile-box {
-	// width: 100%;
+    flex: 1;
+	width: 100%;
 	margin: auto;
 	// max-width: 660px;
 	// min-width: 360px;

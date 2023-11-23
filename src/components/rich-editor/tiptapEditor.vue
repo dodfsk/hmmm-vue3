@@ -1,6 +1,6 @@
 <template>
 	<div class="editor-container" :class="theme">
-		<div class="editor__header" v-if="editor && theme != 'headless'">
+		<div class="editor__header" v-if="editor && theme != 'headless'" :style="props.headerStyle">
 			<template v-for="(item, index) in TipTapMenuBar" :key="item.key">
 				<!-- 普通按钮 -->
 				<button
@@ -39,14 +39,7 @@
 							<n-icon size="18" :component="item.svg" v-if="item.svg" />
 						</button>
 					</template>
-					<div
-						:style="{
-							border: '#000 solid 3px',
-							borderRadius: '8px',
-							padding: '4px 10px',
-							background: '#fff',
-						}"
-					>
+					<div class="pop-menu">
 						<n-button-group vertical size="small">
 							<n-button color="#000" quaternary size="small" @click="item.cmd">图片地址</n-button>
 							<n-button color="#000" quaternary size="small" @click="() => (showModal = true)"
@@ -65,15 +58,18 @@
             </button> -->
 		</div>
 
-		<div class="editor__content">
-			<EditorContent ref="editorRef" v-bind="$attrs" :editor="editor" style="height: 100%">
+		<!-- <div class="editor__content"> -->
+			<EditorContent class="editor__content" ref="editorRef" v-bind="$attrs" :editor="editor">
 				<!-- <template #[slotName]="slotProps" v-for="(slot, slotName) in $slots" >
                     <slot :name="slotName" v-bind="slotProps"></slot>
                 </template> -->
+                <template class="ttt">
+                    
+                </template>
 			</EditorContent>
-		</div>
+		<!-- </div> -->
 
-		<div class="editor__footer" v-if="showFooter">
+		<div class="editor__footer" v-if="showFooter" :style="props.footerStyle">
 			<UploadFileCard
 				v-for="item in assets"
 				:key="item.fileName"
@@ -114,14 +110,7 @@
 							<n-icon size="22" :component="item.svg" v-if="item.svg" />
 						</button>
 					</template>
-					<div
-						:style="{
-							border: '#000 solid 3px',
-							borderRadius: '8px',
-							padding: '6px 8px',
-							background: '#fff',
-						}"
-					>
+					<div class="bubble-pop-form">
 						<n-space vertical align="end">
 							<n-form size="tiny">
 								<n-form-item label="src">
@@ -186,6 +175,7 @@
 </template>
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, reactive, ref, ShallowRef, toRefs, useAttrs, watch } from 'vue'
+import type { CSSProperties } from 'vue'
 import { PreSignInfo } from '@/types/room'
 
 import { useEditor, EditorContent, Editor, BubbleMenu } from '@tiptap/vue-3'
@@ -241,6 +231,8 @@ export type DefineExpose = {
 type Props = {
 	theme?: string
 	modelValue?: string
+	headerStyle?: string | CSSProperties
+	footerStyle?: string | CSSProperties
 	assets?: PreSignInfo[]
 }
 type Emits = {
@@ -820,8 +812,8 @@ defineExpose({
 	// color: #0d0d0d;
 	// background-color: #fff;
 	outline: 3px solid #0d0d0d;
-	// border: 3px solid #0d0d0d;
-	border-radius: 0.75rem;
+	border-radius: 0.25rem;
+	// overflow:hidden;
 	// overflow:auto;
 }
 .headless {
@@ -836,12 +828,12 @@ defineExpose({
 }
 
 .editor__header {
-	position: sticky;
-	top: 0px;
-	z-index: 1000;
-	border-radius: 0.75rem 0.75rem 0 0;
-	background-color: #fff;
 	//粘性布局浮顶
+	// position: sticky;
+	// top: 0px;
+	// z-index: 1000;
+	border-radius: 0.25rem 0.25rem 0 0;
+	background-color: #fff;
 	text-align: left;
 	display: flex;
 	align-items: center;
@@ -849,6 +841,10 @@ defineExpose({
 	flex-wrap: wrap;
 	padding: 0.25rem;
 	border-bottom: 3px solid #0d0d0d;
+	// overflow:hidden;
+	input {
+		background-color: #fff;
+	}
 	button {
 		// font-size: 18px;
 		font-size: inherit;
@@ -860,6 +856,7 @@ defineExpose({
 		background: white;
 		accent-color: black;
 	}
+
 	.menu-item {
 		width: 1.75rem;
 		height: 1.75rem;
@@ -906,9 +903,11 @@ defineExpose({
 	}
 }
 .editor__content {
+    // height: 100%;
 	padding: 0.5rem 0.75rem;
 	flex: 1 1 auto;
 	overflow: auto;
+    cursor: auto;
 	-webkit-overflow-scrolling: touch;
 }
 .editor__footer {
@@ -925,12 +924,25 @@ defineExpose({
 	padding: 5px;
 	border-top: 3px solid #0d0d0d;
 }
+.pop-menu {
+	border: 3px #000 solid;
+	border-radius: 0.25rem;
+	padding: 4px 10px;
+	background: #fff;
+}
+.bubble-pop-form {
+	border: #000 solid 3px;
+	border-radius: 0.25rem;
+	padding: 6px 8px;
+	background: #fff;
+}
 .bubble-menu {
 	display: flex;
 	background-color: #fff;
 	padding: 0 0.2rem;
 	border: 3px solid #0d0d0d;
-	border-radius: 0.75rem;
+	border-radius: 0.25rem;
+
 	// button {
 	//     border: none;
 	//     background: none;

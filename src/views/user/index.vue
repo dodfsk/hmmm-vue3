@@ -9,6 +9,7 @@
 			default-collapsed
 			show-trigger="bar"
 			:inverted="inverted"
+            :native-scrollbar="false"
 		>
 			<n-menu
 				:inverted="inverted"
@@ -19,7 +20,7 @@
 			/>
 		</n-layout-sider>
 
-		<n-layout-content class="user-layout-content">
+		<n-layout-content class="user-layout-content" >
 			<router-view />
 		</n-layout-content>
 	</n-layout>
@@ -164,7 +165,7 @@ const menuOptions = [
 
 .user-layout-sider {
 	// background-color: #fff;
-	height: calc(100vh - 50px);
+	// height: calc(100vh - 50px);
     // display: flex;
     // width: 180px;
     // flex: 1;
@@ -182,10 +183,10 @@ const menuOptions = [
 
 .user-layout-content {
     // flex: 1;
-	max-height: calc(100vh - 50px);
-	// height:100%;
+	// max-height: calc(100vh - 50px);
+	height:100%;
     // width: 800px;
-	overflow:auto;
+	// overflow:auto;
 }
 // @media (min-width: 1024px){
 //     .user-layout-content {

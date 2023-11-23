@@ -176,7 +176,6 @@
 			<div class="comment-edit__content">
 				<tiptapEditor
 					v-if="userStore.userInfo"
-					:key="String(route.query.id) || 'defaultKey'"
 					v-model="newComment.content"
 					v-model:assets="newComment.assets"
 					ref="tipTapRef"
@@ -625,7 +624,9 @@ watch(
 }
 .comment-edit__content {
 	width: 100%;
-	height: 250px;
+	// height: 100%;
+	height: 240px;
+
 	.unLogin {
 		height: 250px;
 		font-size: 18px;
@@ -658,15 +659,15 @@ watch(
 	}
 }
 @media screen and (max-width: 540px) {
-    .article-container {
-	    padding: 20px 10px 30px;
-    }
-    .comment-container {
-	    padding: 5px 10px 5px;
-    }
-    .comment-edit{
-	    padding: 25px 10px 25px;
-    }
+	.article-container {
+		padding: 20px 10px 30px;
+	}
+	.comment-container {
+		padding: 5px 10px 5px;
+	}
+	.comment-edit {
+		padding: 25px 10px 25px;
+	}
 	.comment-edit__content {
 		height: 350px;
 	}
